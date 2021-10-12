@@ -1,5 +1,5 @@
 npm install --global npm-check-updates 
-npm install --global @vue/cli 
+npm install --global @vue/cli
 vue create qualtrics-response-exporter-ui
 	Vue CLI v4.5.13
 	? Please pick a preset: Manually select features
@@ -26,3 +26,11 @@ npm audit --only=prod
 npm install --save-dev eslint@7 @typescript-eslint/eslint-plugin@4 @typescript-eslint/parser@4
 // upgrade to the latest version
 npm install --save vue@next vue-router@4 vuex@4
+// tailwind with PostCSS 7 (vue-cli v4 doesn't support PostCSS 8, yet)
+npm install --save-dev tailwindcss@npm:@tailwindcss/postcss7-compat postcss@^7 autoprefixer@^9
+// create tailwind.config.js and postcss.config.js
+npx tailwindcss init -p
+// install Tailwind UI dependencies 
+npm install --save @headlessui/vue @heroicons/vue
+
+
