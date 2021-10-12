@@ -14,8 +14,15 @@ vue create qualtrics-response-exporter-ui
 	? Where do you prefer placing config for Babel, ESLint, etc.? In dedicated config files
 
 cd qualtrics-response-exporter-ui
+vue add electron-builder
 
+// upgrade all development dependencies to the latest version
 ncu -u
 npm install --force
-npm install --save vue@next vue-router@4 vuex@4
+// audit for production only
 npm audit --only=prod
+
+// rollback eslint and its related package to previous version to prevent errors
+npm install --save-dev eslint@7 @typescript-eslint/eslint-plugin@4 @typescript-eslint/parser@4
+// upgrade to the latest version
+npm install --save vue@next vue-router@4 vuex@4
