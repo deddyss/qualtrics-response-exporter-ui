@@ -1,8 +1,8 @@
 module.exports = {
 	pages: {
 		index: {
-			entry: "src/main.ts",
-			title: "Qualtrics Response Exporter"
+			entry: 'src/main.ts',
+			title: 'Qualtrics Response Exporter'
 		}
 	},
 	configureWebpack: {
@@ -12,16 +12,16 @@ module.exports = {
 	},
 	pluginOptions: {
 		electronBuilder: {
-			// preload: "src/preload.ts",
-			// chainWebpackMainProcess: (config) => {
-			// 		config.externals([/node_modules/, "bufferutil", "utf-8-validate"]);
-			// },
+			// preload: 'src/preload.ts',
+			chainWebpackMainProcess: (config) => {
+					config.externals([/node_modules/, 'utf-8-validate', 'bufferutil', 'long', 'pino-pretty']);
+			},
 			builderOptions: {
-				appId: "deddyss.qualtrics.exporter",
-				productName: "Qualtrics Response Exporter",
+				appId: 'deddyss.qualtrics.exporter',
+				productName: 'Qualtrics Response Exporter',
 				win: {
-					target: ["portable"],
-					// icon: "public/logo-512x512.png"
+					target: ['portable'],
+					// icon: 'public/logo-512x512.png'
 				}
 			}
 		}

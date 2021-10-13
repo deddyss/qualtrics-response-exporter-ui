@@ -11,10 +11,8 @@
 	"keywords": [
 		"typescript",
 		"vue3",
-		"tailwind-css",
-		"electron",
-		"electron-builder",
-		"desktop-application"
+		"tailwindcss",
+		"electron"
 	],
 	"scripts": {
 		"serve": "vue-cli-service serve",
@@ -30,7 +28,17 @@
 	"dependencies": {
 		"@headlessui/vue": "^1.4.1",
 		"@heroicons/vue": "^1.0.4",
-		"core-js": "^3.18.2",
+		"async-lock": "^1.3.0",
+		"axios": "^0.23.0",
+		"core-js": "^3.18.3",
+		"crypto-js": "^4.1.1",
+		"denque": "^2.0.1",
+		"fastify": "^3.22.0",
+		"fastify-websocket": "^4.0.0",
+		"get-port": "^5.1.1",
+		"limiter": "^2.1.0",
+		"systeminformation": "^5.9.7",
+		"threads": "^1.7.0",
 		"vue": "^3.2.20",
 		"vue-router": "^4.0.11",
 		"vuex": "^4.0.2"
@@ -38,6 +46,7 @@
 	"devDependencies": {
 		"@types/electron-devtools-installer": "^2.2.0",
 		"@types/jest": "^27.0.2",
+		"@types/ws": "^8.2.0",
 		"@typescript-eslint/eslint-plugin": "^4.33.0",
 		"@typescript-eslint/parser": "^4.33.0",
 		"@vue/cli-plugin-babel": "~4.5.13",
@@ -55,11 +64,11 @@
 		"electron": "^15.1.2",
 		"electron-devtools-installer": "^3.2.0",
 		"eslint": "^7.32.0",
-		"eslint-plugin-import": "^2.24.2",
+		"eslint-plugin-import": "^2.25.2",
 		"eslint-plugin-vue": "^7.19.1",
 		"postcss": "^7.0.39",
 		"tailwindcss": "npm:@tailwindcss/postcss7-compat@^2.2.16",
-		"typescript": "~4.4.3",
+		"typescript": "^4.4.4",
 		"vue-cli-plugin-electron-builder": "~2.1.1",
 		"vue-jest": "^5.0.0-0"
 	}

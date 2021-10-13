@@ -32,5 +32,14 @@ npm install --save-dev tailwindcss@npm:@tailwindcss/postcss7-compat postcss@^7 a
 npx tailwindcss init -p
 // install Tailwind UI dependencies 
 npm install --save @headlessui/vue @heroicons/vue
+// axios and rate limiter
+npm install --save axios limiter
+// queue, thread, lock
+npm install --save denque threads async-lock
+// web server (http & websocket), available port
+npm install --save fastify fastify-websocket get-port@5.1.1
+npm install --save-dev @types/ws
+// system information and cryptography library
+npm install --save systeminformation crypto-js
 
 
