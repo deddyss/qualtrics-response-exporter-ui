@@ -106,7 +106,7 @@
 	</div>
 </template>
 
-<script>
+<script lang='ts'>
 import { defineComponent } from 'vue';
 import { Popover, PopoverButton, PopoverPanel } from '@headlessui/vue';
 import { MenuIcon, XIcon } from '@heroicons/vue/outline';

@@ -40,6 +40,8 @@ module.exports = {
 		'no-underscore-dangle': 0,
 		// custom: no-unused-expressions
 		'no-unused-expressions': ['error', { allowShortCircuit: true }],
+		// custom: max-len
+		"max-len": 0,
 		// custom: import no-unresolved
 		'import/no-unresolved': 0,
 		// custom: import no-extraneous-dependencies
@@ -56,4 +58,7 @@ module.exports = {
 			},
 		},
 	],
+	globals: {
+		__static: "readonly"
+	}
 };

@@ -14,9 +14,13 @@ class WhoAmI extends Api {
 		return new Promise<User>((resolve, reject) => {
 			this.sendHttpGetRequest<WhoAmIResponse>({ url: URL })
 				.then((response: AxiosResponse<WhoAmIResponse>) => {
+					// TODO:
+					console.log(response.data.result);
 					resolve(response.data.result);
 				})
 				.catch((error: AxiosError<ApiErrorResponse>) => {
+					// TODO:
+					console.log(this.parseError(error));
 					reject(this.parseError(error));
 				});
 		});

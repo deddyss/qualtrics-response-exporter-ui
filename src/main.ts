@@ -5,4 +5,12 @@ import store from './store';
 
 import '@/assets/style.css';
 
-createApp(App).use(store).use(router).mount('#app');
+const app = createApp(App);
+app.directive('focus', {
+	mounted(el: HTMLElement) {
+		el.focus();
+	}
+});
+app.use(store);
+app.use(router);
+app.mount('#app');

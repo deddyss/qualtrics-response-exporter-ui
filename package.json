@@ -41,7 +41,8 @@
 		"threads": "^1.7.0",
 		"vue": "^3.2.20",
 		"vue-router": "^4.0.11",
-		"vuex": "^4.0.2"
+		"vuex": "^4.0.2",
+		"vuex-persistedstate": "^4.1.0"
 	},
 	"devDependencies": {
 		"@types/electron-devtools-installer": "^2.2.0",

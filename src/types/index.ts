@@ -2,6 +2,11 @@ export interface Map<T> {
 	[key: string]: T;
 }
 
+export interface SelectOption {
+	value: string;
+	label: string;
+}
+
 export interface Preferences {
 	dataCenter?: string;
 	activeSurveyOnly?: boolean;
@@ -126,4 +131,22 @@ export interface ExportFailedSurvey {
 	id: string;
 	name: string;
 	error: string;
+}
+
+// eslint-disable-next-line
+type EventListener = (...args: any[]) => void;
+export type FunctionLike = EventListener;
+
+export type ApiCommand = 'signIn';
+export type ApiEvent = 'serverReady' | 'signedIn' | 'signInFailed';
+
+declare global {
+	interface Window {
+		api: {
+			// loadConfiguration: () => void;
+			// saveConfiguration: (configuration: Configuration) => void;
+			signIn: (param: ApiConfiguration) => void;
+			on: (event: ApiEvent, listener: EventListener) => void;
+		}
+	}
 }

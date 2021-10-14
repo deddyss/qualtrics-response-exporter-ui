@@ -1,11 +1,13 @@
 'use strict'
 
-import { app, protocol, BrowserWindow } from 'electron'
-import { createProtocol } from 'vue-cli-plugin-electron-builder/lib'
-import installExtension, { VUEJS3_DEVTOOLS } from 'electron-devtools-installer'
-import { createWebServer, getAvailablePort } from './api/server'
-import { FastifyInstance } from 'fastify'
-const isDevelopment = process.env.NODE_ENV !== 'production'
+import { app, protocol, BrowserWindow, shell } from 'electron';
+import { createProtocol } from 'vue-cli-plugin-electron-builder/lib';
+import installExtension, { VUEJS3_DEVTOOLS } from 'electron-devtools-installer';
+import { FastifyInstance } from 'fastify';
+import path from "path";
+import { createWebServer, getAvailablePort } from '@/api/server';
+import { registerEventListeners } from '@/electron/api'
+const isDevelopment = process.env.NODE_ENV !== 'production';
 
 // scheme must be registered before the app is ready
 protocol.registerSchemesAsPrivileged([
@@ -28,7 +30,7 @@ const createWindow = async () => {
 		height: 768,
 		show: false,
 		webPreferences: {
-			// preload: path.join(__dirname, 'preload.js'),
+			preload: path.join(__dirname, 'preload.js'),
 			// Use pluginOptions.nodeIntegration, leave this alone
 			// See nklayman.github.io/vue-cli-plugin-electron-builder/guide/security.html#node-integration for more info
 			nodeIntegration: (process.env
@@ -48,6 +50,12 @@ const createWindow = async () => {
 		// Load the index.html when not in development
 		window.loadURL('app://./index.html')
 	}
+	window.webContents.setWindowOpenHandler(({ url }) => {
+		setImmediate(() => shell.openExternal(url));
+		return { action: 'deny' };
+	});
+	// register event listener
+	registerEventListeners(window);
 };
 
 const runMiscellaneousScript = () => {

@@ -12,7 +12,7 @@ module.exports = {
 	},
 	pluginOptions: {
 		electronBuilder: {
-			// preload: 'src/preload.ts',
+			preload: 'src/preload.ts',
 			chainWebpackMainProcess: (config) => {
 					config.externals([/node_modules/, 'utf-8-validate', 'bufferutil', 'long', 'pino-pretty']);
 			},
@@ -21,7 +21,7 @@ module.exports = {
 				productName: 'Qualtrics Response Exporter',
 				win: {
 					target: ['portable'],
-					// icon: 'public/logo-512x512.png'
+					icon: 'public/logo.png'
 				}
 			}
 		}

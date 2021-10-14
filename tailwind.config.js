@@ -15,7 +15,14 @@ module.exports = {
 		},
 	},
 	variants: {
-		extend: {},
+		extend: {
+			cursor: ['disabled'],
+			pointerEvents: ['disabled'],
+			opacity: ['disabled'],
+			backgroundColor: ['disabled']
+		},
 	},
-	plugins: [],
+	plugins: [
+		'@tailwindcss/forms'
+	],
 }
