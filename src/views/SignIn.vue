@@ -1,9 +1,8 @@
 <template>
-	<!-- eslint-disable max-len -->
 	<main class='min-h-screen bg-white flex'>
 
 		<div class='flex-1 flex flex-col justify-center py-12 px-4 sm:px-6 lg:w-1/2 lg:flex-none lg:px-20 xl:px-24'>
-			<div class='mx-auto w-full max-w-sm lg:w-96'>
+			<div class='mx-auto w-full max-w-sm lg:w-96 relative'>
 				<div>
 					<img class='h-16 w-auto' src='logo.png' alt='Workflow' />
 					<h2 class='mt-6 text-2xl font-extrabold text-gray-900'>
@@ -42,7 +41,6 @@
 										v-model='dataCenter'
 										:disabled='signingIn'
 									/>
-									<!-- <input id='datacenter' name='datacenter' type='email' autocomplete='email' required='' class='appearance-none block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm' /> -->
 								</div>
 							</div>
 
@@ -69,7 +67,7 @@
 							</div>
 
 							<div>
-								<button type='submit' class='w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 disabled:opacity-50 disabled:cursor-not-allowed' :disabled='signingIn'>
+								<button type='submit' class='w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 disabled:opacity-50 disabled:cursor-not-allowed' :disabled='signingIn || !apiAvailable || showAlert'>
 									<template v-if='signingIn'>
 										<svg class='animate-spin -ml-1 mr-3 h-5 w-5 text-white' xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24'>
 											<circle class='opacity-25' cx='12' cy='12' r='10' stroke='currentColor' stroke-width='4'></circle>
@@ -82,6 +80,8 @@
 									</template>
 								</button>
 							</div>
+
+							<alert v-if="showAlert" type="error" title="Sign-in error" :message="authorizationError" class="absolute w-full"/>
 						</form>
 					</div>
 				</div>
@@ -96,15 +96,21 @@
 </template>
 
 <script lang='ts'>
-import { computed, defineComponent, ref } from 'vue';
+import { defineComponent, computed, ref } from 'vue';
+import { mapGetters, useStore } from 'vuex';
+
 import SelectMenu from '@/components/SelectMenu.vue';
+import Alert from '@/components/Alert.vue';
+
 import BACKGROUNDS from '@/reference/images';
 import { DATA_CENTERS } from '@/reference';
-import { ApiError, SelectOption, User } from '@/types';
+import { ACTION, GETTER, MUTATION } from '@/reference/store';
+import { Configuration, SelectOption, State } from '@/types';
 
 export default defineComponent({
 	components: {
-		SelectMenu
+		SelectMenu,
+		Alert
 	},
 	setup() {
 		const background = computed<string>(
@@ -119,43 +125,63 @@ export default defineComponent({
 				return option;
 			});
 		});
-		const dataCenter = ref<string>('syd1');
-		const apiToken = ref<string>('');
-		const rememberMe = ref<boolean>(false);
+
+		const store = useStore<State>();
+		const apiToken = ref<string>(store.state.qualtrics?.apiToken ?? '');
+		const apiAvailable = ref<boolean>(store.state.qualtrics.accessible);
+		const dataCenter = ref<string>(store.state.qualtrics.dataCenter);
+		const rememberMe = ref<boolean>(store.state.configuration.rememberApiToken);
+
 		const signingIn = ref<boolean>(false);
+		const showAlert = ref<boolean>(false);
 		return {
 			background,
 			dataCenters,
 			dataCenter,
 			apiToken,
 			rememberMe,
-			signingIn
+			signingIn,
+			apiAvailable,
+			showAlert
 		};
 	},
-	mounted() {
-		if (window.api === undefined) {
-			return;
+	computed: {
+		...mapGetters({
+			isUserAuthorized: GETTER.IS_USER_AUTHORIZED
+		}),
+		authorizationError(): string {
+			return this.$store.state.qualtrics.errorMessage ?? '';
 		}
-		window.api.on('signedIn', ({ user }: { user: User }) => {
-			console.log('user', user);
+	},
+	watch: {
+		isUserAuthorized(authorized: boolean) {
 			this.signingIn = false;
-		});
-		window.api.on('signInFailed', ({ error }: { error: ApiError }) => {
-			console.log('error', error);
-			this.signingIn = false;
-		});
+			if (authorized) {
+				// TODO: go to another route
+			}
+		},
+		authorizationError(message: string) {
+			if (message) {
+				this.signingIn = false;
+				this.showAlert = true;
+			}
+			else {
+				this.showAlert = false;
+			}
+		}
 	},
 	methods: {
 		signIn(e: Event): void {
 			e.preventDefault();
-			/* eslint-disable prefer-destructuring */
-			const apiToken = this.apiToken;
-			const dataCenter = this.dataCenter;
-			// TODO:
-			console.log('window.api', window.api);
-			console.log('window.api.signIn', window.api.signIn);
-			window.api && window.api.signIn({ apiToken, dataCenter });
-			this.signingIn = true;
+
+			const { apiToken, dataCenter } = this;
+			this.$store
+				.dispatch(ACTION.SIGN_IN, { apiToken, dataCenter })
+				.then(() => {
+					this.signingIn = true;
+					this.$store.commit(MUTATION.SET.CONFIGURATION, { rememberApiToken: this.rememberMe } as Configuration);
+					// TODO: remember me = true -> store to file
+				});
 		}
 	}
 });

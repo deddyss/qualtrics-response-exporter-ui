@@ -7,25 +7,55 @@ export interface SelectOption {
 	label: string;
 }
 
-export interface Preferences {
-	dataCenter?: string;
-	activeSurveyOnly?: boolean;
-	lastSelectedSurveys?: string[];
-	exportWithContinuation?: boolean;
-	exportFormat?: string;
-	compressExportFile?: boolean;
+export type AlertType = 'info' | 'success' | 'warning' | 'error';
+
+export interface State {
+	configuration: Configuration;
+	qualtrics: Qualtrics;
+	user?: User;
+	surveys: Survey[];
+	selectedIds: string[];
+	exportOptions: ExportOptions;
 }
 
-export interface Answer extends Preferences {
-	apiToken?: string;
-	loadPreferences?: boolean;
-	selectedSurveys?: string[];
-	savePreferences?: boolean;
+export interface Configuration {
+	rememberApiToken: boolean;
+	rememberSurveys: boolean;
+	rememberSelectedIds: boolean;
 }
 
-export interface ApiConfiguration {
+export interface ExportOptions {
+	withContinuation: boolean;
+	format: string;
+	compressFile: boolean;
+}
+
+// export interface Preferences {
+// 	dataCenter?: string;
+// 	activeSurveyOnly?: boolean;
+// 	lastSelectedSurveys?: string[];
+// 	exportWithContinuation?: boolean;
+// 	exportFormat?: string;
+// 	compressExportFile?: boolean;
+// }
+
+// export interface Answer extends Preferences {
+// 	apiToken?: string;
+// 	loadPreferences?: boolean;
+// 	selectedSurveys?: string[];
+// 	savePreferences?: boolean;
+// }
+
+export interface ApiAuthorization {
 	dataCenter: string;
 	apiToken: string;
+}
+
+export interface Qualtrics {
+	accessible: boolean;
+	dataCenter: string;
+	apiToken?: string;
+	errorMessage?: string;
 }
 
 export interface Error {
@@ -109,7 +139,7 @@ export interface ApiError {
 	message?: string;
 }
 
-export interface PoolOptions extends ApiConfiguration {
+export interface PoolOptions extends ApiAuthorization {
 	internalApiPort: number;
 	surveys: Survey[],
 	exportWithContinuation: boolean;
@@ -137,7 +167,7 @@ export interface ExportFailedSurvey {
 type EventListener = (...args: any[]) => void;
 export type FunctionLike = EventListener;
 
-export type ApiCommand = 'signIn';
+export type ApiAction = 'signIn';
 export type ApiEvent = 'serverReady' | 'signedIn' | 'signInFailed';
 
 declare global {
@@ -145,7 +175,7 @@ declare global {
 		api: {
 			// loadConfiguration: () => void;
 			// saveConfiguration: (configuration: Configuration) => void;
-			signIn: (param: ApiConfiguration) => void;
+			signIn: (param: ApiAuthorization) => void;
 			on: (event: ApiEvent, listener: EventListener) => void;
 		}
 	}

@@ -1,5 +1,5 @@
 import { contextBridge, ipcRenderer } from 'electron';
-import { ApiCommand, ApiConfiguration, FunctionLike } from '@/types';
+import { ApiAction, ApiAuthorization, FunctionLike } from '@/types';
 
 contextBridge.exposeInMainWorld(
 	'api', {
@@ -9,8 +9,8 @@ contextBridge.exposeInMainWorld(
 		// saveConfiguration: (configuration: Configuration) => {
 		// 	ipcRenderer.send(COMMAND.CONFIGURATION.SAVE, { configuration });
 		// },
-		signIn: (param: ApiConfiguration) => {
-			ipcRenderer.send('signIn' as ApiCommand, param);
+		signIn: (param: ApiAuthorization) => {
+			ipcRenderer.send('signIn' as ApiAction, param);
 		},
 		on: (name: string, func: FunctionLike) => {
 			// remove all listeners first

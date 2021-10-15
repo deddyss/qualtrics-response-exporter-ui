@@ -1,4 +1,3 @@
-
 const BACKGROUNDS = [
 	'https://images.unsplash.com/photo-1576731753569-3e93a228048c?ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&ixlib=rb-1.2.1&auto=format&fit=crop&w=1080&q=80',
 	'https://images.unsplash.com/photo-1540327009232-51e2281b5648?ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&ixlib=rb-1.2.1&auto=format&fit=crop&w=1080&q=80',

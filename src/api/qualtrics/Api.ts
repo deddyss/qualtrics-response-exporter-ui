@@ -1,14 +1,14 @@
 import axios, { AxiosError, AxiosRequestConfig, AxiosResponse } from 'axios';
 import { Stream } from 'stream';
-import { ApiConfiguration, ApiErrorResponse, ApiError } from '@/types';
+import { ApiAuthorization, ApiErrorResponse, ApiError } from '@/types';
 
 class Api {
 	private baseUrl: string;
 	private apiToken: string;
 
-	constructor (config: ApiConfiguration) {
-		this.baseUrl = `https://${config.dataCenter}.qualtrics.com/API/v3`;
-		this.apiToken = config.apiToken;
+	constructor (auth: ApiAuthorization) {
+		this.baseUrl = `https://${auth.dataCenter}.qualtrics.com/API/v3`;
+		this.apiToken = auth.apiToken;
 	}
 
 	protected getBaseUrl(): string {

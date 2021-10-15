@@ -3,7 +3,7 @@ import { AxiosError, AxiosResponse } from 'axios';
 import { createWriteStream, WriteStream } from 'fs';
 import { Stream } from 'stream';
 import { 
-	ApiConfiguration, ApiError, ApiErrorResponse, ExportProgressResponse, ExportProgressResult,
+	ApiAuthorization, ApiError, ApiErrorResponse, ExportProgressResponse, ExportProgressResult,
 	StartExportRequestData, StartExportResponse, StartExportResult
 } from '@/types';
 import Api from './Api';
@@ -17,7 +17,7 @@ const exportProgressLimiter = new RateLimiter({ tokensPerInterval: 1000, interva
 const exportFileLimiter = new RateLimiter({ tokensPerInterval: 100, interval: 'minute' });
 
 class ResponseExport extends Api {
-	constructor (config: ApiConfiguration) {
+	constructor (config: ApiAuthorization) {
 		super(config);
 	}
 

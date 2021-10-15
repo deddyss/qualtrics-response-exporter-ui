@@ -1,8 +1,8 @@
 import { WhoAmI } from '@/api/qualtrics';
-import { ApiCommand, ApiConfiguration, ApiError, ApiEvent, User } from '@/types';
+import { ApiAction, ApiAuthorization, ApiError, ApiEvent, User } from '@/types';
 import { BrowserWindow, ipcMain, IpcMainEvent } from 'electron';
 
-const signIn = async (auth: ApiConfiguration) => {
+const signIn = async (auth: ApiAuthorization) => {
 	const api = new WhoAmI(auth);
 	return new Promise<User>((resolve, reject) => {
 		api.userInfo()
@@ -12,12 +12,11 @@ const signIn = async (auth: ApiConfiguration) => {
 };
 
 export const registerEventListeners = (window: BrowserWindow): void => {
-
-	ipcMain.on('signIn' as ApiCommand, (event: IpcMainEvent, auth: ApiConfiguration) => {
-		console.log('signIn', auth);
+	// sign in
+	ipcMain.on('signIn' as ApiAction, (event: IpcMainEvent, auth: ApiAuthorization) => {
 		signIn(auth)
-			.then((user: User) => event.sender.send('signedIn' as ApiEvent, { user }))
-			.catch((error: ApiError) => event.sender.send('signInFailed' as ApiEvent, { error }));
+			.then((user: User) => event.sender.send('signedIn' as ApiEvent, { user, auth }))
+			.catch((error: ApiError) => event.sender.send('signInFailed' as ApiEvent, { error, auth }));
 	});
 
 };
