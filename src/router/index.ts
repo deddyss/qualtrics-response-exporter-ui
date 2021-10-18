@@ -3,6 +3,8 @@ import Home from '@/views/Home.vue';
 // import SignIn from '@/views/SignIn.vue';
 import Survey from '@/views/Survey.vue';
 import SurveyList from '@/views/survey/SurveyList.vue';
+import ExportOptions from '@/views/export/ExportOptions.vue';
+import ExportProgress from '@/views/export/ExportProgress.vue';
 import NotFound from '@/views/NotFound.vue';
 import PATH from '@/reference/path';
 import { GETTER } from '@/reference/store';
@@ -38,6 +40,18 @@ const routes: Array<RouteRecordRaw> = [
 				path: PATH.SURVEY.URI + PATH.SURVEY.LIST.URI,
 				name: PATH.SURVEY.LIST.NAME,
 				component: SurveyList,
+				meta: requiresAuthMeta
+			},
+			{
+				path: PATH.SURVEY.URI + PATH.SURVEY.EXPORT.OPTIONS.URI,
+				name: PATH.SURVEY.EXPORT.OPTIONS.NAME,
+				component: ExportOptions,
+				meta: requiresAuthMeta
+			},
+			{
+				path: PATH.SURVEY.URI + PATH.SURVEY.EXPORT.PROGRESS.URI,
+				name: PATH.SURVEY.EXPORT.PROGRESS.NAME,
+				component: ExportProgress,
 				meta: requiresAuthMeta
 			}
 		]

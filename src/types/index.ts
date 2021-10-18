@@ -7,6 +7,12 @@ export interface SelectOption {
 	label: string;
 }
 
+export interface NavigationMenuItem {
+	path: string;
+	name: string;
+	description: string;
+}
+
 export type AlertType = 'info' | 'success' | 'warning' | 'error';
 
 export interface State {

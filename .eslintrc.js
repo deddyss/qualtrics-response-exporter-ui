@@ -36,6 +36,8 @@ module.exports = {
 		'lines-between-class-members': ['error', 'always', { exceptAfterSingleLine: true }],
 		// custom: object curly newline
 		'object-curly-newline': 0,
+		// custom: no-nested-ternary
+		'no-nested-ternary': 0,
 		// custom: no-underscore-dangle
 		'no-underscore-dangle': 0,
 		// custom: no-unused-expressions

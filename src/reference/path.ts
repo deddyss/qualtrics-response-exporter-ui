@@ -12,16 +12,22 @@ const PATH = {
 		},
 		LIST: {
 			URI: '/list',
-			NAME: 'Survey List'
+			NAME: 'Survey List',
+			DESCRIPTION: 'Select survey you want to export'
 		},
 		EXPORT: {
+			INDEX: {
+				URI: '/'
+			},
 			OPTIONS: {
 				URI: '/export/options',
-				NAME: 'Export Options'
+				NAME: 'Export Options',
+				DESCRIPTION: 'Format, compress, continuation, etc'
 			},
 			PROGRESS: {
 				URI: '/export/progress',
-				NAME: 'Export Progress'
+				NAME: 'Export Progress',
+				DESCRIPTION: 'Monitor progress and remaining items'
 			}
 		}
 	}
