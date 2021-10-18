@@ -19,7 +19,9 @@ module.exports = {
 			cursor: ['disabled'],
 			pointerEvents: ['disabled'],
 			opacity: ['disabled'],
-			backgroundColor: ['disabled']
+			backgroundColor: ['disabled'],
+			borderStyle: ['responsive', 'hover'],
+			borderWidth: ['responsive', 'hover']
 		},
 	},
 	plugins: [
