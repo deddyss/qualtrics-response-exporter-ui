@@ -44,6 +44,7 @@ const createWindow = async () => {
 	if (process.env.WEBPACK_DEV_SERVER_URL) {
 		// Load the url of the dev server if in development mode
 		await window.loadURL(process.env.WEBPACK_DEV_SERVER_URL as string)
+		window.webContents.openDevTools();
 	}
 	else {
 		createProtocol('app')
@@ -104,6 +105,7 @@ const background = async () => {
 			// Install Vue Devtools
 			try {
 				await installExtension(VUEJS3_DEVTOOLS);
+
 			}
 			catch (e) {
 				console.error('Vue Devtools failed to install: ', e);

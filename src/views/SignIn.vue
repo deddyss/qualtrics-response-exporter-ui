@@ -107,6 +107,7 @@ import BACKGROUNDS from '@/reference/images';
 import { DATA_CENTERS } from '@/reference';
 import { ACTION, GETTER, MUTATION } from '@/reference/store';
 import { Configuration, SelectOption, State } from '@/types';
+import PATH from '@/reference/path';
 
 export default defineComponent({
 	components: {
@@ -158,7 +159,7 @@ export default defineComponent({
 		isUserAuthorized(authorized: boolean) {
 			this.signingIn = false;
 			if (authorized) {
-				// TODO: go to another route
+				this.$router.push({ path: PATH.SURVEY.URI + PATH.SURVEY.INDEX.URI });
 			}
 		},
 		authorizationError(message: string) {

@@ -18,7 +18,7 @@ export default defineComponent({
 				path: PATH.SIGNIN.URI,
 				name: PATH.SIGNIN.NAME
 			});
-		}, 1000);
+		}, 5000);
 	}
 });
 </script>

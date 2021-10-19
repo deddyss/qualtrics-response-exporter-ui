@@ -5,8 +5,10 @@
 			:current-path="currentPath"
 			:disabled="menuDisabled"
 			@click="menuClicked"
-			class="sticky top-0 z-20"
+			@profile="profileShown = true"
+			class="sticky top-0 z-10"
 		/>
+		<user-profile :user="user" v-model:shown="profileShown" class="z-10"/>
 		<main class="relative">
 			Survey
 			<router-view v-slot='{ Component }'>
@@ -21,9 +23,11 @@
 <script lang="ts">
 import { defineComponent, ref } from 'vue';
 import { useRoute } from 'vue-router';
+import { useStore } from 'vuex';
 import NavigationBar from '@/components/NavigationBar.vue';
-import { NavigationMenuItem } from '@/types';
+import UserProfile from '@/components/UserProfile.vue';
 import PATH from '@/reference/path';
+import { NavigationMenuItem, State, User } from '@/types';
 
 const { SURVEY } = PATH;
 const { EXPORT } = SURVEY;
@@ -36,16 +40,23 @@ const menuItems: NavigationMenuItem[] = [
 
 export default defineComponent({
 	components: {
-		NavigationBar
+		NavigationBar,
+		UserProfile
 	},
 	setup() {
 		const route = useRoute();
+		const store = useStore<State>();
+
 		const currentPath = ref<string>(route.path);
 		const menuDisabled = ref<boolean>(false);
+		const profileShown = ref<boolean>(false);
+		const user = ref<User>(store.state.user as User);
 		return {
 			menuItems,
 			menuDisabled,
-			currentPath
+			currentPath,
+			profileShown,
+			user
 		};
 	},
 	methods: {

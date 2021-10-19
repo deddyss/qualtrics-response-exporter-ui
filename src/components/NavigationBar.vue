@@ -2,7 +2,7 @@
 <template>
 	<Disclosure as="nav" class="bg-white" v-slot="{ open }">
 		<div class="mx-auto px-6 lg:pl-0 shadow">
-			<div class="relative flex justify-between h-16">
+			<div class="relative flex justify-between h-20">
 				<div class="absolute inset-y-0 left-0 flex items-center lg:hidden">
 					<!-- mobile menu button -->
 					<DisclosureButton
@@ -45,8 +45,8 @@
 											:class="step.status === 'current' ? 'bg-blue-600' : !disabled ? 'bg-transparent group-hover:bg-gray-200' : ''"
 											aria-hidden="true"
 										/>
-										<span class="px-6 py-3 flex items-start text-sm font-medium">
-											<span class="flex-shrink-0">
+										<span class="px-6 py-5 flex items-start text-sm font-medium">
+											<span class="flex-shrink-0 pt-0">
 												<!-- step icon -->
 												<span v-if="step.status === 'complete'"
 													class="w-9 h-9 flex items-center justify-center rounded-full border-2 border-blue-500"
@@ -83,7 +83,7 @@
 												>{{ step.name }}</span>
 												<!-- step description -->
 												<span
-													class="text-sm font-medium text-gray-500"
+													class="text-sm font-medium text-gray-500 truncate"
 													:class="disabled ? 'opacity-70': ''"
 												>{{ step.description }}</span>
 											</span>
