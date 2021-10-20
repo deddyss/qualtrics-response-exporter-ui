@@ -14,6 +14,7 @@ export interface NavigationMenuItem {
 }
 
 export type AlertType = 'info' | 'success' | 'warning' | 'error';
+export type NavigationMenuPosition = 'left' | 'center';
 
 export interface State {
 	configuration: Configuration;
@@ -28,6 +29,7 @@ export interface Configuration {
 	rememberApiToken: boolean;
 	rememberSurveys: boolean;
 	rememberSelectedIds: boolean;
+	navigationMenuPosition: NavigationMenuPosition;
 }
 
 export interface ExportOptions {

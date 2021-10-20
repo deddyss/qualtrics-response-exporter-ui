@@ -26,5 +26,8 @@ export const ACTION = {
 };
 
 export const GETTER = {
-	IS_USER_AUTHORIZED: 'isUserAuthorized'
+	IS_USER_AUTHORIZED: 'isUserAuthorized',
+	NAVIGATION_MENU_POSITION: 'getNavigationMenuPosition',
+	SURVEYS: 'getSurveys',
+	SELECTED_IDS: 'getSelectedIds'
 };

@@ -1,33 +1,51 @@
 <template>
 	<div>
-		<navigation-bar
-			:menu-items="menuItems"
-			:current-path="currentPath"
+		<NavigationBar
+			:menuItems="menuItems"
+			:menuPosition="menuPosition"
+			:currentPath="$route.path"
 			:disabled="menuDisabled"
 			@click="menuClicked"
 			@profile="profileShown = true"
+			@signout="signOut"
 			class="sticky top-0 z-10"
 		/>
-		<user-profile :user="user" v-model:shown="profileShown" class="z-10"/>
-		<main class="relative">
-			Survey
-			<router-view v-slot='{ Component }'>
-				<transition name='fade' mode='out-in'>
-					<component :is='Component' />
-				</transition>
-			</router-view>
-		</main>
+
+		<UserProfile
+			:user="user"
+			v-model:shown="profileShown"
+			@signout="signOut"
+			class="z-10"
+		/>
+
+		<div class="py-6">
+			<header class="hidden lg:block">
+				<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+					<h1 class="text-3xl font-bold leading-tight text-gray-900">
+						{{ $route.name }}
+					</h1>
+				</div>
+			</header>
+			<main class="max-w-7xl mx-auto px-6 lg:px-8">
+				<router-view v-slot='{ Component }'>
+					<transition name='fade' mode='out-in'>
+						<component :is='Component' />
+					</transition>
+				</router-view>
+			</main>
+		</div>
 	</div>
 </template>
 
 <script lang="ts">
 import { defineComponent, ref } from 'vue';
 import { useRoute } from 'vue-router';
-import { useStore } from 'vuex';
+import { mapGetters, useStore } from 'vuex';
 import NavigationBar from '@/components/NavigationBar.vue';
 import UserProfile from '@/components/UserProfile.vue';
 import PATH from '@/reference/path';
 import { NavigationMenuItem, State, User } from '@/types';
+import { ACTION, GETTER } from '@/reference/store';
 
 const { SURVEY } = PATH;
 const { EXPORT } = SURVEY;
@@ -47,23 +65,51 @@ export default defineComponent({
 		const route = useRoute();
 		const store = useStore<State>();
 
-		const currentPath = ref<string>(route.path);
+		const routePath = ref<string>(route.path);
 		const menuDisabled = ref<boolean>(false);
 		const profileShown = ref<boolean>(false);
 		const user = ref<User>(store.state.user as User);
 		return {
 			menuItems,
 			menuDisabled,
-			currentPath,
+			routePath,
 			profileShown,
 			user
 		};
 	},
+	computed: {
+		...mapGetters({
+			isUserAuthorized: GETTER.IS_USER_AUTHORIZED,
+			menuPosition: GETTER.NAVIGATION_MENU_POSITION,
+			surveys: GETTER.SURVEYS
+		})
+	},
+	watch: {
+		isUserAuthorized(authorized: boolean) {
+			console.log('isUserAuthorized', authorized);
+			if (!authorized) {
+				this.$router.push({ path: PATH.SIGNIN.URI });
+			}
+		}
+	},
+	mounted() {
+		// handle browser back / forward button click event
+		window.onpopstate = (event: PopStateEvent) => {
+			const current: string = event.state.current ?? '';
+			if (current.startsWith(PATH.SURVEY.URI)) {
+				this.routePath = current;
+			}
+		};
+	},
 	methods: {
-		menuClicked(menuItem: NavigationMenuItem) {
+		menuClicked(menuItem: NavigationMenuItem): void {
 			const { path, name } = menuItem;
 			this.$router.push({ path, name });
-			this.currentPath = path;
+			this.routePath = path;
+		},
+		signOut(): void {
+			console.log('signOut');
+			this.$store.dispatch(ACTION.SIGN_OFF);
 		}
 	}
 });

@@ -15,13 +15,14 @@
 
 				<div class="fixed inset-y-0 right-0 pl-10 max-w-full flex sm:pl-16">
 					<TransitionChild as="template"
-						enter="transform transition ease-in-out duration-500 sm:duration-700" enter-from="translate-x-full"
+						enter="transform transition ease-in-out duration-500 sm:duration-700"
+						enter-from="translate-x-full"
 						enter-to="translate-x-0"
 						leave="transform transition ease-in-out duration-500 sm:duration-700"
 						leave-from="translate-x-0"
 						leave-to="translate-x-full"
 					>
-						<div class="w-screen max-w-md">
+						<div class="w-screen max-w-sm lg:max-w-md">
 							<div class="h-full flex flex-col bg-white shadow-2xl">
 								<!-- header -->
 								<div class="px-4 py-6 sm:px-6 bg-blue-700 border-b-4 border-blue-700">
@@ -47,7 +48,7 @@
 														<div class="flex items-center">
 															<UserCircleIcon class="h-14 w-14 text-blue-600" aria-hidden="true" />
 															<h3 class="ml-3 text-2xl font-bold capitalize leading-7 text-gray-900 sm:leading-9 sm:truncate">
-																{{ user.firstName.toLowerCase() }} {{ user.lastName ? user.lastName.toLowerCase() : '' }}
+																{{ user.firstName ? user.firstName.toLowerCase() : '' }} {{ user.lastName ? user.lastName.toLowerCase() : '' }}
 															</h3>
 														</div>
 													</div>
@@ -140,7 +141,8 @@ export default defineComponent({
 	props: {
 		user: {
 			type: Object as PropType<User>,
-			required: true
+			required: true,
+			default: () => ({})
 		},
 		shown: {
 			type: Boolean,

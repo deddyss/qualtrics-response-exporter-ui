@@ -21,10 +21,19 @@ module.exports = {
 			opacity: ['disabled'],
 			backgroundColor: ['disabled'],
 			borderStyle: ['responsive', 'hover'],
-			borderWidth: ['responsive', 'hover']
+			borderWidth: ['responsive', 'hover'],
+			// ringColor: ['focus'],
+			// ringOffsetColor: ['focus'],
+			// ringOffsetWidth: ['focus'],
+			// ringOpacity: ['focus'],
+			// ringWidth: ['focus']
 		},
 	},
 	plugins: [
-		'@tailwindcss/forms'
+		// '@tailwindcss/forms'
+		// I use strategy class because default strategy above doesn't work well in this project
+		require('@tailwindcss/forms')({
+			strategy: 'class',
+		})
 	],
 }

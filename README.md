@@ -34,7 +34,7 @@ If you have so many [Qualtrics](https://www.qualtrics.com) surveys and want to e
    ```
 5. Build the app
    ```sh
-   npm run build
+   npm run electron:build
    ```
 
 ## License

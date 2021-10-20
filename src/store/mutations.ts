@@ -13,7 +13,7 @@ const mutations: MutationTree<State> = {
 		state.configuration = { ...initialState.configuration };
 	},
 	[SET.QUALTRICS]: (state: State, qualtrics: Qualtrics): void => {
-		state.qualtrics = qualtrics;
+		state.qualtrics = { ...state.qualtrics, ...qualtrics };
 	},
 	[RESET.QUALTRICS]: (state: State): void => {
 		state.qualtrics = { ...initialState.qualtrics };

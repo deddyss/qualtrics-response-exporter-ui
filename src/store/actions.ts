@@ -1,5 +1,5 @@
 import { ActionContext, ActionTree } from 'vuex';
-import { ApiAuthorization, State } from '@/types';
+import { ApiAuthorization, Qualtrics, State } from '@/types';
 import { ACTION, MUTATION } from '@/reference/store';
 
 const { SIGN_IN, SIGN_OFF } = ACTION;
@@ -17,9 +17,13 @@ const actions: ActionTree<State, State> = {
 			}
 		});
 	},
-	[SIGN_OFF]: ({ commit }: ActionContext<State, State>) => {
+	[SIGN_OFF]: ({ commit, state }: ActionContext<State, State>) => {
 		return new Promise<void>((resolve) => {
 			commit(MUTATION.RESET.USER);
+			if (!state.configuration.rememberApiToken) {
+				commit(MUTATION.SET.QUALTRICS, { apiToken: undefined } as Qualtrics);
+			}
+			// TODO: make all configurations, preferences and changes persisted
 			resolve();
 		});
 	}

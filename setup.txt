@@ -33,6 +33,7 @@ npm install --save-dev tailwindcss@npm:@tailwindcss/postcss7-compat postcss@^7 a
 // create tailwind.config.js and postcss.config.js
 npx tailwindcss init -p
 // install Tailwind UI dependencies 
+npm install --save @tailwindcss/forms @tailwindcss/typography @tailwindcss/aspect-ratio
 npm install --save @headlessui/vue @heroicons/vue
 // axios and rate limiter
 npm install --save axios limiter

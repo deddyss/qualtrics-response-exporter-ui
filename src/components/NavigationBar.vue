@@ -1,7 +1,7 @@
 <!-- This example requires Tailwind CSS v2.0+ -->
 <template>
 	<Disclosure as="nav" class="bg-white" v-slot="{ open }">
-		<div class="mx-auto px-6 lg:pl-0 shadow">
+		<div class="mx-auto px-6 lg:pl-0 shadow bg-gray-50">
 			<div class="relative flex justify-between h-20">
 				<div class="absolute inset-y-0 left-0 flex items-center lg:hidden">
 					<!-- mobile menu button -->
@@ -17,7 +17,10 @@
 						<XIcon v-else class="block h-6 w-6" aria-hidden="true" />
 					</DisclosureButton>
 				</div>
-				<div class="flex-1 flex items-center justify-center lg:items-stretch lg:justify-start">
+				<div
+					class="flex-1 flex items-stretch justify-center"
+					:class="menuPosition === 'center' ? 'lg:justify-center' : 'lg:justify-start'"
+				>
 					<div class="flex-shrink-0 flex items-center">
 						<!-- <img class="block lg:hidden h-8 w-auto mr-2" src="logo.png" alt="Qualtrics Response Exporter" /> -->
 						<h1 class="block lg:hidden h-8 w-auto text-xl font-semibold mt-1">{{ title }}</h1>
@@ -246,6 +249,11 @@ export default defineComponent({
 			required: false,
 			default: () => []
 		},
+		menuPosition: {
+			type: String,
+			required: false,
+			default: 'left'
+		},
 		currentPath: {
 			type: String,
 			required: false,
@@ -298,7 +306,6 @@ export default defineComponent({
 				return;
 			}
 			const { path, name, description } = stepItem;
-			// this.step = this.steps.findIndex((item) => item.path === path);
 			this.$emit('click', { path, name, description } as NavigationMenuItem);
 		},
 		profile(): void {

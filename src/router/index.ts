@@ -1,3 +1,4 @@
+import { nextTick } from 'vue';
 import { createRouter, createWebHashHistory, RouteMeta, RouteRecordRaw } from 'vue-router';
 import Home from '@/views/Home.vue';
 import SignIn from '@/views/SignIn.vue';
@@ -12,6 +13,8 @@ import store from '@/store';
 
 // TODO: requiresAuth: true
 const requiresAuthMeta: RouteMeta = { requiresAuth: false };
+
+const appTitle: string = document.title;
 
 const routes: Array<RouteRecordRaw> = [
 	{
@@ -35,6 +38,7 @@ const routes: Array<RouteRecordRaw> = [
 		children: [
 			{
 				path: PATH.SURVEY.URI + PATH.SURVEY.INDEX.URI,
+				name: PATH.SURVEY.NAME,
 				redirect: PATH.SURVEY.URI + PATH.SURVEY.LIST.URI
 			},
 			{
@@ -68,6 +72,7 @@ const router = createRouter({
 	routes
 });
 
+// handle authorization checking
 router.beforeEach((to, from, next) => {
 	if (to.matched.some((route) => route.meta.requiresAuth)) {
 		const isUserAuthorized: boolean = store.getters[GETTER.IS_USER_AUTHORIZED];
@@ -77,6 +82,13 @@ router.beforeEach((to, from, next) => {
 		}
 	}
 	next();
+});
+
+// handle page title
+router.afterEach((to) => {
+	nextTick(() => {
+		document.title = to.name ? `${to.name.toString()} | ${appTitle}` : appTitle;
+	});
 });
 
 export default router;
