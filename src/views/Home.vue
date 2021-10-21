@@ -1,9 +1,9 @@
 <template>
 	<div class='flex justify-center items-center bg-white h-screen space-x-2'>
-			<div class='bg-blue-500 w-3 h-3 rounded-full animate-bounce circle'></div>
-			<div class='bg-blue-600 w-3 h-3 rounded-full animate-bounce circle'></div>
-			<div class='bg-blue-700 w-3 h-3 rounded-full animate-bounce circle'></div>
-			<div class='bg-blue-800 w-3 h-3 rounded-full animate-bounce circle'></div>
+		<div class='bg-blue-500 w-3 h-3 rounded-full animate-bounce circle'></div>
+		<div class='bg-blue-600 w-3 h-3 rounded-full animate-bounce circle'></div>
+		<div class='bg-blue-700 w-3 h-3 rounded-full animate-bounce circle'></div>
+		<div class='bg-blue-800 w-3 h-3 rounded-full animate-bounce circle'></div>
 	</div>
 </template>
 

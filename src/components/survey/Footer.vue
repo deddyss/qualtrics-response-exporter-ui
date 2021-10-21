@@ -21,7 +21,7 @@
 								</span>
 							</p>
 						</div>
-						<div class="order-1 mt-2 flex-shrink-0 w-full sm:mt-0 sm:w-auto">
+						<div class="order-1 mt-2 px-3 sm:px-0 flex-shrink-0 w-full sm:mt-0 sm:w-auto">
 							<a href="javascript:;"
 								class="flex items-center justify-center px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-blue-600 bg-white hover:bg-blue-50"
 								@click="proceed"

@@ -1,5 +1,5 @@
 <template>
-	<div>
+	<div class="bg-gray-100 min-h-screen">
 		<NavigationBar
 			:menuItems="menuItems"
 			:menuPosition="menuPosition"
@@ -95,7 +95,7 @@ export default defineComponent({
 	mounted() {
 		// handle browser back / forward button click event
 		window.onpopstate = (event: PopStateEvent) => {
-			const current: string = event.state.current ?? '';
+			const current: string = (event.state && event.state.current) ?? '';
 			if (current.startsWith(PATH.SURVEY.URI)) {
 				this.routePath = current;
 			}

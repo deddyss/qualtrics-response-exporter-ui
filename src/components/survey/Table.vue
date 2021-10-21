@@ -1,13 +1,14 @@
 <template>
 	<div class="flex flex-col">
-		<div class="-my-2 overflow-x-auto -mx-4 sm:-mx-6 lg:-mx-8">
+		<!-- <div class="-my-2 overflow-x-auto -mx-4 sm:-mx-6 lg:-mx-8"> -->
+		<div class="-my-2 overflow-x-auto -mx-2 sm:-mx-6 lg:-mx-8">
 			<div
 				class="py-6 align-middle inline-block min-w-full px-2 sm:px-6 lg:px-8"
-				:class="checkedIds.length > 0 ? 'pb-24' : 'pb-10'"
+				:class="localSelectedIds.length > 0 ? 'pb-24' : 'pb-10'"
 			>
 				<div class="shadow-lg overflow-hidden border-b border-gray-200 rounded-lg">
 					<table class="min-w-full divide-y divide-gray-200">
-						<thead class="bg-gray-100">
+						<thead class="bg-white">
 							<tr>
 								<th scope="col" class="pl-6 py-4" title="Select / unselect all">
 									<span class="sr-only">Select / unselect all</span>
@@ -46,7 +47,7 @@
 										type="checkbox"
 										:id="survey.id"
 										:value="survey.id"
-										v-model="checkedIds"
+										v-model="localSelectedIds"
 										class="form-checkbox h-4 w-4 focus:ring-blue-500 text-blue-600 border-2 border-gray-300 rounded cursor-pointer"
 									/>
 								</td>
@@ -81,7 +82,7 @@
 
 <script lang="ts">
 import { defineComponent, onMounted, PropType, reactive, ref } from 'vue';
-import { Survey } from '@/types';
+import { SortCriteria, Survey } from '@/types';
 
 export default defineComponent({
 	props: {
@@ -94,6 +95,10 @@ export default defineComponent({
 			type: Array as PropType<Array<string>>,
 			required: false,
 			default: () => []
+		},
+		sortCriteria: {
+			type: Object as PropType<SortCriteria>,
+			required: true
 		}
 	},
 	emits: [
@@ -103,10 +108,10 @@ export default defineComponent({
 		// eslint-disable-next-line @typescript-eslint/no-explicit-any
 		const selectAllCheckbox = ref<HTMLInputElement>(null as any);
 		const filteredSurveys = reactive<Survey[]>(props.surveys);
-		const checkedIds = ref<string[]>(props.selectedIds);
+		const localSelectedIds = ref<string[]>(props.selectedIds);
 
 		onMounted(() => {
-			if (checkedIds.value.length === filteredSurveys.length) {
+			if (localSelectedIds.value.length === filteredSurveys.length) {
 				selectAllCheckbox.value.checked = true;
 			}
 		});
@@ -114,40 +119,53 @@ export default defineComponent({
 		return {
 			selectAllCheckbox,
 			filteredSurveys,
-			checkedIds
+			localSelectedIds
 		};
 	},
-	// watch: {
-	// 	checkedIds(values: string[]) {
-	// 		console.log(values);
-	// 	}
-	// },
+	watch: {
+		sortCriteria: {
+			handler(sort: SortCriteria) {
+				this.filteredSurveys.sort((first, second) => {
+					const firstValue: string | boolean = first[sort.by];
+					const secondValue: string | boolean = second[sort.by];
+					if (typeof firstValue === 'string' && typeof secondValue === 'string') {
+						return sort.order === 'ascending' ? firstValue.localeCompare(secondValue) : secondValue.localeCompare(firstValue);
+					}
+					return sort.order === 'descending' ? Number(firstValue) - Number(secondValue) : Number(secondValue) - Number(firstValue);
+				});
+			},
+			deep: true
+		}
+		// localSelectedIds(values: string[]) {
+		// 	console.log(values);
+		// }
+	},
 	methods: {
 		selectAll(): void {
 			if (this.selectAllCheckbox.checked) {
 				this.filteredSurveys.forEach((survey: Survey) => {
-					if (!this.checkedIds.includes(survey.id)) {
-						this.checkedIds.push(survey.id);
+					if (!this.localSelectedIds.includes(survey.id)) {
+						this.localSelectedIds.push(survey.id);
 					}
 				});
 			}
 			else {
-				this.checkedIds = [];
+				this.localSelectedIds = [];
 			}
-			this.$emit('update:selectedIds', this.checkedIds);
+			this.$emit('update:selectedIds', this.localSelectedIds);
 		},
 		select(survey: Survey) {
-			const index: number = this.checkedIds.findIndex((id: string) => id === survey.id);
+			const index: number = this.localSelectedIds.findIndex((id: string) => id === survey.id);
 			// survey already checked
 			if (index >= 0) {
-				this.checkedIds.splice(index, 1);
+				this.localSelectedIds.splice(index, 1);
 			}
 			else {
-				this.checkedIds.push(survey.id);
+				this.localSelectedIds.push(survey.id);
 			}
-			this.$emit('update:selectedIds', this.checkedIds);
+			this.$emit('update:selectedIds', this.localSelectedIds);
 
-			if (this.checkedIds.length === this.filteredSurveys.length) {
+			if (this.localSelectedIds.length === this.filteredSurveys.length) {
 				this.selectAllCheckbox.checked = true;
 			}
 			else {

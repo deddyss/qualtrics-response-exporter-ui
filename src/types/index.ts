@@ -13,6 +13,14 @@ export interface NavigationMenuItem {
 	description: string;
 }
 
+export type SortBy = 'name' | 'isActive' | 'creationDate' | 'lastModified';
+export type SortOrder = 'ascending' | 'descending';
+
+export interface SortCriteria {
+	by: SortBy;
+	order: SortOrder; 
+}
+
 export type AlertType = 'info' | 'success' | 'warning' | 'error';
 export type NavigationMenuPosition = 'left' | 'center';
 
