@@ -20,17 +20,17 @@
 										@click="selectAll"
 									/>
 								</th>
-								<th scope="col" class="px-6 py-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-									Name / Title
-								</th>
-								<th scope="col" class="px-6 py-4 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">
-									Status
-								</th>
-								<th scope="col" class="px-4 py-4 text-center text-xs font-medium text-gray-500 uppercase tracking-wider whitespace-nowrap hidden lg:table-cell">
-									Creation Date
-								</th>
-								<th scope="col" class="px-4 py-4 text-center text-xs font-medium text-gray-500 uppercase tracking-wider whitespace-nowrap hidden lg:table-cell">
-									Last Modified
+								<th
+									v-for="header in headers"
+									:key="header.id" scope="col"
+									class="px-6 py-4 text-xs font-medium text-gray-500 uppercase tracking-wider"
+									:class="[
+										header.left ? 'text-left' : 'text-center',
+										header.hideable ? 'hidden lg:table-cell' : '',
+										header.nowrap ? 'whitespace-nowrap' : ''
+									]"
+								>
+									{{ header.name }}
 								</th>
 							</tr>
 						</thead>
@@ -56,8 +56,8 @@
 								</td>
 								<td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500 text-center">
 									<span
-										class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full"
-										:class="survey.isActive ? 'bg-green-300 text-green-900' : 'bg-gray-200 text-gray-500'"
+										class="px-2 inline-flex text-xs leading-5 font-medium rounded-full"
+										:class="survey.isActive ? 'bg-green-500 text-white' : 'bg-gray-200 text-gray-500'"
 									>
 										{{ survey.isActive ? 'active' : 'inactive' }}
 									</span>
@@ -84,6 +84,21 @@
 import { defineComponent, onMounted, PropType, reactive, ref } from 'vue';
 import { SortCriteria, Survey } from '@/types';
 
+interface Header {
+	id: string;
+	name: string;
+	left?: boolean;
+	hideable?: boolean;
+	nowrap?: boolean;
+}
+
+const headers: Array<Header> = [
+	{ id: 'name', name: 'Name', left: true },
+	{ id: 'isActive', name: 'Status' },
+	{ id: 'creationDate', name: 'Creation Date', hideable: true, nowrap: true },
+	{ id: 'lastModified', name: 'Last Modified', hideable: true, nowrap: true }
+];
+
 export default defineComponent({
 	props: {
 		surveys: {
@@ -98,6 +113,10 @@ export default defineComponent({
 		},
 		sortCriteria: {
 			type: Object as PropType<SortCriteria>,
+			required: true
+		},
+		activeOnly: {
+			type: Boolean,
 			required: true
 		}
 	},
@@ -117,6 +136,7 @@ export default defineComponent({
 		});
 
 		return {
+			headers,
 			selectAllCheckbox,
 			filteredSurveys,
 			localSelectedIds
@@ -124,24 +144,48 @@ export default defineComponent({
 	},
 	watch: {
 		sortCriteria: {
-			handler(sort: SortCriteria) {
-				this.filteredSurveys.sort((first, second) => {
-					const firstValue: string | boolean = first[sort.by];
-					const secondValue: string | boolean = second[sort.by];
-					if (typeof firstValue === 'string' && typeof secondValue === 'string') {
-						return sort.order === 'ascending' ? firstValue.localeCompare(secondValue) : secondValue.localeCompare(firstValue);
-					}
-					return sort.order === 'descending' ? Number(firstValue) - Number(secondValue) : Number(secondValue) - Number(firstValue);
-				});
+			handler() {
+				this.sortSurveys();
 			},
 			deep: true
+		},
+		activeOnly() {
+			this.filterSurveys();
 		}
 		// localSelectedIds(values: string[]) {
 		// 	console.log(values);
 		// }
 	},
 	methods: {
-		selectAll(): void {
+		filterSurveys() {
+			if (this.activeOnly) {
+				this.filteredSurveys = this.surveys.filter((survey) => survey.isActive === true);
+			}
+			else {
+				this.filteredSurveys = [...this.surveys];
+			}
+
+			this.sortSurveys();
+
+			// filter selected ids
+			if (this.localSelectedIds.length > 0) {
+				const filteredSurveyIds: string[] = this.filteredSurveys.map((survey) => survey.id);
+				this.localSelectedIds = this.localSelectedIds.filter((id) => filteredSurveyIds.includes(id));
+				this.$emit('update:selectedIds', this.localSelectedIds);
+				this.evaluateSelectAllCheckbox();
+			}
+		},
+		sortSurveys() {
+			this.filteredSurveys.sort((first, second) => {
+				const firstValue: string | boolean = first[this.sortCriteria.by];
+				const secondValue: string | boolean = second[this.sortCriteria.by];
+				if (typeof firstValue === 'string' && typeof secondValue === 'string') {
+					return this.sortCriteria.order === 'ascending' ? firstValue.localeCompare(secondValue) : secondValue.localeCompare(firstValue);
+				}
+				return this.sortCriteria.order === 'descending' ? Number(firstValue) - Number(secondValue) : Number(secondValue) - Number(firstValue);
+			});
+		},
+		selectAll() {
 			if (this.selectAllCheckbox.checked) {
 				this.filteredSurveys.forEach((survey: Survey) => {
 					if (!this.localSelectedIds.includes(survey.id)) {
@@ -164,7 +208,9 @@ export default defineComponent({
 				this.localSelectedIds.push(survey.id);
 			}
 			this.$emit('update:selectedIds', this.localSelectedIds);
-
+			this.evaluateSelectAllCheckbox();
+		},
+		evaluateSelectAllCheckbox() {
 			if (this.localSelectedIds.length === this.filteredSurveys.length) {
 				this.selectAllCheckbox.checked = true;
 			}

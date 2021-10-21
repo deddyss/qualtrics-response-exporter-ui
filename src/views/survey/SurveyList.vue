@@ -1,8 +1,19 @@
 <template>
 	<div>
-		<Toolbar v-model:sortCriteria="sortCriteria" />
-		<Table :surveys="surveys" v-model:selectedIds="selectedIds" :sortCriteria="sortCriteria"/>
-		<Footer :selectedIds="selectedIds" @proceed="goToExportOptions"/>
+		<Toolbar
+			v-model:sortCriteria="sortCriteria"
+			v-model:activeOnly="activeOnly"
+		/>
+		<Table
+			v-model:selectedIds="selectedIds"
+			:surveys="surveys"
+			:activeOnly="activeOnly"
+			:sortCriteria="sortCriteria"
+		/>
+		<Footer
+			:selectedIds="selectedIds"
+			@proceed="goToExportOptions"
+		/>
 	</div>
 </template>
 
@@ -25,10 +36,13 @@ export default defineComponent({
 	setup() {
 		const store = useStore<State>();
 		const selectedIds = ref<Array<string>>(store.state.selectedIds);
+		// TODO: activeOnly should retrieved from and set to store
+		const activeOnly = ref<boolean>(false);
 		// TODO: sortCriteria should retrieved from and set to store
 		const sortCriteria = ref<SortCriteria>({ by: 'lastModified', order: 'descending' });
 		return {
 			selectedIds,
+			activeOnly,
 			sortCriteria
 		};
 	},
@@ -45,6 +59,9 @@ export default defineComponent({
 				console.log(value);
 			},
 			deep: true
+		},
+		activeOnly(value: boolean) {
+			console.log(value);
 		}
 	},
 	computed: {
