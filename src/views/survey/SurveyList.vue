@@ -1,12 +1,14 @@
 <template>
 	<div>
 		<Toolbar
-			v-model:sortCriteria="sortCriteria"
+			v-model:keyword="keyword"
 			v-model:activeOnly="activeOnly"
+			v-model:sortCriteria="sortCriteria"
 		/>
 		<Table
 			v-model:selectedIds="selectedIds"
 			:surveys="surveys"
+			:keyword="keyword"
 			:activeOnly="activeOnly"
 			:sortCriteria="sortCriteria"
 		/>
@@ -36,12 +38,15 @@ export default defineComponent({
 	setup() {
 		const store = useStore<State>();
 		const selectedIds = ref<Array<string>>(store.state.selectedIds);
+		// TODO: keyword should retrieved from and set to store
+		const keyword = ref<string>('');
 		// TODO: activeOnly should retrieved from and set to store
 		const activeOnly = ref<boolean>(false);
 		// TODO: sortCriteria should retrieved from and set to store
 		const sortCriteria = ref<SortCriteria>({ by: 'lastModified', order: 'descending' });
 		return {
 			selectedIds,
+			keyword,
 			activeOnly,
 			sortCriteria
 		};
@@ -50,18 +55,24 @@ export default defineComponent({
 		selectedIds: {
 			handler(values: string[]) {
 				this.$store.commit(MUTATION.SET.SELECTED_IDS, values);
-				// TODO: store to file if remember me checkbox is checked
+				// TODO: save to file if remember me checkbox is checked
 			},
 			deep: true
+		},
+		keyword(value: string) {
+			// TODO: store commit
+			console.log('keyword', value);
+		},
+		activeOnly(value: boolean) {
+			// TODO: store commit
+			console.log('activeOnly', value);
 		},
 		sortCriteria: {
 			handler(value: SortCriteria) {
-				console.log(value);
+				// TODO: store commit
+				console.log('sortCriteria', value);
 			},
 			deep: true
-		},
-		activeOnly(value: boolean) {
-			console.log(value);
 		}
 	},
 	computed: {

@@ -5,6 +5,17 @@ module.exports = {
 			title: 'Qualtrics Response Exporter'
 		}
 	},
+	chainWebpack: (config) => {
+		// handle ESM modules
+		// https://github.com/vueuse/vueuse/issues/718
+		config.module
+			.rule('mjs$')
+			.test(/\.mjs$/)
+			.include
+					.add(/node_modules/)
+					.end()
+			.type('javascript/auto');
+	},
 	configureWebpack: {
 		performance: {
 			hints: false

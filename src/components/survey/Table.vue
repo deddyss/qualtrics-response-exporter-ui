@@ -1,6 +1,5 @@
 <template>
 	<div class="flex flex-col">
-		<!-- <div class="-my-2 overflow-x-auto -mx-4 sm:-mx-6 lg:-mx-8"> -->
 		<div class="-my-2 overflow-x-auto -mx-2 sm:-mx-6 lg:-mx-8">
 			<div
 				class="py-6 align-middle inline-block min-w-full px-2 sm:px-6 lg:px-8"
@@ -54,7 +53,7 @@
 								<td class="px-6 py-4 text-sm font-medium text-gray-900 max-w-md sm:max-w-lg md:max-w-xl lg:max-w-2xl">
 									{{ survey.name }}
 								</td>
-								<td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500 text-center">
+								<td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500 text-center w-32">
 									<span
 										class="px-2 inline-flex text-xs leading-5 font-medium rounded-full"
 										:class="survey.isActive ? 'bg-green-500 text-white' : 'bg-gray-200 text-gray-500'"
@@ -62,11 +61,11 @@
 										{{ survey.isActive ? 'active' : 'inactive' }}
 									</span>
 								</td>
-								<td class="px-4 py-4 whitespace-nowrap text-sm text-gray-500 text-center hidden lg:table-cell">
+								<td class="px-4 py-4 whitespace-nowrap text-sm text-gray-500 text-center w-36 hidden lg:table-cell">
 									{{ survey.creationDate.substring(0, 10) }}
 								</td>
 								<td
-									class="px-4 py-4 whitespace-nowrap text-sm text-gray-500 text-center hidden lg:table-cell"
+									class="px-4 py-4 whitespace-nowrap text-sm text-gray-500 text-center w-36 hidden lg:table-cell"
 									:class="survey.lastModified.substring(0, 10) !== survey.creationDate.substring(0, 10) ? 'text-yellow-500 font-medium' : ''"
 								>
 									{{ survey.lastModified.substring(0, 10) }}
@@ -82,6 +81,7 @@
 
 <script lang="ts">
 import { defineComponent, onMounted, PropType, reactive, ref } from 'vue';
+import Fuse from 'fuse.js';
 import { SortCriteria, Survey } from '@/types';
 
 interface Header {
@@ -111,12 +111,16 @@ export default defineComponent({
 			required: false,
 			default: () => []
 		},
-		sortCriteria: {
-			type: Object as PropType<SortCriteria>,
+		keyword: {
+			type: String,
 			required: true
 		},
 		activeOnly: {
 			type: Boolean,
+			required: true
+		},
+		sortCriteria: {
+			type: Object as PropType<SortCriteria>,
 			required: true
 		}
 	},
@@ -128,6 +132,9 @@ export default defineComponent({
 		const selectAllCheckbox = ref<HTMLInputElement>(null as any);
 		const filteredSurveys = reactive<Survey[]>(props.surveys);
 		const localSelectedIds = ref<string[]>(props.selectedIds);
+		const fuse = ref<Fuse<Survey>>(
+			new Fuse(props.surveys, { keys: ['name'], includeScore: true, includeMatches: true })
+		);
 
 		onMounted(() => {
 			if (localSelectedIds.value.length === filteredSurveys.length) {
@@ -139,10 +146,14 @@ export default defineComponent({
 			headers,
 			selectAllCheckbox,
 			filteredSurveys,
-			localSelectedIds
+			localSelectedIds,
+			fuse
 		};
 	},
 	watch: {
+		keyword() {
+			this.applyFilter();
+		},
 		sortCriteria: {
 			handler() {
 				this.sortSurveys();
@@ -150,19 +161,46 @@ export default defineComponent({
 			deep: true
 		},
 		activeOnly() {
-			this.filterSurveys();
+			this.applyFilter();
 		}
 		// localSelectedIds(values: string[]) {
 		// 	console.log(values);
 		// }
 	},
+	mounted() {
+		this.$nextTick(() => {
+			this.applyFilter();
+		});
+	},
 	methods: {
-		filterSurveys() {
-			if (this.activeOnly) {
-				this.filteredSurveys = this.surveys.filter((survey) => survey.isActive === true);
+		search(keyword: string): Array<Survey> {
+			const fuseExpression: string | Fuse.Expression = keyword;
+			// TODO: add AND logical for query result if the keyword contains more than one word
+			const fuseResults: Array<Fuse.FuseResult<Survey>> = this.fuse.search(fuseExpression);
+			// TODO:
+			console.log(fuseResults);
+			return fuseResults.map((fuseResult) => fuseResult.item);
+		},
+		sortSurveys() {
+			this.filteredSurveys.sort((first, second) => {
+				const firstValue: string | boolean = first[this.sortCriteria.by];
+				const secondValue: string | boolean = second[this.sortCriteria.by];
+				if (typeof firstValue === 'string' && typeof secondValue === 'string') {
+					return this.sortCriteria.order === 'ascending' ? firstValue.localeCompare(secondValue) : secondValue.localeCompare(firstValue);
+				}
+				return this.sortCriteria.order === 'descending' ? Number(firstValue) - Number(secondValue) : Number(secondValue) - Number(firstValue);
+			});
+		},
+		applyFilter() {
+			if (this.keyword) {
+				this.filteredSurveys = this.search(this.keyword);
 			}
 			else {
 				this.filteredSurveys = [...this.surveys];
+			}
+
+			if (this.activeOnly) {
+				this.filteredSurveys = this.filteredSurveys.filter((survey) => survey.isActive === true);
 			}
 
 			this.sortSurveys();
@@ -174,16 +212,6 @@ export default defineComponent({
 				this.$emit('update:selectedIds', this.localSelectedIds);
 				this.evaluateSelectAllCheckbox();
 			}
-		},
-		sortSurveys() {
-			this.filteredSurveys.sort((first, second) => {
-				const firstValue: string | boolean = first[this.sortCriteria.by];
-				const secondValue: string | boolean = second[this.sortCriteria.by];
-				if (typeof firstValue === 'string' && typeof secondValue === 'string') {
-					return this.sortCriteria.order === 'ascending' ? firstValue.localeCompare(secondValue) : secondValue.localeCompare(firstValue);
-				}
-				return this.sortCriteria.order === 'descending' ? Number(firstValue) - Number(secondValue) : Number(secondValue) - Number(firstValue);
-			});
 		},
 		selectAll() {
 			if (this.selectAllCheckbox.checked) {

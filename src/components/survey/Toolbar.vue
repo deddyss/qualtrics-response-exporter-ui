@@ -2,7 +2,7 @@
 	<div class="mx-auto pt-3">
 		<div class="flex flex-wrap gap-3">
 			<div class="flex-1 flex">
-				<SearchInput class="flex-1"/>
+				<SearchInput v-model="localKeyword" class="flex-1"/>
 			</div>
 			<div class="order-1 flex-shrink-0 w-full sm:mt-0 sm:w-auto">
 				<div class="flex gap-3">
@@ -37,40 +37,51 @@ export default defineComponent({
 		SynchronizeButton
 	},
 	props: {
-		sortCriteria: {
-			type: Object as PropType<SortCriteria>,
+		keyword: {
+			type: String,
 			required: false,
-			default: () => ({ by: 'lastModified', order: 'descending' } as SortCriteria)
+			default: ''
 		},
 		activeOnly: {
 			type: Boolean,
 			required: false,
 			default: false
+		},
+		sortCriteria: {
+			type: Object as PropType<SortCriteria>,
+			required: false,
+			default: () => ({ by: 'lastModified', order: 'descending' } as SortCriteria)
 		}
 	},
 	emits: [
-		'update:sortCriteria',
-		'update:activeOnly'
+		'update:keyword',
+		'update:activeOnly',
+		'update:sortCriteria'
 	],
 	setup(props) {
-		const localSortCriteria = ref<SortCriteria>(props.sortCriteria);
+		const localKeyword = ref<string>(props.keyword);
 		const localActiveOnly = ref<boolean>(props.activeOnly);
+		const localSortCriteria = ref<SortCriteria>(props.sortCriteria);
 		return {
-			localSortCriteria,
-			localActiveOnly
+			localKeyword,
+			localActiveOnly,
+			localSortCriteria
 		};
 	},
 	watch: {
+		localKeyword(value: string) {
+			this.$emit('update:keyword', value);
+			console.log('update:keyword', value);
+		},
+		localActiveOnly(value: boolean) {
+			this.$emit('update:activeOnly', value);
+		},
 		localSortCriteria: {
 			handler(value: SortCriteria) {
 				this.$emit('update:sortCriteria', value);
 			},
 			deep: true
-		},
-		localActiveOnly(value: boolean) {
-			this.$emit('update:activeOnly', value);
 		}
 	}
-
 });
 </script>
