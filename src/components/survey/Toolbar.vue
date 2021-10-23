@@ -1,5 +1,5 @@
 <template>
-	<div class="mx-auto pt-3">
+	<div class="mx-auto">
 		<div class="flex flex-wrap gap-3">
 			<div class="flex-1 flex">
 				<SearchInput v-model="localKeyword" class="flex-1"/>
@@ -13,7 +13,7 @@
 						<SortButton v-model="localSortCriteria" />
 					</div>
 					<div class="order-4 flex-1">
-						<SynchronizeButton />
+						<ReloadButton :active="isLoading" @click="reload"/>
 					</div>
 				</div>
 			</div>
@@ -26,7 +26,7 @@ import { defineComponent, PropType, ref } from 'vue';
 import SearchInput from '@/components/survey/SearchInput.vue';
 import ActiveOnlyCheckbox from '@/components/survey/ActiveOnlyCheckbox.vue';
 import SortButton from '@/components/survey/SortButton.vue';
-import SynchronizeButton from '@/components/survey/SynchronizeButton.vue';
+import ReloadButton from '@/components/survey/ReloadButton.vue';
 import { SortCriteria } from '@/types';
 
 export default defineComponent({
@@ -34,7 +34,7 @@ export default defineComponent({
 		SearchInput,
 		ActiveOnlyCheckbox,
 		SortButton,
-		SynchronizeButton
+		ReloadButton
 	},
 	props: {
 		keyword: {
@@ -51,12 +51,18 @@ export default defineComponent({
 			type: Object as PropType<SortCriteria>,
 			required: false,
 			default: () => ({ by: 'lastModified', order: 'descending' } as SortCriteria)
+		},
+		isLoading: {
+			type: Boolean,
+			required: false,
+			default: false
 		}
 	},
 	emits: [
 		'update:keyword',
 		'update:activeOnly',
-		'update:sortCriteria'
+		'update:sortCriteria',
+		'reload'
 	],
 	setup(props) {
 		const localKeyword = ref<string>(props.keyword);
@@ -71,7 +77,6 @@ export default defineComponent({
 	watch: {
 		localKeyword(value: string) {
 			this.$emit('update:keyword', value);
-			console.log('update:keyword', value);
 		},
 		localActiveOnly(value: boolean) {
 			this.$emit('update:activeOnly', value);
@@ -81,6 +86,11 @@ export default defineComponent({
 				this.$emit('update:sortCriteria', value);
 			},
 			deep: true
+		}
+	},
+	methods: {
+		reload() {
+			this.$emit('reload');
 		}
 	}
 });

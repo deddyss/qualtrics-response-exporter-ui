@@ -9,7 +9,7 @@
 		:show="selectedIds.length > 0"
 	>
 		<div
-			class="fixed inset-x-0 bottom-0"
+			class="fixed z-20 inset-x-0 bottom-0"
 		>
 			<div class="bg-blue-600">
 				<div class="max-w-7xl mx-auto py-3 px-3 sm:px-6 lg:px-8">
@@ -29,11 +29,6 @@
 								Proceed
 							</a>
 						</div>
-						<!-- <div class="order-2 flex-shrink-0 sm:order-3 sm:ml-3">
-							<button type="button" class="-mr-1 flex p-2 rounded-md hover:bg-blue-500 focus:outline-none focus:ring-2 focus:ring-white sm:-mr-2">
-								<span class="sr-only">Dismiss</span>
-							</button>
-						</div> -->
 					</div>
 				</div>
 			</div>

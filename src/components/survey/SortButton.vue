@@ -1,5 +1,5 @@
 <template>
-	<span class="relative z-0 inline-flex shadow rounded-md">
+	<span class="relative z-10 inline-flex shadow rounded-md">
 		<button
 			type="button"
 			class="relative inline-flex items-center w-40 h-10 px-4 py-2 rounded-l-md border border-gray-300 bg-white text-sm font-medium text-gray-700 hover:text-blue-600 focus:text-gray-700 hover:bg-gray-50 focus:z-10 focus:outline-none focus:ring-1 focus:ring-blue-500 focus:border-blue-500"

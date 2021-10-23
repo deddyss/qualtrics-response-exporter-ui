@@ -11,3 +11,22 @@
 .fade-leave-active {
 	opacity: 0;
 }
+
+.slidedown-enter-active{
+	transition: max-height 0.3s ease-in;
+}
+.slidedown-leave-active {
+	transition: max-height 0.3s cubic-bezier(0, 1, 0.5, 1);
+}
+
+.slidedown-enter-to,
+.slidedown-leave-from {
+	overflow: hidden;
+	max-height: 1000px;
+}
+
+.slidedown-enter-from,
+.slidedown-leave-to {
+	overflow: hidden;
+	max-height: 0;
+}

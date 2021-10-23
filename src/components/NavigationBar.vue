@@ -9,7 +9,7 @@
 						class="inline-flex items-center justify-center p-2 rounded-md text-blue-600 hover:text-blue-500 hover:bg-blue-100 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-blue-500"
 						:class="[
 							open ? 'bg-blue-100' : '',
-							disabled ? 'opacity-50' : ''
+							disabled === true ? 'opacity-50' : ''
 						]"
 					>
 						<span class="sr-only">Open main menu</span>
@@ -22,7 +22,6 @@
 					:class="menuPosition === 'center' ? 'lg:justify-center' : 'lg:justify-start'"
 				>
 					<div class="flex-shrink-0 flex items-center">
-						<!-- <img class="block lg:hidden h-8 w-auto mr-2" src="logo.png" alt="Qualtrics Response Exporter" /> -->
 						<h1 class="block lg:hidden h-8 w-auto text-xl font-semibold mt-1">{{ title }}</h1>
 					</div>
 					<div class="hidden lg:flex lg:space-x-8">
@@ -38,14 +37,14 @@
 										@click.prevent="click(step)"
 										:class="[
 											step.status !== 'current' ? 'group' : '',
-											disabled ? 'cursor-not-allowed opacity-50' : ''
+											disabledIndex.includes(stepIdx) ? 'cursor-not-allowed opacity-50' : ''
 										]"
 										:aria-current="step.status === 'current' ? 'step' : ''"
 									>
 										<!-- bottom border -->
 										<span
 											class="absolute top-0 left-0 w-1 h-full lg:w-full lg:h-1 lg:bottom-0 lg:top-auto"
-											:class="step.status === 'current' ? 'bg-blue-600' : !disabled ? 'bg-transparent group-hover:bg-gray-200' : ''"
+											:class="step.status === 'current' ? 'bg-blue-600' : !disabledIndex.includes(stepIdx) ? 'bg-transparent group-hover:bg-gray-200' : ''"
 											aria-hidden="true"
 										/>
 										<span class="px-6 py-5 flex items-start text-sm font-medium">
@@ -53,19 +52,19 @@
 												<!-- step icon -->
 												<span v-if="step.status === 'complete'"
 													class="w-9 h-9 flex items-center justify-center rounded-full border-2 border-blue-500"
-													:class="disabled ? 'opacity-50' : ''"
+													:class="disabledIndex.includes(stepIdx) ? 'opacity-50' : ''"
 												>
 													<CheckIcon class="w-5 h-5 text-blue-500" aria-hidden="true" />
 												</span>
 												<span v-else-if="step.status === 'current'"
 													class="w-9 h-9 flex items-center justify-center rounded-full bg-blue-600"
-													:class="disabled ? 'opacity-50' : ''"
+													:class="disabledIndex.includes(stepIdx) ? 'opacity-50' : ''"
 												>
 													<span class="text-white text-xs font-bold">{{ step.id }}</span>
 												</span>
 												<span v-else
 													class="w-9 h-9 flex items-center justify-center rounded-full border-2 border-gray-300"
-													:class="disabled ? 'opacity-50' : ''"
+													:class="disabledIndex.includes(stepIdx) ? 'opacity-50' : ''"
 												>
 													<span class="text-gray-500 text-xs">{{ step.id }}</span>
 												</span>
@@ -74,20 +73,20 @@
 												<!-- step name -->
 												<span v-if="step.status === 'complete'"
 													class="text-xs font-semibold text-gray-600 tracking-wide uppercase"
-													:class="disabled ? 'opacity-70': ''"
+													:class="disabledIndex.includes(stepIdx) ? 'opacity-70': ''"
 												>{{ step.name }}</span>
 												<span v-else-if="step.status === 'current'"
 													class="text-xs font-bold text-blue-700 tracking-wide uppercase"
-													:class="disabled ? 'opacity-70': ''"
+													:class="disabledIndex.includes(stepIdx) ? 'opacity-70': ''"
 												>{{ step.name }}</span>
 												<span v-else
 													class="text-xs font-semibold text-gray-500 tracking-wide uppercase"
-													:class="disabled ? 'opacity-70': ''"
+													:class="disabledIndex.includes(stepIdx) ? 'opacity-70': ''"
 												>{{ step.name }}</span>
 												<!-- step description -->
 												<span
 													class="text-sm font-medium text-gray-500 truncate"
-													:class="disabled ? 'opacity-70': ''"
+													:class="disabledIndex.includes(stepIdx) ? 'opacity-70': ''"
 												>{{ step.description }}</span>
 											</span>
 										</span>
@@ -143,78 +142,80 @@
 			</div>
 		</div>
 
-		<DisclosurePanel class="lg:hidden">
-			<div class="pb-0 space-y-1">
-				<ol role="list" class="overflow-hidden shadow">
-					<li
-						v-for="(step, stepIdx) in steps"
-						:key="step.id"
-						class="relative overflow-hidden"
-					>
-						<div :class="[stepIdx === 0 ? 'border-b-0 border-t-0' : '', stepIdx === steps.length - 1 ? 'border-t-0' : '', 'border border-gray-200 overflow-hidden']">
-							<a
-								href="javascript:;"
-								@click.prevent="click(step)"
-								:class="[
-									step.status !== 'current' ? 'group' : '',
-									disabled ? 'cursor-not-allowed opacity-50' : ''
-								]"
-								:aria-current="step.status === 'current' ? 'step' : ''"
-							>
-								<!-- left border -->
-								<span
-									class="absolute top-0 left-0 w-1 h-full"
-									:class="step.status === 'current' ? 'bg-blue-600' : !disabled ? 'bg-transparent group-hover:bg-gray-200' : ''"
-									aria-hidden="true" />
-								<span class="px-6 py-3 flex items-start text-sm font-medium">
-									<span class="flex-shrink-0">
-										<!-- step icon -->
-										<span v-if="step.status === 'complete'"
-											class="w-9 h-9 flex items-center justify-center rounded-full border-2 border-blue-500"
-											:class="disabled ? 'opacity-50' : ''"
-										>
-											<CheckIcon class="w-5 h-5 text-blue-500" aria-hidden="true" />
+		<transition name="slidedown">
+			<DisclosurePanel class="lg:hidden">
+				<div class="pb-0 space-y-1">
+					<ol role="list" class="overflow-hidden shadow">
+						<li
+							v-for="(step, stepIdx) in steps"
+							:key="step.id"
+							class="relative overflow-hidden"
+						>
+							<div :class="[stepIdx === 0 ? 'border-b-0 border-t-0' : '', stepIdx === steps.length - 1 ? 'border-t-0' : '', 'border border-gray-200 overflow-hidden']">
+								<a
+									href="javascript:;"
+									@click.prevent="click(step)"
+									:class="[
+										step.status !== 'current' ? 'group' : '',
+										disabledIndex.includes(stepIdx) ? 'cursor-not-allowed opacity-50' : ''
+									]"
+									:aria-current="step.status === 'current' ? 'step' : ''"
+								>
+									<!-- left border -->
+									<span
+										class="absolute top-0 left-0 w-1 h-full"
+										:class="step.status === 'current' ? 'bg-blue-600' : !disabledIndex.includes(stepIdx) ? 'bg-transparent group-hover:bg-gray-200' : ''"
+										aria-hidden="true" />
+									<span class="px-6 py-3 flex items-start text-sm font-medium">
+										<span class="flex-shrink-0">
+											<!-- step icon -->
+											<span v-if="step.status === 'complete'"
+												class="w-9 h-9 flex items-center justify-center rounded-full border-2 border-blue-500"
+												:class="disabledIndex.includes(stepIdx) ? 'opacity-50' : ''"
+											>
+												<CheckIcon class="w-5 h-5 text-blue-500" aria-hidden="true" />
+											</span>
+											<span v-else-if="step.status === 'current'"
+												class="w-9 h-9 flex items-center justify-center rounded-full bg-blue-600"
+												:class="disabledIndex.includes(stepIdx) ? 'opacity-50' : ''"
+											>
+												<span class="text-white text-xs font-bold">{{ step.id }}</span>
+											</span>
+											<span v-else
+												class="w-9 h-9 flex items-center justify-center rounded-full border-2 border-gray-300"
+												:class="disabledIndex.includes(stepIdx) ? 'opacity-50' : ''"
+											>
+												<span class="text-gray-500 text-xs">{{ step.id }}</span>
+											</span>
 										</span>
-										<span v-else-if="step.status === 'current'"
-											class="w-9 h-9 flex items-center justify-center rounded-full bg-blue-600"
-											:class="disabled ? 'opacity-50' : ''"
-										>
-											<span class="text-white text-xs font-bold">{{ step.id }}</span>
-										</span>
-										<span v-else
-											class="w-9 h-9 flex items-center justify-center rounded-full border-2 border-gray-300"
-											:class="disabled ? 'opacity-50' : ''"
-										>
-											<span class="text-gray-500 text-xs">{{ step.id }}</span>
+										<span class="mt-0.5 ml-4 min-w-0 flex flex-col">
+											<!-- step name -->
+											<span v-if="step.status === 'complete'"
+												class="text-xs font-semibold text-gray-600 tracking-wide uppercase"
+												:class="disabledIndex.includes(stepIdx) ? 'opacity-70': ''"
+											>{{ step.name }}</span>
+											<span v-else-if="step.status === 'current'"
+												class="text-xs font-bold text-blue-700 tracking-wide uppercase"
+												:class="disabledIndex.includes(stepIdx) ? 'opacity-70': ''"
+											>{{ step.name }}</span>
+											<span v-else
+												class="text-xs font-semibold text-gray-500 tracking-wide uppercase"
+												:class="disabledIndex.includes(stepIdx) ? 'opacity-70': ''"
+											>{{ step.name }}</span>
+											<!-- step description -->
+											<span
+												class="text-sm font-medium text-gray-500"
+												:class="disabledIndex.includes(stepIdx) ? 'opacity-70': ''"
+											>{{ step.description }}</span>
 										</span>
 									</span>
-									<span class="mt-0.5 ml-4 min-w-0 flex flex-col">
-										<!-- step name -->
-										<span v-if="step.status === 'complete'"
-											class="text-xs font-semibold text-gray-600 tracking-wide uppercase"
-											:class="disabled ? 'opacity-70': ''"
-										>{{ step.name }}</span>
-										<span v-else-if="step.status === 'current'"
-											class="text-xs font-bold text-blue-700 tracking-wide uppercase"
-											:class="disabled ? 'opacity-70': ''"
-										>{{ step.name }}</span>
-										<span v-else
-											class="text-xs font-semibold text-gray-500 tracking-wide uppercase"
-											:class="disabled ? 'opacity-70': ''"
-										>{{ step.name }}</span>
-										<!-- step description -->
-										<span
-											class="text-sm font-medium text-gray-500"
-											:class="disabled ? 'opacity-70': ''"
-										>{{ step.description }}</span>
-									</span>
-								</span>
-							</a>
-						</div>
-					</li>
-				</ol>
-			</div>
-		</DisclosurePanel>
+								</a>
+							</div>
+						</li>
+					</ol>
+				</div>
+			</DisclosurePanel>
+		</transition>
 	</Disclosure>
 </template>
 
@@ -260,9 +261,9 @@ export default defineComponent({
 			default: ''
 		},
 		disabled: {
-			type: Boolean,
+			type: [Boolean, Array] as PropType<boolean | Array<number>>,
 			required: false,
-			default: false
+			default: () => false
 		}
 	},
 	emits: [
@@ -294,10 +295,17 @@ export default defineComponent({
 			}
 			return '';
 		});
+		const disabledIndex = computed<Array<number>>(() => {
+			if (Array.isArray(props.disabled)) {
+				return props.disabled;
+			}
+			return props.disabled ? [...props.menuItems.keys()] : [];
+		});
 		return {
 			step,
 			steps,
-			title
+			title,
+			disabledIndex
 		};
 	},
 	methods: {

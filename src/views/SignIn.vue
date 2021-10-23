@@ -55,7 +55,7 @@
 										:disabled="signingIn"
 										class="form-checkbox h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded cursor-pointer disabled:opacity-50 disabled:cursor-default"
 									/>
-									<label for="remember-me" class="ml-2 block text-sm text-gray-900">
+									<label for="rememberMe" class="ml-2 block text-sm text-gray-900">
 										Remember me
 									</label>
 								</div>

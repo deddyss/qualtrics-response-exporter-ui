@@ -2,7 +2,13 @@ import { GetterTree } from 'vuex';
 import { GETTER } from '@/reference/store';
 import { NavigationMenuPosition, State, Survey } from '@/types';
 
-const { IS_USER_AUTHORIZED, NAVIGATION_MENU_POSITION, SURVEYS, SELECTED_IDS } = GETTER;
+const {
+	IS_USER_AUTHORIZED,
+	NAVIGATION_MENU_POSITION,
+	SURVEYS,
+	SELECTED_IDS,
+	IS_LOADING
+} = GETTER;
 
 /* eslint-disable arrow-body-style */
 const getters: GetterTree<State, State> = {
@@ -17,6 +23,9 @@ const getters: GetterTree<State, State> = {
 	},
 	[SELECTED_IDS]: (state: State): Array<string> => {
 		return state.selectedIds;
+	},
+	[IS_LOADING]: (state: State): boolean => {
+		return state.current.isLoading;
 	}
 };
 

@@ -2,6 +2,7 @@ import { ApiAction } from '@/types';
 
 const SET = {
 	CONFIGURATION: 'setConfiguration',
+	CURRENT: 'setCurrent',
 	QUALTRICS: 'setQualtrics',
 	USER: 'setUser',
 	SURVEYS: 'setSurveys',
@@ -11,6 +12,7 @@ const SET = {
 
 const RESET = {
 	CONFIGURATION: 'resetConfiguration',
+	CURRENT: 'resetCurrent',
 	QUALTRICS: 'resetQualtrics',
 	USER: 'resetUser',
 	SURVEYS: 'resetSurveys',
@@ -29,5 +31,6 @@ export const GETTER = {
 	IS_USER_AUTHORIZED: 'isUserAuthorized',
 	NAVIGATION_MENU_POSITION: 'getNavigationMenuPosition',
 	SURVEYS: 'getSurveys',
-	SELECTED_IDS: 'getSelectedIds'
+	SELECTED_IDS: 'getSelectedIds',
+	IS_LOADING: 'isLoading'
 };

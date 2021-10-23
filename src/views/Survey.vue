@@ -26,7 +26,7 @@
 					</h1>
 				</div>
 			</header>
-			<main class="max-w-7xl mx-auto px-6 lg:px-8">
+			<main class="max-w-7xl mx-auto px-6 py-4 lg:px-8">
 				<router-view v-slot='{ Component }'>
 					<transition name='fade' mode='out-in'>
 						<component :is='Component' />
@@ -66,12 +66,10 @@ export default defineComponent({
 		const store = useStore<State>();
 
 		const routePath = ref<string>(route.path);
-		const menuDisabled = ref<boolean>(false);
 		const profileShown = ref<boolean>(false);
 		const user = ref<User>(store.state.user as User);
 		return {
 			menuItems,
-			menuDisabled,
 			routePath,
 			profileShown,
 			user
@@ -81,8 +79,17 @@ export default defineComponent({
 		...mapGetters({
 			isUserAuthorized: GETTER.IS_USER_AUTHORIZED,
 			menuPosition: GETTER.NAVIGATION_MENU_POSITION,
+			selectedIds: GETTER.SELECTED_IDS,
 			surveys: GETTER.SURVEYS
-		})
+		}),
+		menuDisabled(): boolean | number[] {
+			const noSurveySelected = (this.selectedIds as string[]).length === 0;
+			if (noSurveySelected) {
+				// disable second and third menu
+				return [1, 2];
+			}
+			return false;
+		}
 	},
 	watch: {
 		isUserAuthorized(authorized: boolean) {

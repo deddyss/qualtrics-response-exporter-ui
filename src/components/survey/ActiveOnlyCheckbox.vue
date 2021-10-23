@@ -2,7 +2,7 @@
 	<span class="relative z-0 inline-flex shadow rounded-md">
 		<span class="relative inline-flex items-center h-10 px-2 py-2 rounded-l-md border border-gray-300 bg-white">
 			<label for="select-all" class="sr-only">Select all</label>
-			<input type="checkbox" v-model="activeOnly" class="form-checkbox h-4 w-4 mx-1 text-green-500 cursor-pointer focus:ring-green-600 border-gray-300 rounded" />
+			<input id="select-all" type="checkbox" v-model="activeOnly" class="form-checkbox h-4 w-4 mx-1 text-green-500 cursor-pointer focus:ring-green-400 border-gray-300 rounded" />
 		</span>
 		<div class="-ml-px block w-full px-3 py-2 rounded-l-none rounded-r-md border border-gray-300 bg-white text-sm font-medium text-gray-700 cursor-default">
 			<span>Active only</span>

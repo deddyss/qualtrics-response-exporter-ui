@@ -3,15 +3,16 @@
 		<div class="-my-2 overflow-x-auto -mx-2 sm:-mx-6 lg:-mx-8">
 			<div
 				class="py-6 align-middle inline-block min-w-full px-2 sm:px-6 lg:px-8"
-				:class="localSelectedIds.length > 0 ? 'pb-24' : 'pb-10'"
+				:class="localSelectedIds.length > 0 ? 'pb-24' : 'pb-8'"
 			>
 				<div class="shadow-lg overflow-hidden border-b border-gray-200 rounded-lg">
 					<table class="min-w-full divide-y divide-gray-200">
 						<thead class="bg-white">
 							<tr>
-								<th scope="col" class="pl-6 py-4" title="Select / unselect all">
+								<th scope="col" class="pl-6 py-4 w-12" title="Select / unselect all">
 									<span class="sr-only">Select / unselect all</span>
 									<input
+										v-if="filteredSurveys.length > 0"
 										type="checkbox"
 										ref="selectAllCheckbox"
 										class="form-checkbox focus:ring-blue-500 h-6 w-6 text-blue-600 border-2 border-blue-300 rounded cursor-pointer"
@@ -23,17 +24,13 @@
 									v-for="header in headers"
 									:key="header.id" scope="col"
 									class="px-6 py-4 text-xs font-medium text-gray-500 uppercase tracking-wider"
-									:class="[
-										header.left ? 'text-left' : 'text-center',
-										header.hideable ? 'hidden lg:table-cell' : '',
-										header.nowrap ? 'whitespace-nowrap' : ''
-									]"
+									:class="header.class"
 								>
 									{{ header.name }}
 								</th>
 							</tr>
 						</thead>
-						<tbody>
+						<tbody v-if="filteredSurveys.length > 0">
 							<tr
 								v-for="(survey, idx) in filteredSurveys"
 								:key="survey.id"
@@ -41,7 +38,7 @@
 								:class="idx % 2 === 0 ? 'bg-white' : 'bg-gray-50'"
 								@click="select(survey)"
 							>
-								<td class="pl-6 py-4 whitespace-nowrap text-center text-sm font-medium">
+								<td class="pl-6 py-4 whitespace-nowrap text-center text-sm font-medium w-12">
 									<input
 										type="checkbox"
 										:id="survey.id"
@@ -50,7 +47,7 @@
 										class="form-checkbox h-4 w-4 focus:ring-blue-500 text-blue-600 border-2 border-gray-300 rounded cursor-pointer"
 									/>
 								</td>
-								<td class="px-6 py-4 text-sm font-medium text-gray-900 max-w-md sm:max-w-lg md:max-w-xl lg:max-w-2xl">
+								<td class="px-6 py-4 text-sm font-medium text-gray-900 w-auto">
 									{{ survey.name }}
 								</td>
 								<td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500 text-center w-32">
@@ -72,6 +69,14 @@
 								</td>
 							</tr>
 						</tbody>
+						<tbody v-else>
+							<tr class="bg-yellow-50">
+								<td colspan="5" class="px-6 py-4 text-sm text-yellow-800 font-medium max-w-md sm:max-w-lg md:max-w-xl lg:max-w-2xl">
+									<ExclamationIcon class="h-6 w-6 mr-0.5 text-yellow-500 inline-block" aria-hidden="true" />
+									Survey not found
+								</td>
+							</tr>
+						</tbody>
 					</table>
 				</div>
 			</div>
@@ -80,26 +85,22 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, onMounted, PropType, reactive, ref } from 'vue';
+import { defineComponent, onMounted, PropType, ref } from 'vue';
 import Fuse from 'fuse.js';
-import { SortCriteria, Survey } from '@/types';
-
-interface Header {
-	id: string;
-	name: string;
-	left?: boolean;
-	hideable?: boolean;
-	nowrap?: boolean;
-}
+import { ExclamationIcon } from '@heroicons/vue/solid';
+import { Header, SortCriteria, Survey } from '@/types';
 
 const headers: Array<Header> = [
-	{ id: 'name', name: 'Name', left: true },
-	{ id: 'isActive', name: 'Status' },
-	{ id: 'creationDate', name: 'Creation Date', hideable: true, nowrap: true },
-	{ id: 'lastModified', name: 'Last Modified', hideable: true, nowrap: true }
+	{ id: 'name', name: 'Name', class: 'text-left w-auto' },
+	{ id: 'isActive', name: 'Status', class: 'text-center whitespace-nowrap w-32' },
+	{ id: 'creationDate', name: 'Creation Date', class: 'text-center whitespace-nowrap hidden lg:table-cell w-36' },
+	{ id: 'lastModified', name: 'Last Modified', class: 'text-center whitespace-nowrap hidden lg:table-cell w-36' }
 ];
 
 export default defineComponent({
+	components: {
+		ExclamationIcon
+	},
 	props: {
 		surveys: {
 			type: Array as PropType<Array<Survey>>,
@@ -130,14 +131,16 @@ export default defineComponent({
 	setup(props) {
 		// eslint-disable-next-line @typescript-eslint/no-explicit-any
 		const selectAllCheckbox = ref<HTMLInputElement>(null as any);
-		const filteredSurveys = reactive<Survey[]>(props.surveys);
+		const filteredSurveys = ref<Survey[]>(props.surveys);
 		const localSelectedIds = ref<string[]>(props.selectedIds);
 		const fuse = ref<Fuse<Survey>>(
-			new Fuse(props.surveys, { keys: ['name'], includeScore: true, includeMatches: true })
+			new Fuse(
+				props.surveys, { keys: ['name'], includeScore: false, shouldSort: false, threshold: 0.4 }
+			)
 		);
 
 		onMounted(() => {
-			if (localSelectedIds.value.length === filteredSurveys.length) {
+			if (localSelectedIds.value.length === filteredSurveys.value.length) {
 				selectAllCheckbox.value.checked = true;
 			}
 		});
@@ -174,11 +177,13 @@ export default defineComponent({
 	},
 	methods: {
 		search(keyword: string): Array<Survey> {
-			const fuseExpression: string | Fuse.Expression = keyword;
-			// TODO: add AND logical for query result if the keyword contains more than one word
+			let fuseExpression: string | Fuse.Expression = keyword;
+			const words = keyword.match(/(\w{2,})/g);
+			if (words && words.length > 1) {
+				// https://fusejs.io/api/query.html
+				fuseExpression = { $and: words.map((word) => ({ name: word })) };
+			}
 			const fuseResults: Array<Fuse.FuseResult<Survey>> = this.fuse.search(fuseExpression);
-			// TODO:
-			console.log(fuseResults);
 			return fuseResults.map((fuseResult) => fuseResult.item);
 		},
 		sortSurveys() {
@@ -192,7 +197,7 @@ export default defineComponent({
 			});
 		},
 		applyFilter() {
-			if (this.keyword) {
+			if (this.keyword && this.keyword.trim().length >= 2) {
 				this.filteredSurveys = this.search(this.keyword);
 			}
 			else {

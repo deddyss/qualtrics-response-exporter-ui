@@ -2,10 +2,10 @@
 	<div class="rounded-md p-4" :class="backgroundClass">
 		<div class="flex">
 			<div class="flex-shrink-0">
-				<XCircleIcon v-if="type === 'error'" class="h-5 w-5 text-red-400" aria-hidden="true" />
-				<ExclamationIcon v-else-if="type === 'warning'" class="h-5 w-5 text-yellow-400" aria-hidden="true" />
-				<CheckCircleIcon v-else-if="type === 'success'" class="h-5 w-5 text-green-400" aria-hidden="true" />
-				<InformationCircleIcon v-else class="h-5 w-5 text-blue-400" aria-hidden="true" />
+				<XCircleIcon v-if="type === 'error'" class="h-5 w-5 text-red-500" aria-hidden="true" />
+				<ExclamationIcon v-else-if="type === 'warning'" class="h-5 w-5 text-yellow-500" aria-hidden="true" />
+				<CheckCircleIcon v-else-if="type === 'success'" class="h-5 w-5 text-green-500" aria-hidden="true" />
+				<InformationCircleIcon v-else class="h-5 w-5 text-blue-500" aria-hidden="true" />
 			</div>
 			<div class="ml-3">
 				<h3 class="text-sm font-medium" :class="titleClass">

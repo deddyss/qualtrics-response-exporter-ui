@@ -1,17 +1,23 @@
 <template>
 	<div>
+
 		<Toolbar
 			v-model:keyword="keyword"
 			v-model:activeOnly="activeOnly"
 			v-model:sortCriteria="sortCriteria"
+			:isLoading="isLoading"
+			@reload="reload"
 		/>
-		<Table
+
+		<TableSkeleton v-if="surveys.length === 0 && isLoading"/>
+		<Table v-else
 			v-model:selectedIds="selectedIds"
 			:surveys="surveys"
 			:keyword="keyword"
 			:activeOnly="activeOnly"
 			:sortCriteria="sortCriteria"
 		/>
+
 		<Footer
 			:selectedIds="selectedIds"
 			@proceed="goToExportOptions"
@@ -24,31 +30,30 @@ import { defineComponent, ref } from 'vue';
 import { mapGetters, useStore } from 'vuex';
 import Toolbar from '@/components/survey/Toolbar.vue';
 import Table from '@/components/survey/Table.vue';
+import TableSkeleton from '@/components/survey/TableSkeleton.vue';
 import Footer from '@/components/survey/Footer.vue';
 import { GETTER, MUTATION } from '@/reference/store';
-import { SortCriteria, State } from '@/types';
+import { Current, SortCriteria, State } from '@/types';
 import PATH from '@/reference/path';
 
 export default defineComponent({
 	components: {
 		Toolbar,
 		Table,
+		TableSkeleton,
 		Footer
 	},
 	setup() {
 		const store = useStore<State>();
+		const keyword = ref<string>(store.state.current.keyword);
+		const activeOnly = ref<boolean>(store.state.current.activeOnly);
+		const sortCriteria = ref<SortCriteria>(store.state.current.sortCriteria);
 		const selectedIds = ref<Array<string>>(store.state.selectedIds);
-		// TODO: keyword should retrieved from and set to store
-		const keyword = ref<string>('');
-		// TODO: activeOnly should retrieved from and set to store
-		const activeOnly = ref<boolean>(false);
-		// TODO: sortCriteria should retrieved from and set to store
-		const sortCriteria = ref<SortCriteria>({ by: 'lastModified', order: 'descending' });
 		return {
-			selectedIds,
 			keyword,
 			activeOnly,
-			sortCriteria
+			sortCriteria,
+			selectedIds
 		};
 	},
 	watch: {
@@ -60,24 +65,22 @@ export default defineComponent({
 			deep: true
 		},
 		keyword(value: string) {
-			// TODO: store commit
-			console.log('keyword', value);
+			this.$store.commit(MUTATION.SET.CURRENT, { keyword: value } as Current);
 		},
 		activeOnly(value: boolean) {
-			// TODO: store commit
-			console.log('activeOnly', value);
+			this.$store.commit(MUTATION.SET.CURRENT, { activeOnly: value } as Current);
 		},
 		sortCriteria: {
 			handler(value: SortCriteria) {
-				// TODO: store commit
-				console.log('sortCriteria', value);
+				this.$store.commit(MUTATION.SET.CURRENT, { sortCriteria: value } as Current);
 			},
 			deep: true
 		}
 	},
 	computed: {
 		...mapGetters({
-			surveys: GETTER.SURVEYS
+			surveys: GETTER.SURVEYS,
+			isLoading: GETTER.IS_LOADING
 		})
 	},
 	methods: {
@@ -85,6 +88,13 @@ export default defineComponent({
 			const { SURVEY } = PATH;
 			const { EXPORT } = SURVEY;
 			this.$router.push({ path: SURVEY.URI + EXPORT.OPTIONS.URI, name: EXPORT.OPTIONS.NAME });
+		},
+		reload() {
+			// TODO:
+			this.$store.commit(MUTATION.SET.CURRENT, { isLoading: true } as Current);
+			setTimeout(() => {
+				this.$store.commit(MUTATION.SET.CURRENT, { isLoading: false } as Current);
+			}, 3000);
 		}
 	}
 });

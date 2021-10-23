@@ -21,16 +21,30 @@ export interface SortCriteria {
 	order: SortOrder; 
 }
 
+export interface Header {
+	id: string;
+	name: string;
+	class?: string;
+}
+
 export type AlertType = 'info' | 'success' | 'warning' | 'error';
 export type NavigationMenuPosition = 'left' | 'center';
 
 export interface State {
 	configuration: Configuration;
+	current: Current;
 	qualtrics: Qualtrics;
 	user?: User;
 	surveys: Survey[];
 	selectedIds: string[];
 	exportOptions: ExportOptions;
+}
+
+export interface Current {
+	keyword: string;
+	activeOnly: boolean;
+	sortCriteria: SortCriteria;
+	isLoading: boolean;
 }
 
 export interface Configuration {
@@ -41,9 +55,26 @@ export interface Configuration {
 }
 
 export interface ExportOptions {
-	withContinuation: boolean;
 	format: string;
-	compressFile: boolean;
+	compress: boolean;
+	allowContinuation: boolean;
+	formatDecimalAsComma?: boolean;
+	breakoutSets?: boolean;
+	seenUnansweredRecode?: boolean;
+	multiselectSeenUnansweredRecode?: boolean;
+	includeDisplayOrder?: boolean;
+	useLabels?: boolean;
+	timeZone?: string;
+}
+
+export interface ExportOptionQuestion {
+	id: string;
+	title: string;
+	description: string;
+	type: 'boolean' | 'select';
+	options?: string[];
+	default?: boolean | string;
+	value?: boolean | string;
 }
 
 // export interface Preferences {
