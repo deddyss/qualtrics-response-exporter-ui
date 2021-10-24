@@ -16,7 +16,7 @@
 	transition: max-height 0.3s ease-in;
 }
 .slidedown-leave-active {
-	transition: max-height 0.3s cubic-bezier(0, 1, 0.5, 1);
+	transition: max-height 0.3s ease-out;
 }
 
 .slidedown-enter-to,

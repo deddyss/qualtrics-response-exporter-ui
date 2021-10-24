@@ -1,9 +1,9 @@
 <template>
 	<TransitionRoot as="template"
-		enter="transform transition ease-in-out duration-200"
+		enter="transform transition ease-in duration-200"
 		enter-from="translate-y-full"
 		enter-to="translate-y-0"
-		leave="transform transition ease-in-out duration-200"
+		leave="transform transition ease-out duration-200"
 		leave-from="translate-y-0"
 		leave-to="translate-y-full"
 		:show="selectedIds.length > 0"

@@ -52,13 +52,14 @@ const TIMEZONES = [
 	'Pacific/Tongatapu'
 ];
 
-export const BASIC_OPTIONS: Array<ExportOptionQuestion> = [
+export const BASIC: Array<ExportOptionQuestion> = [
 	{
 		id: 'format',
 		title: 'Format of the export file',
 		description: 'This can be one of: csv, tsv, json, ndjson, spss, or xml',
 		type: 'select',
-		options: ['csv', 'tsv', 'tsv', 'json', 'ndjson', 'spss', 'xml']
+		required: true,
+		options: ['csv', 'tsv', 'json', 'ndjson', 'spss', 'xml']
 	},
 	{
 		id: 'compress',
@@ -74,7 +75,7 @@ export const BASIC_OPTIONS: Array<ExportOptionQuestion> = [
 	}
 ];
 
-export const EXTRA_OPTIONS: Array<ExportOptionQuestion> = [
+export const ADVANCED: Array<ExportOptionQuestion> = [
 	{
 		id: 'formatDecimalAsComma',
 		title: 'Use commas for decimals',
@@ -86,7 +87,7 @@ export const EXTRA_OPTIONS: Array<ExportOptionQuestion> = [
 		title: 'Split multi-value fields into columns',
 		description: 'Certain question types allow for multiple answer choices to be selected for a single question. This option splits each possible answer to the question into a unique column, rather than combining every chosen answer into a single column',
 		type: 'boolean'
-	}, 
+	},
 	{
 		id: 'seenUnansweredRecode',
 		title: 'Recode seen but unanswered questions as -99',

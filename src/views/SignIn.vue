@@ -37,7 +37,7 @@
 									Qualtrics Data Center
 								</label>
 								<div class="mt-1">
-									<select-menu
+									<Select
 										:options="dataCenters"
 										v-model="dataCenter"
 										:disabled="signingIn"
@@ -82,7 +82,7 @@
 								</button>
 							</div>
 
-							<alert v-if="showAlert" type="error" title="Sign-in error" :message="authorizationError" class="absolute w-full"/>
+							<Alert v-if="showAlert" type="error" title="Sign-in error" :message="authorizationError" class="absolute w-full"/>
 						</form>
 					</div>
 				</div>
@@ -100,7 +100,7 @@
 import { defineComponent, computed, ref } from 'vue';
 import { mapGetters, useStore } from 'vuex';
 
-import SelectMenu from '@/components/SelectMenu.vue';
+import Select from '@/components/Select.vue';
 import Alert from '@/components/Alert.vue';
 
 import BACKGROUNDS from '@/reference/images';
@@ -111,7 +111,7 @@ import PATH from '@/reference/path';
 
 export default defineComponent({
 	components: {
-		SelectMenu,
+		Select,
 		Alert
 	},
 	setup() {

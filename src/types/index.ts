@@ -45,6 +45,7 @@ export interface Current {
 	activeOnly: boolean;
 	sortCriteria: SortCriteria;
 	isLoading: boolean;
+	showAdvancedOptions: boolean;
 }
 
 export interface Configuration {
@@ -54,17 +55,17 @@ export interface Configuration {
 	navigationMenuPosition: NavigationMenuPosition;
 }
 
-export interface ExportOptions {
+export interface ExportOptions extends Map<string | boolean | undefined> {
 	format: string;
 	compress: boolean;
 	allowContinuation: boolean;
-	formatDecimalAsComma?: boolean;
-	breakoutSets?: boolean;
-	seenUnansweredRecode?: boolean;
-	multiselectSeenUnansweredRecode?: boolean;
-	includeDisplayOrder?: boolean;
-	useLabels?: boolean;
-	timeZone?: string;
+	formatDecimalAsComma: boolean;
+	breakoutSets: boolean;
+	seenUnansweredRecode: boolean;
+	multiselectSeenUnansweredRecode: boolean;
+	includeDisplayOrder: boolean;
+	useLabels: boolean;
+	timeZone: string;
 }
 
 export interface ExportOptionQuestion {
@@ -72,8 +73,8 @@ export interface ExportOptionQuestion {
 	title: string;
 	description: string;
 	type: 'boolean' | 'select';
+	required?: boolean;
 	options?: string[];
-	default?: boolean | string;
 	value?: boolean | string;
 }
 

@@ -16,7 +16,8 @@ const initialState = Object.freeze({
 			by: 'lastModified',
 			order: 'descending'
 		},
-		isLoading: false
+		isLoading: false,
+		showAdvancedOptions: false
 	},
 	qualtrics: {
 		accessible: window.api !== undefined,
@@ -25,9 +26,16 @@ const initialState = Object.freeze({
 	surveys,
 	selectedIds: [],
 	exportOptions: {
-		format: 'csv',
+		format: '',
 		compress: false,
-		allowContinuation: false
+		allowContinuation: false,
+		formatDecimalAsComma: false,
+		breakoutSets: false,
+		seenUnansweredRecode: false,
+		multiselectSeenUnansweredRecode: false,
+		includeDisplayOrder: false,
+		useLabels: false,
+		timeZone: ''
 	}
 } as State);
 
