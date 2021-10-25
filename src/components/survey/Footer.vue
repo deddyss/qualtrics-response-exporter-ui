@@ -6,7 +6,7 @@
 		leave="transform transition ease-out duration-200"
 		leave-from="translate-y-0"
 		leave-to="translate-y-full"
-		:show="selectedIds.length > 0"
+		:show="shown"
 	>
 		<div
 			class="fixed z-20 inset-x-0 bottom-0"
@@ -45,6 +45,11 @@ export default defineComponent({
 		TransitionRoot
 	},
 	props: {
+		shown: {
+			type: Boolean,
+			required: false,
+			default: false
+		},
 		selectedIds: {
 			type: Array as PropType<Array<string>>,
 			required: false,

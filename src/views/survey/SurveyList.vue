@@ -19,19 +19,22 @@
 		/>
 
 		<Footer
+			:shown="footerShown"
 			:selectedIds="selectedIds"
 			@proceed="goToExportOptions"
 		/>
+		<BackToTop :class="footerShown ? 'bottom-28 sm:bottom-24' :  ''"/>
 	</div>
 </template>
 
 <script lang="ts">
-import { defineComponent, ref } from 'vue';
+import { computed, defineComponent, ref } from 'vue';
 import { mapGetters, useStore } from 'vuex';
 import Toolbar from '@/components/survey/Toolbar.vue';
 import Table from '@/components/survey/Table.vue';
 import TableSkeleton from '@/components/survey/TableSkeleton.vue';
 import Footer from '@/components/survey/Footer.vue';
+import BackToTop from '@/components/BackToTop.vue';
 import { GETTER, MUTATION } from '@/reference/store';
 import { Current, SortCriteria, State } from '@/types';
 import PATH from '@/reference/path';
@@ -41,7 +44,8 @@ export default defineComponent({
 		Toolbar,
 		Table,
 		TableSkeleton,
-		Footer
+		Footer,
+		BackToTop
 	},
 	setup() {
 		const store = useStore<State>();
@@ -49,11 +53,13 @@ export default defineComponent({
 		const activeOnly = ref<boolean>(store.state.current.activeOnly);
 		const sortCriteria = ref<SortCriteria>(store.state.current.sortCriteria);
 		const selectedIds = ref<Array<string>>(store.state.selectedIds);
+		const footerShown = computed(() => selectedIds.value.length > 0);
 		return {
 			keyword,
 			activeOnly,
 			sortCriteria,
-			selectedIds
+			selectedIds,
+			footerShown
 		};
 	},
 	watch: {

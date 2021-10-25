@@ -2,6 +2,10 @@
 @tailwind components;
 @tailwind utilities;
 
+html {
+	scroll-behavior: smooth;
+}
+
 .fade-enter-active,
 .fade-leave-active {
 	transition: opacity 0.2s ease-in-out;

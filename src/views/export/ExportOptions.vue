@@ -38,7 +38,8 @@
 			</a>
 		</div>
 
-		<Footer :shown="footerShown" />
+		<Footer :shown="footerShown" @proceed="goToExportProgress"/>
+		<BackToTop :class="footerShown ? 'bottom-24' :  ''"/>
 	</div>
 </template>
 
@@ -47,14 +48,17 @@ import { computed, defineComponent, ref } from 'vue';
 import { useStore } from 'vuex';
 import Option from '@/components/export/Option.vue';
 import Footer from '@/components/export/Footer.vue';
+import BackToTop from '@/components/BackToTop.vue';
 import { BASIC, ADVANCED } from '@/reference/exportOptions';
 import { Current, ExportOptionQuestion, ExportOptions, State } from '@/types';
 import { MUTATION } from '@/reference/store';
+import PATH from '@/reference/path';
 
 export default defineComponent({
 	components: {
 		Option,
-		Footer
+		Footer,
+		BackToTop
 	},
 	setup() {
 		const store = useStore<State>();
@@ -96,6 +100,11 @@ export default defineComponent({
 
 			const { showAdvancedOptions } = this;
 			this.$store.commit(MUTATION.SET.CURRENT, { showAdvancedOptions } as Current);
+		},
+		goToExportProgress() {
+			const { SURVEY } = PATH;
+			const { EXPORT } = SURVEY;
+			this.$router.push({ path: SURVEY.URI + EXPORT.PROGRESS.URI, name: EXPORT.PROGRESS.NAME });
 		}
 	}
 });
