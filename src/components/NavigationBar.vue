@@ -1,6 +1,6 @@
 <!-- This example requires Tailwind CSS v2.0+ -->
 <template>
-	<Disclosure as="nav" class="bg-white" v-slot="{ open }">
+	<Disclosure as="nav" class="bg-white z-20" v-slot="{ open }">
 		<div class="mx-auto px-6 lg:pl-0 shadow">
 			<div class="relative flex justify-between h-20">
 				<div class="absolute inset-y-0 left-0 flex items-center lg:hidden">
@@ -34,7 +34,7 @@
 								<div :class="stepIdx === (steps.length - 1) ? 'hover:border-r' : ''">
 									<a
 										href="javascript:;"
-										@click.prevent="click(step)"
+										@click.prevent="click(step, stepIdx)"
 										:class="[
 											step.status !== 'current' ? 'group' : '',
 											disabledIndex.includes(stepIdx) ? 'cursor-not-allowed opacity-50' : ''
@@ -154,7 +154,7 @@
 							<div :class="[stepIdx === 0 ? 'border-b-0 border-t-0' : '', stepIdx === steps.length - 1 ? 'border-t-0' : '', 'border border-gray-200 overflow-hidden']">
 								<a
 									href="javascript:;"
-									@click.prevent="click(step)"
+									@click.prevent="click(step, stepIdx)"
 									:class="[
 										step.status !== 'current' ? 'group' : '',
 										disabledIndex.includes(stepIdx) ? 'cursor-not-allowed opacity-50' : ''
@@ -309,12 +309,18 @@ export default defineComponent({
 		};
 	},
 	methods: {
-		click(stepItem: StepItem): void {
-			if (this.disabled) {
+		click(stepItem: StepItem, stepIndex: number): void {
+			if (this.isMenuDisabled(stepIndex)) {
 				return;
 			}
 			const { path, name, description } = stepItem;
 			this.$emit('click', { path, name, description } as NavigationMenuItem);
+		},
+		isMenuDisabled(index: number): boolean {
+			if (Array.isArray(this.disabled)) {
+				return this.disabled.includes(index);
+			}
+			return this.disabled;
 		},
 		profile(): void {
 			this.$emit('profile');

@@ -32,5 +32,6 @@ export const GETTER = {
 	NAVIGATION_MENU_POSITION: 'getNavigationMenuPosition',
 	SURVEYS: 'getSurveys',
 	SELECTED_IDS: 'getSelectedIds',
+	EXPORT_OPTIONS: 'getExportOptions',
 	IS_LOADING: 'isLoading'
 };

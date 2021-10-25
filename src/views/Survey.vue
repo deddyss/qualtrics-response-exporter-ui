@@ -44,7 +44,7 @@ import { mapGetters, useStore } from 'vuex';
 import NavigationBar from '@/components/NavigationBar.vue';
 import UserProfile from '@/components/UserProfile.vue';
 import PATH from '@/reference/path';
-import { NavigationMenuItem, State, User } from '@/types';
+import { ExportOptions, NavigationMenuItem, State, User } from '@/types';
 import { ACTION, GETTER } from '@/reference/store';
 
 const { SURVEY } = PATH;
@@ -80,13 +80,19 @@ export default defineComponent({
 			isUserAuthorized: GETTER.IS_USER_AUTHORIZED,
 			menuPosition: GETTER.NAVIGATION_MENU_POSITION,
 			selectedIds: GETTER.SELECTED_IDS,
+			exportOptions: GETTER.EXPORT_OPTIONS,
 			surveys: GETTER.SURVEYS
 		}),
 		menuDisabled(): boolean | number[] {
 			const noSurveySelected = (this.selectedIds as string[]).length === 0;
+			const exportFormatNotSet = (this.exportOptions as ExportOptions).format === '';
 			if (noSurveySelected) {
 				// disable second and third menu
 				return [1, 2];
+			}
+			if (exportFormatNotSet) {
+				// disable third menu
+				return [2];
 			}
 			return false;
 		}
