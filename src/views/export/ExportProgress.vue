@@ -4,6 +4,7 @@
 			<Summary :exportProgress="exportProgress" class="sticky top-28"/>
 		</aside>
 		<main class="lg:col-span-8" style="height: 3000px;">
+			<OngoingList :exportProgress="exportProgress" />
 			<CompletedList :exportProgress="exportProgress" />
 		</main>
 
@@ -15,6 +16,7 @@
 import { defineComponent } from 'vue';
 import { mapGetters } from 'vuex';
 import Summary from '@/components/export/progress/Summary.vue';
+import OngoingList from '@/components/export/progress/OngoingList.vue';
 import CompletedList from '@/components/export/progress/CompletedList.vue';
 import BackToTop from '@/components/BackToTop.vue';
 import { GETTER } from '@/reference/store';
@@ -22,6 +24,7 @@ import { GETTER } from '@/reference/store';
 export default defineComponent({
 	components: {
 		Summary,
+		OngoingList,
 		CompletedList,
 		BackToTop
 	},

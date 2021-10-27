@@ -6,19 +6,19 @@ const exportProgress: ExportProgress = {
 		id: 'a8cnF4BiaSOwV88Pn8gsX8IOSmSY09h',
 		name: 'Business Characteristics Survey',
 		downloadProgress: 100,
-		downloadedTime: 1771561
+		downloadedTime: Date.now() - 1771561
 	},
 	oxNtMeGrfllWlJkUjbwZEWNtqlvHproy: {
 		id: 'oxNtMeGrfllWlJkUjbwZEWNtqlvHproy',
 		name: 'Survey of Disability, Ageing and Carers',
 		downloadProgress: 100,
-		downloadedTime: 884736
+		downloadedTime: Date.now() - 884736
 	},
 	r0Fn1uIbDMw8J3vc10FjKKw6ouK1mEKt: {
 		id: 'r0Fn1uIbDMw8J3vc10FjKKw6ouK1mEKt',
 		name: 'National Health Survey',
 		downloadProgress: 100,
-		downloadedTime: 166375
+		downloadedTime: Date.now() - 512000
 	},
 	kyWGV3hfNyHK3rnerAamgCND8tQAZZt1: {
 		id: 'kyWGV3hfNyHK3rnerAamgCND8tQAZZt1',

@@ -25,7 +25,7 @@
 						<div class="w-screen max-w-sm lg:max-w-md">
 							<div class="h-full flex flex-col bg-white shadow-2xl">
 								<!-- header -->
-								<div class="px-4 py-6 sm:px-6 bg-blue-700 border-b-4 border-blue-700">
+								<div class="px-4 py-6 sm:px-6 bg-blue-600 border-b-4 border-blue-600">
 									<div class="flex items-start justify-between">
 										<h2 id="slide-over-heading" class="text-lg font-medium text-white">
 											Profile
@@ -46,7 +46,7 @@
 												<div class="sm:flex-1">
 													<div>
 														<div class="flex items-center">
-															<UserCircleIcon class="h-14 w-14 text-blue-600" aria-hidden="true" />
+															<UserCircleIcon class="h-14 w-14 text-blue-500" aria-hidden="true" />
 															<h3 class="ml-3 text-2xl font-bold capitalize leading-7 text-gray-900 sm:leading-9 sm:truncate">
 																{{ user.firstName ? user.firstName.toLowerCase() : '' }} {{ user.lastName ? user.lastName.toLowerCase() : '' }}
 															</h3>

@@ -35,8 +35,8 @@ npx tailwindcss init -p
 // install Tailwind UI dependencies 
 npm install --save @tailwindcss/forms @tailwindcss/typography @tailwindcss/aspect-ratio
 npm install --save @headlessui/vue @heroicons/vue
-// install vue utilities (especially for debounce)
-npm install --save @vueuse/core
+// install vue utilities (especially for debounce and timeago)
+npm install --save @vueuse/core @vueuse/components
 // install fuse.js for fuzzy search capability
 npm install --save fuse.js
 
