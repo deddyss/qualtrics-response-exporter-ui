@@ -9,7 +9,8 @@
 			@reload="reload"
 		/>
 
-		<TableSkeleton v-if="surveys.length === 0 && isLoading"/>
+		<!-- <TableSkeleton v-if="surveys.length === 0 && isLoading"/> -->
+		<TableSkeleton v-if="isLoading"/>
 		<Table v-else
 			v-model:selectedIds="selectedIds"
 			:surveys="surveys"
@@ -100,7 +101,7 @@ export default defineComponent({
 			this.$store.commit(MUTATION.SET.CURRENT, { isLoading: true } as Current);
 			setTimeout(() => {
 				this.$store.commit(MUTATION.SET.CURRENT, { isLoading: false } as Current);
-			}, 3000);
+			}, 10000);
 		}
 	}
 });

@@ -2,8 +2,8 @@
 <template>
 	<div class="h-8 relative max-w-full overflow-hidden">
 		<div class="text-xs w-full text-right text-gray-800">{{ progress }}%</div>
-		<div class="w-full h-3 bg-gray-200 absolute top-4 rounded-full"></div>
-		<div ref="bar" class="w-0 h-3 bg-green-500 absolute top-4 rounded-full transition-all ease-linear duration-100"></div>
+		<div class="w-full h-2 bg-gray-200 absolute top-4 rounded-full"></div>
+		<div ref="bar" class="w-0 h-2 bg-green-500 absolute top-4 rounded-full transition-all ease-linear duration-100"></div>
 	</div>
 </template>
 

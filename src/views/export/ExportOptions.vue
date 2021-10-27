@@ -31,7 +31,7 @@
 
 		<div class="px-4 py-4">
 			<a href="javascript:;"
-				class="text-center text-sm font-medium text-blue-600 hover:text-blue-500"
+				class="text-center font-medium text-blue-600 hover:text-blue-500"
 				@click="toggleAdvancedQuestion"
 			>
 				Show {{ showAdvancedOptions ? 'less' : 'more' }} options
@@ -46,8 +46,8 @@
 <script lang="ts">
 import { computed, defineComponent, ref } from 'vue';
 import { useStore } from 'vuex';
-import Option from '@/components/export/Option.vue';
-import Footer from '@/components/export/Footer.vue';
+import Option from '@/components/export/options/Option.vue';
+import Footer from '@/components/export/options/Footer.vue';
 import BackToTop from '@/components/BackToTop.vue';
 import { BASIC, ADVANCED } from '@/reference/exportOptions';
 import { Current, ExportOptionQuestion, ExportOptions, State } from '@/types';

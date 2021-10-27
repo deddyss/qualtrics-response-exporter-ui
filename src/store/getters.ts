@@ -1,6 +1,6 @@
 import { GetterTree } from 'vuex';
 import { GETTER } from '@/reference/store';
-import { ExportOptions, NavigationMenuPosition, State, Survey } from '@/types';
+import { ExportOptions, ExportProgress, NavigationMenuPosition, State, Survey } from '@/types';
 
 const {
 	IS_USER_AUTHORIZED,
@@ -8,6 +8,7 @@ const {
 	SURVEYS,
 	SELECTED_IDS,
 	EXPORT_OPTIONS,
+	EXPORT_PROGRESS,
 	IS_LOADING
 } = GETTER;
 
@@ -27,6 +28,9 @@ const getters: GetterTree<State, State> = {
 	},
 	[EXPORT_OPTIONS]: (state: State): ExportOptions => {
 		return state.exportOptions;
+	},
+	[EXPORT_PROGRESS]: (state: State): ExportProgress => {
+		return state.exportProgress;
 	},
 	[IS_LOADING]: (state: State): boolean => {
 		return state.current.isLoading;

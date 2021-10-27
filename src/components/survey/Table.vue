@@ -166,9 +166,6 @@ export default defineComponent({
 		activeOnly() {
 			this.applyFilter();
 		}
-		// localSelectedIds(values: string[]) {
-		// 	console.log(values);
-		// }
 	},
 	mounted() {
 		this.$nextTick(() => {

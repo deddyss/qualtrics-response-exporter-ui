@@ -99,7 +99,6 @@ export default defineComponent({
 	},
 	watch: {
 		isUserAuthorized(authorized: boolean) {
-			console.log('isUserAuthorized', authorized);
 			if (!authorized) {
 				this.$router.push({ path: PATH.SIGNIN.URI });
 			}
@@ -121,7 +120,6 @@ export default defineComponent({
 			this.routePath = path;
 		},
 		signOut(): void {
-			console.log('signOut');
 			this.$store.dispatch(ACTION.SIGN_OFF);
 		}
 	}

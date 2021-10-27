@@ -1,6 +1,6 @@
 import { MutationTree } from 'vuex';
 import { MUTATION } from '@/reference/store';
-import { Configuration, Current, ExportOptions, Qualtrics, State, Survey, User } from '@/types';
+import { Configuration, Current, ExportOptions, ExportProgress, Qualtrics, State, Survey, User } from '@/types';
 import initialState from './init';
 
 const { SET, RESET } = MUTATION;
@@ -47,6 +47,20 @@ const mutations: MutationTree<State> = {
 	},
 	[RESET.EXPORT_OPTIONS]: (state: State): void => {
 		state.exportOptions = { ...initialState.exportOptions };
+	},
+	[SET.EXPORT_PROGRESS]: (state: State, exportProgress: ExportProgress): void => {
+		const clonedExportProgress = { ...exportProgress };
+		Object.keys(clonedExportProgress).forEach((key) => {
+			const currentDetail = state.exportProgress[key];
+			if (currentDetail) {
+				const newDetail = clonedExportProgress[key];
+				clonedExportProgress[key] = { ...currentDetail, ...newDetail };
+			}
+		});
+		state.exportProgress = { ...state.exportProgress, ...clonedExportProgress };
+	},
+	[RESET.EXPORT_PROGRESS]: (state: State): void => {
+		state.exportProgress = { ...initialState.exportProgress };
 	}
 };
 

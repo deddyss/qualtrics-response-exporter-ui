@@ -38,6 +38,7 @@ export interface State {
 	surveys: Survey[];
 	selectedIds: string[];
 	exportOptions: ExportOptions;
+	exportProgress: ExportProgress;
 }
 
 export interface Current {
@@ -77,6 +78,16 @@ export interface ExportOptionQuestion {
 	options?: string[];
 	value?: boolean | string;
 }
+
+export interface ExportProgressDetail {
+	id: string;
+	name: string;
+	exportStatus?: 'inProgress' | 'complete' | 'failed';
+	exportProgress?: number;
+	downloadProgress?: number;
+	downloadedTime?: number;
+}
+export interface ExportProgress extends Map<ExportProgressDetail> {}
 
 // export interface Preferences {
 // 	dataCenter?: string;

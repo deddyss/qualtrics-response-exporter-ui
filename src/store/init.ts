@@ -1,6 +1,8 @@
 import { State } from '@/types';
 // TODO: remove dummy surveys once UI development done
 import surveys from './dummySurveys';
+// TODO: remove dummy export progress once UI development dong
+import exportProgress from './dummyExportProgress';
 
 const initialState = Object.freeze({
 	configuration: {
@@ -36,7 +38,8 @@ const initialState = Object.freeze({
 		includeDisplayOrder: false,
 		useLabels: false,
 		timeZone: ''
-	}
+	},
+	exportProgress
 } as State);
 
 export default initialState;

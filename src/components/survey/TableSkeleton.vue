@@ -5,7 +5,7 @@
 				class="py-6 align-middle inline-block min-w-full px-2 sm:px-6 lg:px-8 pb-10"
 			>
 				<div class="shadow-lg overflow-hidden border-b border-gray-200 rounded-lg">
-					<table class="min-w-full divide-y divide-gray-200">
+					<table class="min-w-full divide-y divide-gray-100">
 						<thead class="bg-white">
 							<tr class="animate-pulse">
 								<th scope="col" class="pl-6 py-4 w-12" title="Select / unselect all">

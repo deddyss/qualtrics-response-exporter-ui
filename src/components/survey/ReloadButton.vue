@@ -1,7 +1,7 @@
 <template>
 	<button
 		type="button"
-		class="relative flex w-full lg:w-32 justify-center text-center h-10 px-4 py-2 border border-transparent rounded-md shadow text-sm font-medium text-white bg-blue-600 hover:bg-blue-500 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 disabled:opacity-50 disabled:cursor-not-allowed"
+		class="relative flex w-full lg:w-32 justify-center text-center h-10 px-4 py-2 border border-transparent rounded-md shadow-lg text-sm font-medium text-white bg-blue-600 hover:bg-blue-500 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 disabled:opacity-50 disabled:cursor-not-allowed"
 		:disabled="active"
 		@click="click"
 	>

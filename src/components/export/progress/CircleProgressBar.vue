@@ -3,7 +3,7 @@
 	<svg width="150" viewBox="0 0 20 20">
 		<circle class="circle-bg stroke-2" cx="10" cy="10" r="8"/>
 		<circle ref="circle" class="circle-progress stroke-2 transition-all ease-linear duration-100" cx="10" cy="10" r="8" :data-percentage="progress"/>
-		<text class="circle-text" x="50%" y="55%">{{ progress }}%</text>
+		<text class="circle-text font-bold" x="50%" y="55%">{{ progress }}%</text>
 	</svg>
 </template>
 
@@ -55,7 +55,7 @@ export default defineComponent({
 	stroke-linecap: round;
 }
 .circle-text {
-	fill: rgba(31, 41, 55, 1); /* gray-800 */
+	fill: rgba(75, 85, 99, 1); /* gray-500 */
 	text-anchor: middle;
 	font-size: 3px;
 }

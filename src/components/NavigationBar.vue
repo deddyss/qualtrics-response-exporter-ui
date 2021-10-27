@@ -1,7 +1,7 @@
 <!-- This example requires Tailwind CSS v2.0+ -->
 <template>
 	<Disclosure as="nav" class="bg-white z-20" v-slot="{ open }">
-		<div class="mx-auto px-6 lg:pl-0 shadow">
+		<div class="mx-auto px-6 lg:pl-0 shadow-md">
 			<div class="relative flex justify-between h-20">
 				<div class="absolute inset-y-0 left-0 flex items-center lg:hidden">
 					<!-- mobile menu button -->

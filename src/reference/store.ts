@@ -7,7 +7,8 @@ const SET = {
 	USER: 'setUser',
 	SURVEYS: 'setSurveys',
 	SELECTED_IDS: 'setSelectedIds',
-	EXPORT_OPTIONS: 'setExportOptions'
+	EXPORT_OPTIONS: 'setExportOptions',
+	EXPORT_PROGRESS: 'setExportProgress'
 };
 
 const RESET = {
@@ -17,7 +18,8 @@ const RESET = {
 	USER: 'resetUser',
 	SURVEYS: 'resetSurveys',
 	SELECTED_IDS: 'resetSelectedIds',
-	EXPORT_OPTIONS: 'resetExportOptions'
+	EXPORT_OPTIONS: 'resetExportOptions',
+	EXPORT_PROGRESS: 'resetExportProgress'
 };
 
 export const MUTATION = { SET, RESET };
@@ -33,5 +35,6 @@ export const GETTER = {
 	SURVEYS: 'getSurveys',
 	SELECTED_IDS: 'getSelectedIds',
 	EXPORT_OPTIONS: 'getExportOptions',
+	EXPORT_PROGRESS: 'getExportProgress',
 	IS_LOADING: 'isLoading'
 };

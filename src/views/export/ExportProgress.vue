@@ -1,37 +1,34 @@
 <template>
-	<div class="w-auto">
-		Progress Bar
-		<LineProgressBar :progress="progress" />
-		<CircleProgressBar :progress="progress" />
+	<div class="pb-5 lg:grid lg:grid-cols-10 lg:gap-8">
+		<aside class="lg:col-span-2">
+			<Summary :exportProgress="exportProgress" class="sticky top-28"/>
+		</aside>
+		<main class="lg:col-span-8" style="height: 3000px;">
+			<CompletedList :exportProgress="exportProgress" />
+		</main>
+
+		<BackToTop />
 	</div>
 </template>
 
 <script lang="ts">
-import { defineComponent, ref } from 'vue';
-import LineProgressBar from '@/components/export/LineProgressBar.vue';
-import CircleProgressBar from '@/components/export/CircleProgressBar.vue';
+import { defineComponent } from 'vue';
+import { mapGetters } from 'vuex';
+import Summary from '@/components/export/progress/Summary.vue';
+import CompletedList from '@/components/export/progress/CompletedList.vue';
+import BackToTop from '@/components/BackToTop.vue';
+import { GETTER } from '@/reference/store';
 
 export default defineComponent({
 	components: {
-		LineProgressBar,
-		CircleProgressBar
+		Summary,
+		CompletedList,
+		BackToTop
 	},
-	setup() {
-		const progress = ref<number>(0);
-		return {
-			progress
-		};
-	},
-	mounted() {
-		this.incrementProgress();
-	},
-	methods: {
-		incrementProgress() {
-			this.progress += 4;
-			if (this.progress < 100) {
-				setTimeout(this.incrementProgress, 1_00);
-			}
-		}
+	computed: {
+		...mapGetters({
+			exportProgress: GETTER.EXPORT_PROGRESS
+		})
 	}
 });
 </script>
