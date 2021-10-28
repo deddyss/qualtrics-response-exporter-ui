@@ -1,6 +1,6 @@
 <template>
-	<div class="rounded-lg bg-white shadow-lg mt-6 sm:mt-8 lg:mt-0" v-show="shown">
-		<h3 class="text-base lg:text-lg font-medium text-white bg-blue-500 w-full border-b rounded-t-lg p-4 sm:px-6 lg:px-8">
+	<div class="rounded-lg bg-white shadow-lg mt-6 mb-6 sm:mt-8 sm:mb-8 lg:mt-0" v-show="shown">
+		<h3 class="text-base lg:text-lg font-medium text-white bg-blue-600 w-full border-b rounded-t-lg p-4 sm:px-6 lg:px-8">
 			Download Queue
 		</h3>
 		<ul class="divide-y divide-gray-100">
@@ -14,16 +14,17 @@
 				]"
 			>
 				<div class="flex-1 font-medium text-gray-900">{{ item.name }}</div>
-				<div class="relative flex-shrink-0 w-full lg:w-96 -mt-3 sm:-mt-4 lg:mt-0 mb-1 lg:mb-0">
+				<div class="relative flex-shrink-0 w-full lg:w-80 -mt-3 sm:-mt-4 lg:mt-0 mb-1 lg:mb-0">
 					<span
 						class="absolute text-gray-500 -top-1"
 						:class="[
-							item.status === 'downloading' ? 'text-green-600' : ''
+							item.status === 'downloading' ? 'text-blue-600' : '',
+							item.status === 'exporting' ? 'text-gray-700' : ''
 						]"
 					>
 						{{ item.status }}
 					</span>
-					<LineProgressBar :progress="item.progress" />
+					<LineProgressBar :progress="item.progress" barClass="bg-blue-400" />
 				</div>
 			</li>
 		</ul>

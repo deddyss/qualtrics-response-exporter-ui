@@ -1,14 +1,27 @@
 <template>
-	<ul>
-		<li v-for="item in completedItems" :key="item.id" class="block">
-			<span>{{ item.name }}</span>
-			<span>&nbsp;
-				<UseTimeAgo v-slot="{ timeAgo }" :time="new Date(item.downloadedTime)">
-					{{ timeAgo }}
-				</UseTimeAgo>
-			</span>
-		</li>
-	</ul>
+	<div class="rounded-lg bg-white shadow-lg mt-6 sm:mt-8 lg:mt-0" v-show="shown">
+		<h3 class="text-base lg:text-lg font-medium text-white bg-green-600 w-full border-b rounded-t-lg p-4 sm:px-6 lg:px-8">
+			Completed
+		</h3>
+		<ul class="divide-y divide-gray-100">
+			<li
+				v-for="(item, idx) in completedItems"
+				:key="item.id"
+				class="p-4 text-sm sm:px-6 lg:px-8 flex flex-wrap gap-4 sm:gap-6"
+				:class="[
+					idx % 2 === 0 ? 'bg-white' : 'bg-gray-50',
+					idx === completedItems.length - 1 ? 'rounded-b-lg' : ''
+				]"
+			>
+				<div class="flex-1 font-medium text-gray-900">{{ item.name }}</div>
+				<div class="relative flex-shrink-0 text-green-700 text-left lg:text-right w-full lg:w-72 -mt-4 lg:mt-0">
+					<UseTimeAgo v-slot="{ timeAgo }" :time="new Date(item.downloadedTime)">
+						{{ timeAgo }}
+					</UseTimeAgo>
+				</div>
+			</li>
+		</ul>
+	</div>
 </template>
 
 <script lang="ts">
@@ -49,8 +62,10 @@ export default defineComponent({
 				return result;
 			}
 		);
+		const shown = computed<boolean>(() => completedItems.value.length > 0);
 		return {
-			completedItems
+			completedItems,
+			shown
 		};
 	}
 });

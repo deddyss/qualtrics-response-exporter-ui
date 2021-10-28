@@ -1,9 +1,9 @@
 <template>
-	<div class="pb-5 lg:grid lg:grid-cols-10 lg:gap-8">
+	<div class="pb-0 lg:grid lg:grid-cols-10 lg:gap-8">
 		<aside class="lg:col-span-2">
 			<Summary :exportProgress="exportProgress" class="sticky top-28"/>
 		</aside>
-		<main class="lg:col-span-8" style="height: 3000px;">
+		<main class="lg:col-span-8">
 			<OngoingList :exportProgress="exportProgress" />
 			<CompletedList :exportProgress="exportProgress" />
 		</main>
