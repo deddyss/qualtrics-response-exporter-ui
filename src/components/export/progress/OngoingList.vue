@@ -19,12 +19,12 @@
 						class="absolute text-gray-500 -top-1"
 						:class="[
 							item.status === 'downloading' ? 'text-blue-600' : '',
-							item.status === 'exporting' ? 'text-gray-700' : ''
+							item.status === 'exporting' ? 'text-yellow-600' : ''
 						]"
 					>
 						{{ item.status }}
 					</span>
-					<LineProgressBar :progress="item.progress" barClass="bg-blue-400" />
+					<LineProgressBar :progress="item.progress" barClass="bg-blue-500" />
 				</div>
 			</li>
 		</ul>

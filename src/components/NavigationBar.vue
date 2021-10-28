@@ -44,7 +44,7 @@
 										<!-- bottom border -->
 										<span
 											class="absolute top-0 left-0 w-1 h-full lg:w-full lg:h-1 lg:bottom-0 lg:top-auto"
-											:class="step.status === 'current' ? 'bg-blue-600' : !disabledIndex.includes(stepIdx) ? 'bg-transparent group-hover:bg-gray-200' : ''"
+											:class="step.status === 'current' ? 'bg-blue-500' : !disabledIndex.includes(stepIdx) ? 'bg-transparent group-hover:bg-gray-200' : ''"
 											aria-hidden="true"
 										/>
 										<span class="px-6 py-5 flex items-start text-sm font-medium">

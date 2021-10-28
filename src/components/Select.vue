@@ -13,7 +13,7 @@
 
 			<transition leave-active-class="transition ease-in duration-100" leave-from-class="opacity-100" leave-to-class="opacity-0">
 				<ListboxOptions
-					class="absolute z-10 mt-1 bg-white shadow-lg max-h-60 rounded-md py-1 ring-1 ring-black ring-opacity-5 overflow-auto focus:outline-none text-sm"
+					class="absolute z-30 mt-1 bg-white shadow-lg max-h-60 rounded-md py-1 ring-1 ring-black ring-opacity-5 overflow-auto focus:outline-none text-sm"
 					:class="optionClass"
 				>
 					<ListboxOption as="template"
