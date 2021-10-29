@@ -16,7 +16,7 @@
 			<CompletedList :exportProgress="exportProgress" ref="completed" />
 		</main>
 
-		<Footer :shown="footerShown" />
+		<Footer :shown="footerShown" @startOver="startOver" />
 		<BackToTop :class="footerShown ? 'bottom-40 md:bottom-24' :  ''"/>
 	</div>
 </template>
@@ -29,8 +29,9 @@ import OngoingList from '@/components/export/progress/OngoingList.vue';
 import CompletedList from '@/components/export/progress/CompletedList.vue';
 import Footer from '@/components/export/progress/Footer.vue';
 import BackToTop from '@/components/BackToTop.vue';
-import { GETTER } from '@/reference/store';
+import { ACTION, GETTER } from '@/reference/store';
 import { ExportProgress, ExportProgressDetail } from '@/types';
+import { ROUTE } from '@/reference/path';
 
 const NAVIGATION_BAR_HEIGHT_PLUS_MARGIN = 80 + 24;
 
@@ -73,6 +74,11 @@ export default defineComponent({
 		scrollToCompleted() {
 			const completed: HTMLElement = this.completed.$el;
 			window.scrollTo({ top: completed.offsetTop - NAVIGATION_BAR_HEIGHT_PLUS_MARGIN });
+		},
+		startOver() {
+			this.$store.dispatch(ACTION.START_OVER).then(() => {
+				this.$router.push(ROUTE.SURVEY_LIST);
+			});
 		}
 	},
 	mounted() {

@@ -23,12 +23,12 @@
 
 <script lang="ts">
 import { defineComponent } from 'vue';
-import PATH from '@/reference/path';
+import { ROUTE } from '@/reference/path';
 
 export default defineComponent({
 	methods: {
 		goBackHome() {
-			this.$router.push({ path: PATH.HOME });
+			this.$router.push(ROUTE.HOME);
 		}
 	}
 });

@@ -19,7 +19,8 @@ const initialState = Object.freeze({
 			order: 'descending'
 		},
 		isLoading: false,
-		showAdvancedOptions: false
+		showAdvancedOptions: false,
+		isExporting: false
 	},
 	qualtrics: {
 		accessible: window.api !== undefined,

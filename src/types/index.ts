@@ -47,6 +47,8 @@ export interface Current {
 	sortCriteria: SortCriteria;
 	isLoading: boolean;
 	showAdvancedOptions: boolean;
+	isExporting: boolean;
+	errorMessage?: string;
 }
 
 export interface Configuration {

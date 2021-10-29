@@ -43,7 +43,7 @@ import { useRoute } from 'vue-router';
 import { mapGetters, useStore } from 'vuex';
 import NavigationBar from '@/components/NavigationBar.vue';
 import UserProfile from '@/components/UserProfile.vue';
-import PATH from '@/reference/path';
+import { PATH, ROUTE } from '@/reference/path';
 import { ExportOptions, NavigationMenuItem, State, User } from '@/types';
 import { ACTION, GETTER } from '@/reference/store';
 
@@ -51,9 +51,9 @@ const { SURVEY } = PATH;
 const { EXPORT } = SURVEY;
 
 const menuItems: NavigationMenuItem[] = [
-	{ path: SURVEY.URI + SURVEY.LIST.URI, name: SURVEY.LIST.NAME, description: SURVEY.LIST.DESCRIPTION },
-	{ path: SURVEY.URI + EXPORT.OPTIONS.URI, name: EXPORT.OPTIONS.NAME, description: EXPORT.OPTIONS.DESCRIPTION },
-	{ path: SURVEY.URI + EXPORT.PROGRESS.URI, name: EXPORT.PROGRESS.NAME, description: EXPORT.PROGRESS.DESCRIPTION }
+	{ ...ROUTE.SURVEY_LIST, description: SURVEY.LIST.DESCRIPTION },
+	{ ...ROUTE.EXPORT_OPTIONS, description: EXPORT.OPTIONS.DESCRIPTION },
+	{ ...ROUTE.EXPORT_PROGRESS, description: EXPORT.PROGRESS.DESCRIPTION }
 ];
 
 export default defineComponent({

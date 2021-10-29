@@ -107,7 +107,7 @@ import BACKGROUNDS from '@/reference/images';
 import { DATA_CENTERS } from '@/reference';
 import { ACTION, GETTER, MUTATION } from '@/reference/store';
 import { Configuration, SelectOption, State } from '@/types';
-import PATH from '@/reference/path';
+import { ROUTE } from '@/reference/path';
 
 export default defineComponent({
 	components: {
@@ -159,7 +159,7 @@ export default defineComponent({
 		isUserAuthorized(authorized: boolean) {
 			this.signingIn = false;
 			if (authorized) {
-				this.$router.push({ path: PATH.SURVEY.URI + PATH.SURVEY.INDEX.URI });
+				this.$router.push(ROUTE.SURVEY_LIST);
 			}
 		},
 		authorizationError(message: string) {
@@ -178,13 +178,11 @@ export default defineComponent({
 			e.preventDefault();
 
 			const { apiToken, dataCenter } = this;
-			this.$store
-				.dispatch(ACTION.SIGN_IN, { apiToken, dataCenter })
-				.then(() => {
-					this.signingIn = true;
-					this.$store.commit(MUTATION.SET.CONFIGURATION, { rememberApiToken: this.rememberMe } as Configuration);
-					// TODO: remember me = true -> store to file
-				});
+			this.$store.dispatch(ACTION.SIGN_IN, { apiToken, dataCenter }).then(() => {
+				this.signingIn = true;
+				this.$store.commit(MUTATION.SET.CONFIGURATION, { rememberApiToken: this.rememberMe } as Configuration);
+				// TODO: remember me = true -> store to file
+			});
 		},
 		focusToInput(): void {
 			const input = this.$refs.input as HTMLInputElement;

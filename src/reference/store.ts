@@ -26,7 +26,9 @@ export const MUTATION = { SET, RESET };
 
 export const ACTION = {
 	SIGN_IN: 'signIn' as ApiAction,
-	SIGN_OFF: 'signOff'
+	SIGN_OFF: 'signOff',
+	START_EXPORT: 'startExport',
+	START_OVER: 'startOver'
 };
 
 export const GETTER = {

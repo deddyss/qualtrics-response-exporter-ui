@@ -38,7 +38,7 @@ import Footer from '@/components/survey/Footer.vue';
 import BackToTop from '@/components/BackToTop.vue';
 import { GETTER, MUTATION } from '@/reference/store';
 import { Current, SortCriteria, State } from '@/types';
-import PATH from '@/reference/path';
+import { ROUTE } from '@/reference/path';
 
 export default defineComponent({
 	components: {
@@ -72,14 +72,14 @@ export default defineComponent({
 			deep: true
 		},
 		keyword(value: string) {
-			this.$store.commit(MUTATION.SET.CURRENT, { keyword: value } as Current);
+			this.$store.commit(MUTATION.SET.CURRENT, { keyword: value } as Partial<Current>);
 		},
 		activeOnly(value: boolean) {
-			this.$store.commit(MUTATION.SET.CURRENT, { activeOnly: value } as Current);
+			this.$store.commit(MUTATION.SET.CURRENT, { activeOnly: value } as Partial<Current>);
 		},
 		sortCriteria: {
 			handler(value: SortCriteria) {
-				this.$store.commit(MUTATION.SET.CURRENT, { sortCriteria: value } as Current);
+				this.$store.commit(MUTATION.SET.CURRENT, { sortCriteria: value } as Partial<Current>);
 			},
 			deep: true
 		}
@@ -92,15 +92,13 @@ export default defineComponent({
 	},
 	methods: {
 		goToExportOptions() {
-			const { SURVEY } = PATH;
-			const { EXPORT } = SURVEY;
-			this.$router.push({ path: SURVEY.URI + EXPORT.OPTIONS.URI, name: EXPORT.OPTIONS.NAME });
+			this.$router.push(ROUTE.EXPORT_OPTIONS);
 		},
 		reload() {
 			// TODO:
-			this.$store.commit(MUTATION.SET.CURRENT, { isLoading: true } as Current);
+			this.$store.commit(MUTATION.SET.CURRENT, { isLoading: true } as Partial<Current>);
 			setTimeout(() => {
-				this.$store.commit(MUTATION.SET.CURRENT, { isLoading: false } as Current);
+				this.$store.commit(MUTATION.SET.CURRENT, { isLoading: false } as Partial<Current>);
 			}, 10000);
 		}
 	}

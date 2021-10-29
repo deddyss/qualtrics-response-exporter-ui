@@ -1,4 +1,4 @@
-const PATH = {
+export const PATH = {
 	HOME: '/',
 	SIGNIN: {
 		URI: '/signin',
@@ -33,4 +33,25 @@ const PATH = {
 	}
 };
 
-export default PATH;
+export const ROUTE = {
+	HOME: {
+		path: PATH.HOME,
+		name: 'Home'
+	},
+	SIGN_IN: {
+		path: PATH.SIGNIN.URI,
+		name: PATH.SIGNIN.NAME
+	},
+	SURVEY_LIST: {
+		path: PATH.SURVEY.URI + PATH.SURVEY.LIST.URI,
+		name: PATH.SURVEY.LIST.NAME
+	},
+	EXPORT_OPTIONS: {
+		path: PATH.SURVEY.URI + PATH.SURVEY.EXPORT.OPTIONS.URI,
+		name: PATH.SURVEY.EXPORT.OPTIONS.NAME
+	},
+	EXPORT_PROGRESS: {
+		path: PATH.SURVEY.URI + PATH.SURVEY.EXPORT.PROGRESS.URI,
+		name: PATH.SURVEY.EXPORT.PROGRESS.NAME
+	}
+};

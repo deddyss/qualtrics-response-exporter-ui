@@ -9,15 +9,12 @@
 
 <script lang='ts'>
 import { defineComponent } from 'vue';
-import PATH from '@/reference/path';
+import { ROUTE } from '@/reference/path';
 
 export default defineComponent({
 	mounted() {
 		setTimeout(() => {
-			this.$router.push({
-				path: PATH.SIGNIN.URI,
-				name: PATH.SIGNIN.NAME
-			});
+			this.$router.push(ROUTE.SIGN_IN);
 		}, 5000);
 	}
 });
