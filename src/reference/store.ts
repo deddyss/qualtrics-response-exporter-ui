@@ -38,5 +38,6 @@ export const GETTER = {
 	SELECTED_IDS: 'getSelectedIds',
 	EXPORT_OPTIONS: 'getExportOptions',
 	EXPORT_PROGRESS: 'getExportProgress',
-	IS_LOADING: 'isLoading'
+	IS_LOADING: 'isLoading',
+	ERROR_MESSAGE: 'getErrorMessage'
 };

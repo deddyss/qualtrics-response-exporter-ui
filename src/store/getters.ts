@@ -9,7 +9,8 @@ const {
 	SELECTED_IDS,
 	EXPORT_OPTIONS,
 	EXPORT_PROGRESS,
-	IS_LOADING
+	IS_LOADING,
+	ERROR_MESSAGE
 } = GETTER;
 
 /* eslint-disable arrow-body-style */
@@ -34,6 +35,9 @@ const getters: GetterTree<State, State> = {
 	},
 	[IS_LOADING]: (state: State): boolean => {
 		return state.current.isLoading;
+	},
+	[ERROR_MESSAGE]: (state: State): string => {
+		return state.current.errorMessage ?? '';
 	}
 };
 

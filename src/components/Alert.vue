@@ -58,7 +58,7 @@ export default defineComponent({
 			if (props.type === 'success') {
 				return 'bg-green-50';
 			}
-			return '';
+			return 'bg-blue-50';
 		});
 		const titleClass = computed<string>(() => {
 			if (props.type === 'error') {
@@ -70,7 +70,7 @@ export default defineComponent({
 			if (props.type === 'success') {
 				return 'text-green-800';
 			}
-			return '';
+			return 'text-blue-800';
 		});
 		const messageClass = computed<string>(() => {
 			if (props.type === 'error') {
@@ -82,7 +82,7 @@ export default defineComponent({
 			if (props.type === 'success') {
 				return 'text-green-700';
 			}
-			return '';
+			return 'text-blue-700';
 		});
 		return {
 			backgroundClass,

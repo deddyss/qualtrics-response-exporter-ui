@@ -11,7 +11,7 @@
 		<div
 			class="fixed z-20 inset-x-0 bottom-0"
 		>
-			<div class="bg-blue-600">
+			<div class="bg-green-600">
 				<div class="max-w-7xl mx-auto py-3 px-3 sm:px-6 lg:px-8">
 					<div class="flex items-center justify-between flex-wrap">
 						<div class="flex-1 flex items-center">
@@ -21,7 +21,7 @@
 						</div>
 						<div class="order-1 mt-2 px-3 sm:px-0 flex-shrink-0 w-full md:mt-0 md:w-auto">
 							<a href="javascript:;"
-								class="flex items-center justify-center px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-blue-600 bg-white hover:bg-blue-50"
+								class="flex items-center justify-center px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-green-700 bg-white hover:bg-green-50"
 								@click="openExportDirectory"
 							>
 								Open export directory
@@ -29,7 +29,7 @@
 						</div>
 						<div class="order-2 md:ml-2 mt-2 px-3 sm:px-0 flex-shrink-0 w-full md:mt-0 md:w-auto">
 							<a href="javascript:;"
-								class="flex items-center justify-center px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-blue-600 bg-white hover:bg-blue-50"
+								class="flex items-center justify-center px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-green-800 hover:bg-green-700"
 								@click="startOver"
 							>
 								Start over
