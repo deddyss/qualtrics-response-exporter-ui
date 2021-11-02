@@ -32,10 +32,10 @@
 									<div class="rounded bg-blue-200 h-4 w-4"></div>
 								</td>
 								<td class="px-6 py-4 w-auto">
-									<div class="rounded h-4 bg-gray-200" :class="row.class"></div>
+									<div class="rounded h-4 bg-gray-300" :class="row.class"></div>
 								</td>
 								<td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500 text-center w-32">
-									<div class="rounded-full h-4 w-20" :class="row.isActive ? 'bg-green-200' : 'bg-gray-200'"></div>
+									<div class="rounded-full h-4 w-20" :class="row.isActive ? 'bg-green-300' : 'bg-gray-300'"></div>
 								</td>
 								<td class="px-4 py-4 whitespace-nowrap w-36 hidden lg:table-cell">
 									<div class="rounded-full bg-gray-200 h-4 w-28"></div>

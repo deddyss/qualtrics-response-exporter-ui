@@ -43,6 +43,7 @@ Distributed under the MIT License. See `LICENSE` for more information.
 
 ## Acknowledgements
 * [Unsplash](https://unsplash.com/)
+* [SVGBackgrounds.com](https://www.svgbackgrounds.com/)
 * [Electron builder](https://www.electron.build/)
 * [Jest](https://jestjs.io/)
 * [Denque](https://github.com/invertase/denque)

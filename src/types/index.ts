@@ -32,7 +32,7 @@ export type NotificationType = AlertType;
 export type NavigationMenuPosition = 'left' | 'center';
 
 export interface State {
-	configuration: Configuration;
+	settings: Settings;
 	current: Current;
 	qualtrics: Qualtrics;
 	user?: User;
@@ -52,11 +52,10 @@ export interface Current {
 	errorMessage?: string;
 }
 
-export interface Configuration {
-	rememberApiToken: boolean;
-	rememberSurveys: boolean;
-	rememberSelectedIds: boolean;
+export interface Settings {
+	rememberMe: boolean;
 	navigationMenuPosition: NavigationMenuPosition;
+	exportDirectory?: string;
 }
 
 export interface ExportOptions extends Map<string | boolean | undefined> {
@@ -79,7 +78,6 @@ export interface ExportOptionQuestion {
 	type: 'boolean' | 'select';
 	required?: boolean;
 	options?: string[];
-	value?: boolean | string;
 }
 
 export interface ExportProgressDetail {

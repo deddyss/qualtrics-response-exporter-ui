@@ -1,6 +1,7 @@
 import { nextTick } from 'vue';
 import { createRouter, createWebHashHistory, RouteMeta, RouteRecordRaw } from 'vue-router';
 import Home from '@/views/Home.vue';
+import Settings from '@/views/Settings.vue';
 import SignIn from '@/views/SignIn.vue';
 import Survey from '@/views/Survey.vue';
 import SurveyList from '@/views/survey/SurveyList.vue';
@@ -17,8 +18,13 @@ const requiresAuthMeta: RouteMeta = { requiresAuth: false };
 const appTitle: string = document.title;
 
 const routes: Array<RouteRecordRaw> = [
-	{ ...ROUTE.HOME,
+	{
+		...ROUTE.HOME,
 		component: Home
+	},
+	{
+		...ROUTE.SETTINGS,
+		component: Settings
 	},
 	{
 		...ROUTE.SIGN_IN,
@@ -35,13 +41,16 @@ const routes: Array<RouteRecordRaw> = [
 		children: [
 			{
 				path: PATH.SURVEY.URI + PATH.SURVEY.INDEX.URI,
-				name: PATH.SURVEY.NAME,
 				redirect: PATH.SURVEY.URI + PATH.SURVEY.LIST.URI
 			},
 			{
 				...ROUTE.SURVEY_LIST,
 				component: SurveyList,
 				meta: requiresAuthMeta
+			},
+			{
+				path: PATH.SURVEY.URI + PATH.SURVEY.EXPORT.INDEX.URI,
+				redirect: PATH.SURVEY.URI + PATH.SURVEY.EXPORT.OPTIONS.URI
 			},
 			{
 				...ROUTE.EXPORT_OPTIONS,

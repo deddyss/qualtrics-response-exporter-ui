@@ -63,7 +63,7 @@ export default defineComponent({
 	setup() {
 		const store = useStore<State>();
 		const showAdvancedOptions = ref<boolean>(store.state.current.showAdvancedOptions);
-		const exportOptions = ref<ExportOptions>(store.state.exportOptions);
+		const exportOptions = ref<ExportOptions>({ ...store.state.exportOptions });
 		const footerShown = computed(() => exportOptions.value.format !== '');
 
 		const basicExportQuestions = ref<Array<ExportOptionQuestion>>(BASIC);

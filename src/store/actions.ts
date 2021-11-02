@@ -20,7 +20,7 @@ const actions: ActionTree<State, State> = {
 	[SIGN_OFF]: ({ commit, state }: ActionContext<State, State>) => {
 		return new Promise<void>((resolve) => {
 			commit(MUTATION.RESET.USER);
-			if (!state.configuration.rememberApiToken) {
+			if (!state.settings.rememberMe) {
 				commit(MUTATION.SET.QUALTRICS, { apiToken: undefined } as Qualtrics);
 			}
 			// TODO: make all configurations, preferences and changes persisted

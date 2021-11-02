@@ -1,12 +1,15 @@
 export const PATH = {
 	HOME: '/',
+	SETTINGS: {
+		URI: '/settings',
+		NAME: 'Settings'
+	},
 	SIGNIN: {
 		URI: '/signin',
 		NAME: 'Sign-in'
 	},
 	SURVEY: {
 		URI: '/survey',
-		NAME: 'Survey Dashboard',
 		INDEX: {
 			URI: '/'
 		},
@@ -17,7 +20,7 @@ export const PATH = {
 		},
 		EXPORT: {
 			INDEX: {
-				URI: '/'
+				URI: '/export'
 			},
 			OPTIONS: {
 				URI: '/export/options',
@@ -37,6 +40,10 @@ export const ROUTE = {
 	HOME: {
 		path: PATH.HOME,
 		name: 'Home'
+	},
+	SETTINGS: {
+		path: PATH.SETTINGS.URI,
+		name: PATH.SETTINGS.NAME
 	},
 	SIGN_IN: {
 		path: PATH.SIGNIN.URI,

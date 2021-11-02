@@ -61,7 +61,10 @@ export default defineComponent({
 			const completed: Array<ExportProgressDetail> = values.filter(
 				(survey) => survey.downloadProgress === 100 && survey.downloadedTime !== undefined
 			);
-			const result: boolean = values.length > 0 && values.length === completed.length;
+			const failed: Array<ExportProgressDetail> = values.filter(
+				(survey) => survey.exportStatus === 'failed'
+			);
+			const result: boolean = values.length > 0 && values.length === (completed.length + failed.length);
 			return result;
 			// return true;
 		}

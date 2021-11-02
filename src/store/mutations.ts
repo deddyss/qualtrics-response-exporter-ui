@@ -1,16 +1,16 @@
 import { MutationTree } from 'vuex';
 import { MUTATION } from '@/reference/store';
-import { Configuration, Current, ExportOptions, ExportProgress, Qualtrics, State, Survey, User } from '@/types';
+import { Settings, Current, ExportOptions, ExportProgress, Qualtrics, State, Survey, User } from '@/types';
 import initialState from './init';
 
 const { SET, RESET } = MUTATION;
 
 const mutations: MutationTree<State> = {
-	[SET.CONFIGURATION]: (state: State, configuration: Partial<Configuration>): void => {
-		state.configuration = { ...state.configuration, ...configuration };
+	[SET.SETTINGS]: (state: State, settings: Partial<Settings>): void => {
+		state.settings = { ...state.settings, ...settings };
 	},
-	[RESET.CONFIGURATION]: (state: State): void => {
-		state.configuration = { ...initialState.configuration };
+	[RESET.SETTINGS]: (state: State): void => {
+		state.settings = { ...initialState.settings };
 	},
 	[SET.CURRENT]: (state: State, current: Partial<Current>): void => {
 		state.current = { ...state.current, ...current };

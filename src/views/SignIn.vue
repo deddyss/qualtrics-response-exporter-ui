@@ -106,7 +106,7 @@ import Alert from '@/components/Alert.vue';
 import BACKGROUNDS from '@/reference/images';
 import { DATA_CENTERS } from '@/reference';
 import { ACTION, GETTER, MUTATION } from '@/reference/store';
-import { Configuration, SelectOption, State } from '@/types';
+import { Settings, SelectOption, State } from '@/types';
 import { ROUTE } from '@/reference/path';
 
 export default defineComponent({
@@ -132,7 +132,7 @@ export default defineComponent({
 		const apiToken = ref<string>(store.state.qualtrics?.apiToken ?? '');
 		const apiAvailable = ref<boolean>(store.state.qualtrics.accessible);
 		const dataCenter = ref<string>(store.state.qualtrics.dataCenter);
-		const rememberMe = ref<boolean>(store.state.configuration.rememberApiToken);
+		const rememberMe = ref<boolean>(store.state.settings.rememberMe);
 
 		const signingIn = ref<boolean>(false);
 		const showAlert = ref<boolean>(false);
@@ -180,7 +180,7 @@ export default defineComponent({
 			const { apiToken, dataCenter } = this;
 			this.$store.dispatch(ACTION.SIGN_IN, { apiToken, dataCenter }).then(() => {
 				this.signingIn = true;
-				this.$store.commit(MUTATION.SET.CONFIGURATION, { rememberApiToken: this.rememberMe } as Configuration);
+				this.$store.commit(MUTATION.SET.SETTINGS, { rememberMe: this.rememberMe } as Settings);
 				// TODO: remember me = true -> store to file
 			});
 		},

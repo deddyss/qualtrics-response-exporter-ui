@@ -52,8 +52,8 @@ export default defineComponent({
 		const store = useStore<State>();
 		const keyword = ref<string>(store.state.current.keyword);
 		const activeOnly = ref<boolean>(store.state.current.activeOnly);
-		const sortCriteria = ref<SortCriteria>(store.state.current.sortCriteria);
-		const selectedIds = ref<Array<string>>(store.state.selectedIds);
+		const sortCriteria = ref<SortCriteria>({ ...store.state.current.sortCriteria });
+		const selectedIds = ref<Array<string>>([...store.state.selectedIds]);
 		const footerShown = computed(() => selectedIds.value.length > 0);
 		return {
 			keyword,
@@ -96,6 +96,7 @@ export default defineComponent({
 		},
 		reload() {
 			// TODO:
+			this.selectedIds = [];
 			this.$store.commit(MUTATION.SET.CURRENT, { isLoading: true } as Partial<Current>);
 			setTimeout(() => {
 				this.$store.commit(MUTATION.SET.CURRENT, { isLoading: false } as Partial<Current>);

@@ -18,13 +18,17 @@
 					<span
 						class="absolute text-gray-500 -top-1"
 						:class="[
-							item.status === 'downloading' ? 'text-blue-600' : '',
-							item.status === 'exporting' ? 'text-yellow-600' : ''
+							item.status === 'downloading' ? 'text-blue-700' : '',
+							item.status === 'exporting' ? 'text-blue-500' : '',
+							item.status === 'failed' ? 'text-red-500' : ''
 						]"
 					>
 						{{ item.status }}
 					</span>
-					<LineProgressBar :progress="item.progress" barClass="bg-blue-500" />
+					<LineProgressBar
+						:progress="item.progress"
+						barClass="bg-blue-500"
+					/>
 				</div>
 			</li>
 		</ul>
@@ -36,13 +40,21 @@ import { computed, defineComponent, PropType } from 'vue';
 import LineProgressBar from '@/components/export/progress/LineProgressBar.vue';
 import { ExportProgress, ExportProgressDetail } from '@/types';
 
-type OngoingStatus = 'pending' | 'exporting' | 'downloading';
+type OngoingStatus = 'pending' | 'exporting' | 'failed' | 'downloading';
 interface OngoingItem {
 	id: string;
 	name: string;
 	status: OngoingStatus;
 	progress: number;
 }
+
+const compareProgress = (first: OngoingItem, second: OngoingItem) => (second.progress - first.progress);
+const compareStatus = (first: OngoingItem, second: OngoingItem) => {
+	if (first.status !== second.status) {
+		return first.status === 'exporting' ? -1 : 1;
+	}
+	return 0;
+};
 
 export default defineComponent({
 	components: {
@@ -65,8 +77,14 @@ export default defineComponent({
 					const { id, name, exportStatus, exportProgress, downloadProgress } = survey;
 					let status: OngoingStatus = 'pending';
 					let progress = 0;
-					if (exportStatus === 'inProgress' && exportProgress) {
-						status = 'exporting';
+					if (exportProgress) {
+						if (exportStatus === 'inProgress') {
+							status = 'exporting';
+						}
+						else if (exportStatus === 'failed') {
+							status = 'failed';
+							progress = -exportProgress;
+						}
 					}
 					if (downloadProgress) {
 						status = 'downloading';
@@ -74,15 +92,7 @@ export default defineComponent({
 					}
 					return { id, name, status, progress } as OngoingItem;
 				});
-				const result: Array<OngoingItem> = mapped.sort((first, second) => {
-					if (first.progress === 0 && second.progress === 0) {
-						if (first.status !== second.status) {
-							return first.status === 'exporting' ? -1 : 1;
-						}
-						return 0;
-					}
-					return second.progress - first.progress;
-				});
+				const result: Array<OngoingItem> = mapped.sort(compareProgress || compareStatus);
 				return result;
 			}
 		);

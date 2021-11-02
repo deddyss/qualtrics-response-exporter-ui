@@ -57,6 +57,18 @@ const exportProgress: ExportProgress = {
 		id: 'KDyxmYyYPu1V0s6AYBRH4c6YCKymhOFX',
 		name: 'Survey of Health and Wellbeing'
 	},
+	UnToHQq9lzG1vq6nCCN3j7kmY8g04viL: {
+		id: 'UnToHQq9lzG1vq6nCCN3j7kmY8g04viL',
+		name: 'Multipurpose Household Survey',
+		exportStatus: 'failed',
+		exportProgress: 100
+	},
+	Nf4DvJacNnuF1RdwQzWcoQMojKfr416e: {
+		id: 'Nf4DvJacNnuF1RdwQzWcoQMojKfr416e',
+		name: 'Survey of Adult Skills in Australia',
+		exportStatus: 'failed',
+		exportProgress: 100
+	},
 	ieXpm43SWYtU64TQ4rIRutOK9CBUkegh: {
 		id: 'ieXpm43SWYtU64TQ4rIRutOK9CBUkegh',
 		name: 'Livestock Slaughtered Survey'

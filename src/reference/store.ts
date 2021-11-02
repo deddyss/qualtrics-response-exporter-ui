@@ -1,7 +1,7 @@
 import { ApiAction } from '@/types';
 
 const SET = {
-	CONFIGURATION: 'setConfiguration',
+	SETTINGS: 'setSettings',
 	CURRENT: 'setCurrent',
 	QUALTRICS: 'setQualtrics',
 	USER: 'setUser',
@@ -12,7 +12,7 @@ const SET = {
 };
 
 const RESET = {
-	CONFIGURATION: 'resetConfiguration',
+	SETTINGS: 'resetSettings',
 	CURRENT: 'resetCurrent',
 	QUALTRICS: 'resetQualtrics',
 	USER: 'resetUser',
@@ -34,10 +34,11 @@ export const ACTION = {
 export const GETTER = {
 	IS_USER_AUTHORIZED: 'isUserAuthorized',
 	NAVIGATION_MENU_POSITION: 'getNavigationMenuPosition',
+	SETTINGS: 'getSettings',
 	SURVEYS: 'getSurveys',
 	SELECTED_IDS: 'getSelectedIds',
-	EXPORT_OPTIONS: 'getExportOptions',
 	EXPORT_PROGRESS: 'getExportProgress',
+	ERROR_MESSAGE: 'getErrorMessage',
 	IS_LOADING: 'isLoading',
-	ERROR_MESSAGE: 'getErrorMessage'
+	IS_EXPORTING: 'isExporting'
 };

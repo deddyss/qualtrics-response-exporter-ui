@@ -47,7 +47,7 @@ import NavigationBar from '@/components/NavigationBar.vue';
 import UserProfile from '@/components/UserProfile.vue';
 import Notification from '@/components/Notification.vue';
 import { PATH, ROUTE } from '@/reference/path';
-import { Current, ExportOptions, NavigationMenuItem, State, User } from '@/types';
+import { Current, NavigationMenuItem, State, User } from '@/types';
 import { ACTION, GETTER, MUTATION } from '@/reference/store';
 
 const { SURVEY } = PATH;
@@ -84,22 +84,24 @@ export default defineComponent({
 			isUserAuthorized: GETTER.IS_USER_AUTHORIZED,
 			menuPosition: GETTER.NAVIGATION_MENU_POSITION,
 			selectedIds: GETTER.SELECTED_IDS,
-			exportOptions: GETTER.EXPORT_OPTIONS,
 			surveys: GETTER.SURVEYS,
-			errorMessage: GETTER.ERROR_MESSAGE
+			errorMessage: GETTER.ERROR_MESSAGE,
+			isExporting: GETTER.IS_EXPORTING
 		}),
 		menuDisabled(): boolean | number[] {
+			const currentlyExporting = this.isExporting as boolean;
 			const noSurveySelected = (this.selectedIds as string[]).length === 0;
-			const exportFormatNotSet = (this.exportOptions as ExportOptions).format === '';
+
+			if (currentlyExporting) {
+				// disable first and second menu
+				return [0, 1];
+			}
 			if (noSurveySelected) {
 				// disable second and third menu
 				return [1, 2];
 			}
-			if (exportFormatNotSet) {
-				// disable third menu
-				return [2];
-			}
-			return false;
+			// disable third menu
+			return [2];
 		}
 	},
 	watch: {

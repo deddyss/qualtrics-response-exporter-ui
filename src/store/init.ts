@@ -5,10 +5,8 @@ import surveys from './dummySurveys';
 import exportProgress from './dummyExportProgress';
 
 const initialState = Object.freeze({
-	configuration: {
-		rememberApiToken: false,
-		rememberSurveys: false,
-		rememberSelectedIds: false,
+	settings: {
+		rememberMe: false,
 		navigationMenuPosition: 'left'
 	},
 	current: {
