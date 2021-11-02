@@ -39,6 +39,9 @@ npm install --save @headlessui/vue @heroicons/vue
 npm install --save @vueuse/core @vueuse/components
 // install fuse.js for fuzzy search capability
 npm install --save fuse.js
+// system information and cryptography library
+npm install --save systeminformation crypto-js
+npm install --save-dev @types/crypto-js
 
 // axios and rate limiter
 npm install --save axios limiter
@@ -47,7 +50,5 @@ npm install --save denque threads async-lock
 // web server (http & websocket), available port
 npm install --save fastify fastify-websocket get-port@5.1.1
 npm install --save-dev @types/ws
-// system information and cryptography library
-npm install --save systeminformation crypto-js
 
 

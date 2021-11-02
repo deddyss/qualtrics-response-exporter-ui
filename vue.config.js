@@ -25,7 +25,14 @@ module.exports = {
 		electronBuilder: {
 			preload: 'src/preload.ts',
 			chainWebpackMainProcess: (config) => {
-					config.externals([/node_modules/, 'utf-8-validate', 'bufferutil', 'long', 'pino-pretty']);
+				config.externals([
+					/node_modules/,
+					'utf-8-validate',
+					'bufferutil',
+					'long',
+					'pino-pretty',
+					'osx-temperature-sensor'
+				]);
 			},
 			builderOptions: {
 				appId: 'deddyss.qualtrics.exporter',

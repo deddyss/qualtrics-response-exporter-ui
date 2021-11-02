@@ -25,7 +25,7 @@
 							v-if="question.type === 'path'"
 							class="text-sm text-blue-500 font-medium"
 						>
-							C:\Users\Deddy\Downloads {{ localSettings[question.id] }}
+							{{ localSettings[question.id] }}
 						</p>
 					</div>
 					<div class="flex-shrink-0 w-full sm:mt-0 sm:w-auto">
@@ -43,7 +43,7 @@
 						<Switch
 							v-else-if="question.type === 'boolean'"
 							v-model="localSettings[question.id]"
-							class=" mt-0 sm:mt-1 relative inline-flex flex-shrink-0 h-6 w-11 border-2 border-transparent rounded-full cursor-pointer transition-colors ease-in-out duration-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 "
+							class=" mt-0 sm:mt-2 relative inline-flex flex-shrink-0 h-6 w-11 border-2 border-transparent rounded-full cursor-pointer transition-colors ease-in-out duration-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 "
 							:class="localSettings[question.id] ? 'bg-blue-600' : 'bg-gray-200'"
 						>
 							<span class="sr-only">{{ question.title }}</span>
@@ -72,29 +72,23 @@
 				<button
 					type="button"
 					class="relative w-full sm:w-44 text-center h-10 sm:h-12 px-4 py-2 border border-transparent rounded-full text-sm font-medium text-white bg-blue-600 hover:bg-blue-500 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 disabled:opacity-50 disabled:cursor-not-allowed"
-					:disabled="settingsHaveNotChanged"
-					@click="saveSettings"
+					@click="goBack"
 				>
-					Save
+					<ArrowSmLeftIcon class="h-5 sm:h-6 -ml-3 -mt-0.5 text-white inline" aria-hidden="true" />
+					Go back
 				</button>
 			</div>
-
 		</main>
-
-		<!-- <section class="-mt-32 max-w-7xl mx-auto relative z-10 pb-32 px-4 sm:px-6 lg:px-8">
-			<h2>Contact us</h2>
-			Hello World
-
-		</section> -->
 	</div>
 </template>
 
 <script lang="ts">
-import { defineComponent, ref } from 'vue';
-import { mapGetters, useStore } from 'vuex';
+import { defineComponent, ref, toRaw } from 'vue';
+import { useStore } from 'vuex';
 import { Switch } from '@headlessui/vue';
+import { ArrowSmLeftIcon } from '@heroicons/vue/outline';
 import Select from '@/components/Select.vue';
-import { GETTER, MUTATION } from '@/reference/store';
+import { ACTION } from '@/reference/store';
 import { SelectOption, Settings, State } from '@/types';
 
 interface Setting {
@@ -109,7 +103,7 @@ const questions: Array<Setting> = [
 	{
 		id: 'rememberMe',
 		title: 'Remember me',
-		description: 'When this option is enabled, the application will remember your Qualtrics API token and data center so you don\'t have to sign-in manually',
+		description: 'When this option is enabled, the application will remember your Qualtrics API token and data center so you don\'t have to sign-in manually. Conversely, stored API token and data center, if any, will be deleted',
 		type: 'boolean'
 	},
 	{
@@ -130,7 +124,8 @@ const questions: Array<Setting> = [
 export default defineComponent({
 	components: {
 		Switch,
-		Select
+		Select,
+		ArrowSmLeftIcon
 	},
 	setup() {
 		const store = useStore<State>();
@@ -140,14 +135,12 @@ export default defineComponent({
 			localSettings
 		};
 	},
-	computed: {
-		...mapGetters({
-			settings: GETTER.SETTINGS
-		}),
-		settingsHaveNotChanged(): boolean {
-			return this.localSettings.rememberMe === this.settings.rememberMe
-				&& this.localSettings.navigationMenuPosition === this.settings.navigationMenuPosition
-				&& this.localSettings.exportDirectory === this.settings.exportDirectory;
+	watch: {
+		localSettings: {
+			handler(settings: Settings) {
+				this.$store.dispatch(ACTION.SAVE_SETTINGS, toRaw(settings));
+			},
+			deep: true
 		}
 	},
 	methods: {
@@ -156,12 +149,16 @@ export default defineComponent({
 			return options.map((value: string) => ({ value, label: value } as SelectOption));
 		},
 		triggerDirectorySelector() {
-			// TODO:
-			console.log('triggerDirectorySelector');
+			if (window.api) {
+				window.api.selectDirectory(
+					this.localSettings.exportDirectory
+				).then((path: string) => {
+					this.localSettings.exportDirectory = path;
+				});
+			}
 		},
-		saveSettings() {
-			// TODO: persists configuration
-			this.$store.commit(MUTATION.SET.SETTINGS, this.localSettings);
+		goBack() {
+			this.$router.back();
 		}
 	}
 });

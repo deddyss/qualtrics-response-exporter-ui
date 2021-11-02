@@ -1,6 +1,9 @@
+// --------------------------------- Base --------------------------------------
 export interface Map<T> {
 	[key: string]: T;
 }
+
+// ---------------------------------- UI ---------------------------------------
 
 export interface SelectOption {
 	value: string;
@@ -31,46 +34,6 @@ export type AlertType = 'info' | 'success' | 'warning' | 'error';
 export type NotificationType = AlertType;
 export type NavigationMenuPosition = 'left' | 'center';
 
-export interface State {
-	settings: Settings;
-	current: Current;
-	qualtrics: Qualtrics;
-	user?: User;
-	surveys: Survey[];
-	selectedIds: string[];
-	exportOptions: ExportOptions;
-	exportProgress: ExportProgress;
-}
-
-export interface Current {
-	keyword: string;
-	activeOnly: boolean;
-	sortCriteria: SortCriteria;
-	isLoading: boolean;
-	showAdvancedOptions: boolean;
-	isExporting: boolean;
-	errorMessage?: string;
-}
-
-export interface Settings {
-	rememberMe: boolean;
-	navigationMenuPosition: NavigationMenuPosition;
-	exportDirectory?: string;
-}
-
-export interface ExportOptions extends Map<string | boolean | undefined> {
-	format: string;
-	compress: boolean;
-	allowContinuation: boolean;
-	formatDecimalAsComma: boolean;
-	breakoutSets: boolean;
-	seenUnansweredRecode: boolean;
-	multiselectSeenUnansweredRecode: boolean;
-	includeDisplayOrder: boolean;
-	useLabels: boolean;
-	timeZone: string;
-}
-
 export interface ExportOptionQuestion {
 	id: string;
 	title: string;
@@ -80,35 +43,23 @@ export interface ExportOptionQuestion {
 	options?: string[];
 }
 
-export interface ExportProgressDetail {
-	id: string;
-	name: string;
-	exportStatus?: 'inProgress' | 'complete' | 'failed';
-	exportProgress?: number;
-	downloadProgress?: number;
-	downloadedTime?: number;
+// --------------------------------- State -------------------------------------
+
+export interface Settings {
+	rememberMe: boolean;
+	navigationMenuPosition: NavigationMenuPosition;
+	exportDirectory?: string;
 }
-export interface ExportProgress extends Map<ExportProgressDetail> {}
 
-// export interface Preferences {
-// 	dataCenter?: string;
-// 	activeSurveyOnly?: boolean;
-// 	lastSelectedSurveys?: string[];
-// 	exportWithContinuation?: boolean;
-// 	exportFormat?: string;
-// 	compressExportFile?: boolean;
-// }
-
-// export interface Answer extends Preferences {
-// 	apiToken?: string;
-// 	loadPreferences?: boolean;
-// 	selectedSurveys?: string[];
-// 	savePreferences?: boolean;
-// }
-
-export interface ApiAuthorization {
-	dataCenter: string;
-	apiToken: string;
+export interface Current {
+	appReady: boolean;
+	keyword: string;
+	activeOnly: boolean;
+	sortCriteria: SortCriteria;
+	isLoading: boolean;
+	showAdvancedOptions: boolean;
+	isExporting: boolean;
+	errorMessage?: string;
 }
 
 export interface Qualtrics {
@@ -116,19 +67,6 @@ export interface Qualtrics {
 	dataCenter: string;
 	apiToken?: string;
 	errorMessage?: string;
-}
-
-export interface Error {
-	errorMessage: string;
-	errorCode: string;
-}
-export interface Meta {
-	httpStatus: string;
-	requestId: string;
-	notice?: string;
-}
-export interface MetaWithError extends Meta {
-	error: Error;
 }
 
 export interface User {
@@ -150,6 +88,62 @@ export interface Survey {
 	creationDate: string;
 	isActive: boolean;
 }
+
+export interface ExportOptions extends Map<string | boolean | undefined> {
+	format: string;
+	compress: boolean;
+	allowContinuation: boolean;
+	formatDecimalAsComma: boolean;
+	breakoutSets: boolean;
+	seenUnansweredRecode: boolean;
+	multiselectSeenUnansweredRecode: boolean;
+	includeDisplayOrder: boolean;
+	useLabels: boolean;
+	timeZone: string;
+}
+
+export interface ExportProgressDetail {
+	id: string;
+	name: string;
+	exportStatus?: 'inProgress' | 'complete' | 'failed';
+	exportProgress?: number;
+	downloadProgress?: number;
+	downloadedTime?: number;
+}
+
+export interface ExportProgress extends Map<ExportProgressDetail> {}
+
+export interface State {
+	settings: Settings;
+	current: Current;
+	qualtrics: Qualtrics;
+	user?: User;
+	surveys: Survey[];
+	selectedIds: string[];
+	exportOptions: ExportOptions;
+	exportProgress: ExportProgress;
+}
+
+// ----------------------------- Qualtrics API ---------------------------------
+
+export interface ApiAuthorization {
+	dataCenter: string;
+	apiToken: string;
+}
+
+export interface Error {
+	errorMessage: string;
+	errorCode: string;
+}
+export interface Meta {
+	httpStatus: string;
+	requestId: string;
+	notice?: string;
+}
+export interface MetaWithError extends Meta {
+	error: Error;
+}
+
 export interface ListSurveysResult {
 	elements: Array<Survey>;
 	nextPage: string | null;
@@ -199,6 +193,34 @@ export interface ApiError {
 	message?: string;
 }
 
+// ---------------------------- Application API --------------------------------
+
+export interface SignedInParam { user: User, auth: ApiAuthorization }
+export interface SignInFailedParam { error: ApiError, auth: ApiAuthorization }
+export interface ReadyParam { settings: Settings }
+
+// eslint-disable-next-line
+type EventListener = (...args: any[]) => void;
+export type FunctionLike = EventListener;
+
+export type ApiAction = 'signIn' | 'saveSettings' | 'selectDirectory';
+export type ApiEvent = 'ready' | 'signedIn' | 'signInFailed' | 'settingsMenuClicked';
+
+declare global {
+	interface Window {
+		api: {
+			// loadConfiguration: () => void;
+			// saveConfiguration: (configuration: Configuration) => void;
+			saveSettings: (settings: Settings) => void;
+			selectDirectory: (path?: string) => Promise<string>;
+			signIn: (auth: ApiAuthorization) => void;
+			on: (event: ApiEvent, listener: EventListener) => void;
+		}
+	}
+}
+
+// ---------------------------- ??????????????? --------------------------------
+
 export interface PoolOptions extends ApiAuthorization {
 	internalApiPort: number;
 	surveys: Survey[],
@@ -221,22 +243,4 @@ export interface ExportFailedSurvey {
 	id: string;
 	name: string;
 	error: string;
-}
-
-// eslint-disable-next-line
-type EventListener = (...args: any[]) => void;
-export type FunctionLike = EventListener;
-
-export type ApiAction = 'signIn';
-export type ApiEvent = 'serverReady' | 'signedIn' | 'signInFailed';
-
-declare global {
-	interface Window {
-		api: {
-			// loadConfiguration: () => void;
-			// saveConfiguration: (configuration: Configuration) => void;
-			signIn: (param: ApiAuthorization) => void;
-			on: (event: ApiEvent, listener: EventListener) => void;
-		}
-	}
 }

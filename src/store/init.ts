@@ -1,8 +1,8 @@
 import { State } from '@/types';
 // TODO: remove dummy surveys once UI development done
-import surveys from './dummySurveys';
+import surveys from './dummy/surveys';
 // TODO: remove dummy export progress once UI development dong
-import exportProgress from './dummyExportProgress';
+import exportProgress from './dummy/exportProgress';
 
 const initialState = Object.freeze({
 	settings: {
@@ -10,6 +10,7 @@ const initialState = Object.freeze({
 		navigationMenuPosition: 'left'
 	},
 	current: {
+		appReady: false,
 		keyword: '',
 		activeOnly: false,
 		sortCriteria: {

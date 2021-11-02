@@ -107,4 +107,11 @@ router.afterEach((to) => {
 	});
 });
 
+if (window.api !== undefined) {
+	// listening for menu click event
+	window.api.on('settingsMenuClicked', () => {
+		router.push(ROUTE.SETTINGS);
+	});
+}
+
 export default router;

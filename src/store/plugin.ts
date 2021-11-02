@@ -1,9 +1,6 @@
 import { Plugin, Store } from 'vuex';
-import { ApiAuthorization, ApiError, Qualtrics, State, User } from '@/types';
+import { Current, Qualtrics, ReadyParam, SignedInParam, SignInFailedParam, State } from '@/types';
 import { MUTATION } from '@/reference/store';
-
-interface SignedInParam { user: User, auth: ApiAuthorization }
-interface SignInFailedParam { error: ApiError, auth: ApiAuthorization }
 
 const ERROR_MESSAGE_TIMEOUT = 2500;
 
@@ -11,6 +8,12 @@ const ERROR_MESSAGE_TIMEOUT = 2500;
 const createElectronApiPlugin = (): Plugin<State> => {
 	return (store: Store<State>) => {
 		if (window.api === undefined) return;
+
+		window.api.on('ready', (param: ReadyParam) => {
+			const { settings } = param;
+			store.commit(MUTATION.SET.CURRENT, { appReady: true } as Partial<Current>);
+			store.commit(MUTATION.SET.SETTINGS, settings);
+		});
 
 		window.api.on('signedIn', (param: SignedInParam) => {
 			const { user, auth } = param;

@@ -25,6 +25,7 @@ const RESET = {
 export const MUTATION = { SET, RESET };
 
 export const ACTION = {
+	SAVE_SETTINGS: 'saveSettings' as ApiAction,
 	SIGN_IN: 'signIn' as ApiAction,
 	SIGN_OFF: 'signOff',
 	START_EXPORT: 'startExport',

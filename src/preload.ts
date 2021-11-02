@@ -1,5 +1,18 @@
-import { contextBridge, ipcRenderer } from 'electron';
-import { ApiAction, ApiAuthorization, FunctionLike } from '@/types';
+import { contextBridge, ipcRenderer, IpcRenderer } from 'electron';
+import { ApiAction, ApiAuthorization, FunctionLike, Settings } from '@/types';
+
+/**
+ * Wrapper of {@link IpcRenderer.send}
+ * @param action
+ * @param args
+ */
+const send = (action: ApiAction, ...args: any[]) => {
+	ipcRenderer.send(action, ...args);
+};
+
+const invoke = (action: ApiAction, ...args: any[]) => {
+	return ipcRenderer.invoke(action, ...args);
+}
 
 contextBridge.exposeInMainWorld(
 	'api', {
@@ -9,8 +22,14 @@ contextBridge.exposeInMainWorld(
 		// saveConfiguration: (configuration: Configuration) => {
 		// 	ipcRenderer.send(COMMAND.CONFIGURATION.SAVE, { configuration });
 		// },
-		signIn: (param: ApiAuthorization) => {
-			ipcRenderer.send('signIn' as ApiAction, param);
+		saveSettings: (settings: Settings) => {
+			send('saveSettings', settings);
+		},
+		selectDirectory: (path?: string) => {
+			return invoke('selectDirectory', path);
+		},
+		signIn: (auth: ApiAuthorization) => {
+			send('signIn', auth);
 		},
 		on: (name: string, func: FunctionLike) => {
 			// remove all listeners first
