@@ -12,8 +12,7 @@ import { PATH, ROUTE } from '@/reference/path';
 import { GETTER } from '@/reference/store';
 import store from '@/store';
 
-// TODO: requiresAuth: true
-const requiresAuthMeta: RouteMeta = { requiresAuth: false };
+const requiresAuthMeta: RouteMeta = { requiresAuth: true };
 
 const appTitle: string = document.title;
 

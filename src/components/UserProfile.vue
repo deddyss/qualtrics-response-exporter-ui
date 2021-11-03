@@ -59,42 +59,42 @@
 									<div class="px-4 pt-5 pb-5 sm:px-0 sm:pt-0">
 										<dl class="space-y-8 px-4 sm:px-6 sm:space-y-6">
 											<div>
-												<dt class="text-sm font-medium text-gray-500 sm:w-40 sm:flex-shrink-0">
+												<dt class="text-sm text-gray-500 sm:w-40 sm:flex-shrink-0">
 													Email
 												</dt>
-												<dd class="mt-1 text-sm text-gray-900 sm:col-span-2">
+												<dd class="mt-1 text-sm font-medium text-gray-900 sm:col-span-2">
 													{{ user.email }}
 												</dd>
 											</div>
 											<div>
-												<dt class="text-sm font-medium text-gray-500 sm:w-40 sm:flex-shrink-0">
+												<dt class="text-sm text-gray-500 sm:w-40 sm:flex-shrink-0">
 													Username
 												</dt>
-												<dd class="mt-1 text-sm text-gray-900 sm:col-span-2">
+												<dd class="mt-1 text-sm font-medium text-gray-900 sm:col-span-2">
 													{{ user.userName }}
 												</dd>
 											</div>
 											<div>
-												<dt class="text-sm font-medium text-gray-500 sm:w-40 sm:flex-shrink-0">
+												<dt class="text-sm text-gray-500 sm:w-40 sm:flex-shrink-0">
 													Account Type
 												</dt>
-												<dd class="mt-1 text-sm text-gray-900 sm:col-span-2">
+												<dd class="mt-1 text-sm font-medium text-gray-900 sm:col-span-2">
 													{{ user.accountType }}
 												</dd>
 											</div>
 											<div>
-												<dt class="text-sm font-medium text-gray-500 sm:w-40 sm:flex-shrink-0">
+												<dt class="text-sm text-gray-500 sm:w-40 sm:flex-shrink-0">
 													Brand ID
 												</dt>
-												<dd class="mt-1 text-sm text-gray-900 sm:col-span-2">
+												<dd class="mt-1 text-sm font-medium text-gray-900 sm:col-span-2">
 													{{ user.brandId }}
 												</dd>
 											</div>
 											<div>
-												<dt class="text-sm font-medium text-gray-500 sm:w-40 sm:flex-shrink-0">
+												<dt class="text-sm text-gray-500 sm:w-40 sm:flex-shrink-0">
 													Data Center
 												</dt>
-												<dd class="mt-1 text-sm text-gray-900 sm:col-span-2">
+												<dd class="mt-1 text-sm font-medium text-gray-900 sm:col-span-2">
 													{{ user.datacenter }}
 												</dd>
 											</div>

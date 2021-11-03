@@ -1,8 +1,9 @@
 import { ActionContext, ActionTree } from 'vuex';
-import { ApiAuthorization, Current, ExportProgress, Qualtrics, Settings, State, Survey } from '@/types';
+import { ApiAuthorization, Current, ExportProgress, Qualtrics, QualtricsAuthorization, Settings, State, Survey } from '@/types';
 import { ACTION, MUTATION } from '@/reference/store';
+// import surveys from './dummy/surveys';
 
-const { SAVE_SETTINGS, SAVE_QUALTRICS, SIGN_IN, SIGN_OFF, START_EXPORT, START_OVER } = ACTION;
+const { SAVE_SETTINGS, SAVE_QUALTRICS, SELECT_DIRECTORY, SIGN_IN, SIGN_OFF, RETRIEVE_SURVEYS, START_EXPORT, START_OVER } = ACTION;
 const API_NOT_ACCESSIBLE_ERROR = new Error('API cannot be accessed');
 
 /* eslint-disable arrow-body-style */
@@ -10,6 +11,7 @@ const actions: ActionTree<State, State> = {
 	[SAVE_SETTINGS]: ({ commit }: ActionContext<State, State>, settings: Settings) => {
 		return new Promise<void>((resolve, reject) => {
 			commit(MUTATION.SET.SETTINGS, settings);
+
 			if (window.api) {
 				window.api.saveSettings(settings);
 				resolve();
@@ -19,12 +21,23 @@ const actions: ActionTree<State, State> = {
 			}
 		});
 	},
-	[SAVE_QUALTRICS]: ({ state }: ActionContext<State, State>) => {
+	[SAVE_QUALTRICS]: (context: ActionContext<State, State>, qualtrics: QualtricsAuthorization) => {
 		return new Promise<void>((resolve, reject) => {
 			if (window.api) {
-				const { dataCenter, apiToken } = state.qualtrics;
+				const { dataCenter, apiToken } = qualtrics;
 				window.api.saveQualtrics({ dataCenter, apiToken });
 				resolve();
+			}
+			else {
+				reject(API_NOT_ACCESSIBLE_ERROR);
+			}
+		});
+	},
+	[SELECT_DIRECTORY]: ({ state }: ActionContext<State, State>) => {
+		return new Promise<string>((resolve, reject) => {
+			if (window.api) {
+				const { exportDirectory } = state.settings;
+				window.api.selectDirectory(exportDirectory).then(resolve);
 			}
 			else {
 				reject(API_NOT_ACCESSIBLE_ERROR);
@@ -48,8 +61,25 @@ const actions: ActionTree<State, State> = {
 			if (!state.settings.rememberMe) {
 				commit(MUTATION.SET.QUALTRICS, { apiToken: undefined } as Qualtrics);
 			}
-			// TODO: make all configurations, preferences and changes persisted
+			commit(MUTATION.RESET.CURRENT);
+			commit(MUTATION.RESET.SURVEYS);
+			commit(MUTATION.RESET.SELECTED_IDS);
+			commit(MUTATION.RESET.EXPORT_OPTIONS);
 			resolve();
+		});
+	},
+	[RETRIEVE_SURVEYS]: ({ commit, state }: ActionContext<State, State>) => {
+		return new Promise<void>((resolve, reject) => {
+			commit(MUTATION.SET.CURRENT, { isLoading: true } as Partial<Current>);
+
+			if (window.api) {
+				const { dataCenter } = state.qualtrics;
+				const apiToken = state.qualtrics.apiToken ?? '';
+				window.api.retrieveSurveys({ dataCenter, apiToken });
+			}
+			else {
+				reject(API_NOT_ACCESSIBLE_ERROR);
+			}
 		});
 	},
 	[START_EXPORT]: ({ commit, state }: ActionContext<State, State>) => {

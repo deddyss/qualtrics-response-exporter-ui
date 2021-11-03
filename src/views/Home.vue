@@ -13,6 +13,8 @@ import { mapGetters } from 'vuex';
 import { ROUTE } from '@/reference/path';
 import { ACTION, GETTER } from '@/reference/store';
 
+const DELAY_TIME = 3_000;
+
 export default defineComponent({
 	computed: {
 		...mapGetters({
@@ -29,7 +31,7 @@ export default defineComponent({
 				// give some delay
 				setTimeout(() => {
 					this.autoLoginOrGoToSignInPage();
-				}, 3_000);
+				}, DELAY_TIME);
 			}
 		},
 		isUserAuthorized(authorized: boolean) {

@@ -197,16 +197,18 @@ export interface ApiError {
 
 // ---------------------------- Application API --------------------------------
 
+export interface ReadyParam { settings: Settings, qualtrics?: QualtricsAuthorization }
 export interface SignedInParam { user: User, auth: ApiAuthorization }
 export interface SignInFailedParam { error: ApiError, auth: ApiAuthorization }
-export interface ReadyParam { settings: Settings, qualtrics?: QualtricsAuthorization }
+export interface SurveysRetrievedParam { surveys: Array<Survey> }
+export interface RetrieveSurveysFailedParam { error: ApiError }
 
 // eslint-disable-next-line
 type EventListener = (...args: any[]) => void;
 export type FunctionLike = EventListener;
 
-export type ApiAction = 'signIn' | 'saveSettings' | 'saveQualtrics' | 'selectDirectory';
-export type ApiEvent = 'ready' | 'signedIn' | 'signInFailed' | 'settingsMenuClicked';
+export type ApiAction = 'signIn' | 'saveSettings' | 'saveQualtrics' | 'selectDirectory' | 'retrieveSurveys';
+export type ApiEvent = 'ready' | 'settingsMenuClicked' | 'signedIn' | 'signInFailed' | 'surveysRetrieved' | 'retrieveSurveysFailed';
 
 declare global {
 	interface Window {
@@ -217,6 +219,7 @@ declare global {
 			saveQualtrics: (auth: QualtricsAuthorization) => void;
 			selectDirectory: (path?: string) => Promise<string>;
 			signIn: (auth: ApiAuthorization) => void;
+			retrieveSurveys: (auth: ApiAuthorization) => void;
 			on: (event: ApiEvent, listener: EventListener) => void;
 		}
 	}

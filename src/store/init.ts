@@ -1,6 +1,4 @@
 import { State } from '@/types';
-// TODO: remove dummy surveys once UI development done
-import surveys from './dummy/surveys';
 // TODO: remove dummy export progress once UI development dong
 import exportProgress from './dummy/exportProgress';
 
@@ -25,7 +23,7 @@ const initialState = Object.freeze({
 		accessible: window.api !== undefined,
 		dataCenter: 'syd1'
 	},
-	surveys,
+	surveys: [],
 	selectedIds: [],
 	exportOptions: {
 		format: '',

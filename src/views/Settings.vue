@@ -88,8 +88,8 @@ import { useStore } from 'vuex';
 import { Switch } from '@headlessui/vue';
 import { ArrowSmLeftIcon } from '@heroicons/vue/outline';
 import Select from '@/components/Select.vue';
-import { ACTION, MUTATION } from '@/reference/store';
-import { Qualtrics, SelectOption, Settings, State } from '@/types';
+import { ACTION } from '@/reference/store';
+import { QualtricsAuthorization, SelectOption, Settings, State } from '@/types';
 
 interface Setting {
 	id: string;
@@ -140,11 +140,11 @@ export default defineComponent({
 			handler(settings: Settings) {
 				this.$store.dispatch(ACTION.SAVE_SETTINGS, toRaw(settings));
 
-				const { apiToken } = this.$store.state.qualtrics;
+				const { dataCenter } = this.$store.state.qualtrics;
 				// unset api token if remember-me option value is false
-				if (settings.rememberMe === false && apiToken !== undefined) {
-					this.$store.commit(MUTATION.SET.QUALTRICS, { apiToken: undefined } as Partial<Qualtrics>);
-					this.$store.dispatch(ACTION.SAVE_QUALTRICS);
+				if (settings.rememberMe === false) {
+					// save qualtrics authorization to file
+					this.$store.dispatch(ACTION.SAVE_QUALTRICS, { dataCenter, apiToken: undefined } as QualtricsAuthorization);
 				}
 			},
 			deep: true
@@ -156,13 +156,9 @@ export default defineComponent({
 			return options.map((value: string) => ({ value, label: value } as SelectOption));
 		},
 		triggerDirectorySelector() {
-			if (window.api) {
-				window.api.selectDirectory(
-					this.localSettings.exportDirectory
-				).then((path: string) => {
-					this.localSettings.exportDirectory = path;
-				});
-			}
+			this.$store.dispatch(ACTION.SELECT_DIRECTORY).then((path: string) => {
+				this.localSettings.exportDirectory = path;
+			});
 		},
 		goBack() {
 			this.$router.back();

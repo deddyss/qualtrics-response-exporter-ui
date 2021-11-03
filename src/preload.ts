@@ -1,4 +1,4 @@
-import { contextBridge, ipcRenderer, IpcRenderer } from 'electron';
+import { contextBridge, ipcRenderer } from 'electron';
 import { ApiAction, ApiAuthorization, FunctionLike, QualtricsAuthorization, Settings } from '@/types';
 
 /**
@@ -38,6 +38,9 @@ contextBridge.exposeInMainWorld(
 		},
 		signIn: (auth: ApiAuthorization) => {
 			send('signIn', auth);
+		},
+		retrieveSurveys: (auth: ApiAuthorization) => {
+			send('retrieveSurveys', auth);
 		},
 		on: (name: string, func: FunctionLike) => {
 			// remove all listeners first

@@ -176,6 +176,7 @@ export default defineComponent({
 	methods: {
 		signIn(e: Event): void {
 			e.preventDefault();
+			// TODO: Sign in error if remember-me is unchecked
 
 			const { rememberMe } = this;
 			const settings = { ...this.$store.state.settings, rememberMe } as Settings;

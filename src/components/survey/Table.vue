@@ -16,7 +16,6 @@
 										type="checkbox"
 										ref="selectAllCheckbox"
 										class="form-checkbox focus:ring-blue-500 h-6 w-6 text-blue-600 border-2 border-blue-300 rounded cursor-pointer"
-										v-focus
 										@click="selectAll"
 									/>
 								</th>
@@ -140,7 +139,7 @@ export default defineComponent({
 		);
 
 		onMounted(() => {
-			if (localSelectedIds.value.length === filteredSurveys.value.length) {
+			if (localSelectedIds.value.length === filteredSurveys.value.length && filteredSurveys.value.length > 0) {
 				selectAllCheckbox.value.checked = true;
 			}
 		});

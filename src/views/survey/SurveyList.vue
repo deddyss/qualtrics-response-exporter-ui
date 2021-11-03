@@ -36,8 +36,8 @@ import Table from '@/components/survey/Table.vue';
 import TableSkeleton from '@/components/survey/TableSkeleton.vue';
 import Footer from '@/components/survey/Footer.vue';
 import BackToTop from '@/components/BackToTop.vue';
-import { GETTER, MUTATION } from '@/reference/store';
-import { Current, SortCriteria, State } from '@/types';
+import { ACTION, GETTER, MUTATION } from '@/reference/store';
+import { Current, SortCriteria, State, Survey } from '@/types';
 import { ROUTE } from '@/reference/path';
 
 export default defineComponent({
@@ -90,6 +90,14 @@ export default defineComponent({
 			isLoading: GETTER.IS_LOADING
 		})
 	},
+	mounted() {
+		this.$nextTick(() => {
+			const isSurveysEmpty = (this.surveys as Survey[]).length === 0;
+			if (isSurveysEmpty) {
+				this.$store.dispatch(ACTION.RETRIEVE_SURVEYS);
+			}
+		});
+	},
 	methods: {
 		goToExportOptions() {
 			this.$router.push(ROUTE.EXPORT_OPTIONS);
@@ -97,10 +105,7 @@ export default defineComponent({
 		reload() {
 			// TODO:
 			this.selectedIds = [];
-			this.$store.commit(MUTATION.SET.CURRENT, { isLoading: true } as Partial<Current>);
-			setTimeout(() => {
-				this.$store.commit(MUTATION.SET.CURRENT, { isLoading: false } as Partial<Current>);
-			}, 10000);
+			this.$store.dispatch(ACTION.RETRIEVE_SURVEYS);
 		}
 	}
 });
