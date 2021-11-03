@@ -6,10 +6,10 @@ import installExtension, { VUEJS3_DEVTOOLS } from 'electron-devtools-installer';
 import { FastifyInstance } from 'fastify';
 import path from "path";
 import { createWebServer, getAvailablePort } from '@/api/server';
-import { loadSettings, notify, registerEventListeners } from '@/electron/api'
+import { loadQualtricsAuthorization, loadSettings, notify, registerEventListeners } from '@/electron/api'
 import { initKey } from "@/electron/encryptor";
 import menu from "@/electron/menu";
-import { ReadyParam, Settings } from './types';
+import { QualtricsAuthorization, ReadyParam, Settings } from './types';
 
 const isDevelopment = process.env.NODE_ENV !== 'production';
 
@@ -71,9 +71,11 @@ const createWindow = async () => {
 	registerEventListeners(window);
 
 	// load settings
-	const settings: Settings = loadSettings();
+	const settings = loadSettings();
+	// load qualtrics authorization (if any)
+	const qualtrics = loadQualtricsAuthorization();
 	// notify that application is ready now
-	notify(window.webContents).that('ready', { settings } as ReadyParam);
+	notify(window.webContents).that('ready', { settings, qualtrics } as ReadyParam);
 };
 
 const runMiscellaneousScript = () => {

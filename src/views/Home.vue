@@ -9,13 +9,54 @@
 
 <script lang='ts'>
 import { defineComponent } from 'vue';
+import { mapGetters } from 'vuex';
 import { ROUTE } from '@/reference/path';
+import { ACTION, GETTER } from '@/reference/store';
 
 export default defineComponent({
-	mounted() {
-		setTimeout(() => {
+	computed: {
+		...mapGetters({
+			isAppReady: GETTER.IS_APP_READY,
+			isUserAuthorized: GETTER.IS_USER_AUTHORIZED
+		}),
+		authorizationError(): string {
+			return this.$store.state.qualtrics.errorMessage ?? '';
+		}
+	},
+	watch: {
+		isAppReady(ready: boolean) {
+			if (ready) {
+				// give some delay
+				setTimeout(() => {
+					this.autoLoginOrGoToSignInPage();
+				}, 3_000);
+			}
+		},
+		isUserAuthorized(authorized: boolean) {
+			if (authorized) {
+				this.$router.push(ROUTE.SURVEY_LIST);
+			}
+		},
+		authorizationError() {
+			this.goToSignInPage();
+		}
+	},
+	methods: {
+		autoLoginOrGoToSignInPage() {
+			const { rememberMe } = this.$store.state.settings;
+			const { dataCenter, apiToken } = this.$store.state.qualtrics;
+
+			if (rememberMe && apiToken) {
+				// auto login
+				this.$store.dispatch(ACTION.SIGN_IN, { apiToken, dataCenter });
+			}
+			else {
+				this.goToSignInPage();
+			}
+		},
+		goToSignInPage() {
 			this.$router.push(ROUTE.SIGN_IN);
-		}, 5000);
+		}
 	}
 });
 </script>

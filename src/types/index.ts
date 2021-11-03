@@ -69,6 +69,8 @@ export interface Qualtrics {
 	errorMessage?: string;
 }
 
+export type QualtricsAuthorization = Pick<Qualtrics, 'dataCenter' | 'apiToken'>;
+
 export interface User {
 	brandId?: string;
 	userId?: string;
@@ -197,13 +199,13 @@ export interface ApiError {
 
 export interface SignedInParam { user: User, auth: ApiAuthorization }
 export interface SignInFailedParam { error: ApiError, auth: ApiAuthorization }
-export interface ReadyParam { settings: Settings }
+export interface ReadyParam { settings: Settings, qualtrics?: QualtricsAuthorization }
 
 // eslint-disable-next-line
 type EventListener = (...args: any[]) => void;
 export type FunctionLike = EventListener;
 
-export type ApiAction = 'signIn' | 'saveSettings' | 'selectDirectory';
+export type ApiAction = 'signIn' | 'saveSettings' | 'saveQualtrics' | 'selectDirectory';
 export type ApiEvent = 'ready' | 'signedIn' | 'signInFailed' | 'settingsMenuClicked';
 
 declare global {
@@ -212,6 +214,7 @@ declare global {
 			// loadConfiguration: () => void;
 			// saveConfiguration: (configuration: Configuration) => void;
 			saveSettings: (settings: Settings) => void;
+			saveQualtrics: (auth: QualtricsAuthorization) => void;
 			selectDirectory: (path?: string) => Promise<string>;
 			signIn: (auth: ApiAuthorization) => void;
 			on: (event: ApiEvent, listener: EventListener) => void;

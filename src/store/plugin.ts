@@ -1,6 +1,6 @@
 import { Plugin, Store } from 'vuex';
 import { Current, Qualtrics, ReadyParam, SignedInParam, SignInFailedParam, State } from '@/types';
-import { MUTATION } from '@/reference/store';
+import { ACTION, MUTATION } from '@/reference/store';
 
 const ERROR_MESSAGE_TIMEOUT = 2500;
 
@@ -10,15 +10,24 @@ const createElectronApiPlugin = (): Plugin<State> => {
 		if (window.api === undefined) return;
 
 		window.api.on('ready', (param: ReadyParam) => {
-			const { settings } = param;
-			store.commit(MUTATION.SET.CURRENT, { appReady: true } as Partial<Current>);
+			const { settings, qualtrics } = param;
+			if (qualtrics) {
+				store.commit(MUTATION.SET.QUALTRICS, qualtrics);
+			}
 			store.commit(MUTATION.SET.SETTINGS, settings);
+			store.commit(MUTATION.SET.CURRENT, { appReady: true } as Partial<Current>);
 		});
 
 		window.api.on('signedIn', (param: SignedInParam) => {
 			const { user, auth } = param;
 			store.commit(MUTATION.SET.USER, user);
 			store.commit(MUTATION.SET.QUALTRICS, auth as Qualtrics);
+
+			const { rememberMe } = store.state.settings;
+			if (rememberMe) {
+				// save qualtrics configuration
+				store.dispatch(ACTION.SAVE_QUALTRICS);
+			}
 		});
 
 		window.api.on('signInFailed', (param: SignInFailedParam) => {

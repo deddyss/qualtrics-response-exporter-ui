@@ -1,5 +1,5 @@
 import { contextBridge, ipcRenderer, IpcRenderer } from 'electron';
-import { ApiAction, ApiAuthorization, FunctionLike, Settings } from '@/types';
+import { ApiAction, ApiAuthorization, FunctionLike, QualtricsAuthorization, Settings } from '@/types';
 
 /**
  * Wrapper of {@link IpcRenderer.send}
@@ -10,7 +10,12 @@ const send = (action: ApiAction, ...args: any[]) => {
 	ipcRenderer.send(action, ...args);
 };
 
-const invoke = (action: ApiAction, ...args: any[]) => {
+/**
+ * Wrapper of {@link IpcRenderer.invoke}
+ * @param action
+ * @param args
+ */
+ const invoke = (action: ApiAction, ...args: any[]) => {
 	return ipcRenderer.invoke(action, ...args);
 }
 
@@ -24,6 +29,9 @@ contextBridge.exposeInMainWorld(
 		// },
 		saveSettings: (settings: Settings) => {
 			send('saveSettings', settings);
+		},
+		saveQualtrics: (auth: QualtricsAuthorization) => {
+			send('saveQualtrics', auth);
 		},
 		selectDirectory: (path?: string) => {
 			return invoke('selectDirectory', path);

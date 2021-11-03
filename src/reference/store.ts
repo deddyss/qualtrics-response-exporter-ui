@@ -26,6 +26,7 @@ export const MUTATION = { SET, RESET };
 
 export const ACTION = {
 	SAVE_SETTINGS: 'saveSettings' as ApiAction,
+	SAVE_QUALTRICS: 'saveQualtrics' as ApiAction,
 	SIGN_IN: 'signIn' as ApiAction,
 	SIGN_OFF: 'signOff',
 	START_EXPORT: 'startExport',
@@ -33,6 +34,7 @@ export const ACTION = {
 };
 
 export const GETTER = {
+	IS_APP_READY: 'isAppReady',
 	IS_USER_AUTHORIZED: 'isUserAuthorized',
 	NAVIGATION_MENU_POSITION: 'getNavigationMenuPosition',
 	SETTINGS: 'getSettings',

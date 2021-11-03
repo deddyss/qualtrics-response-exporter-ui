@@ -88,8 +88,8 @@ import { useStore } from 'vuex';
 import { Switch } from '@headlessui/vue';
 import { ArrowSmLeftIcon } from '@heroicons/vue/outline';
 import Select from '@/components/Select.vue';
-import { ACTION } from '@/reference/store';
-import { SelectOption, Settings, State } from '@/types';
+import { ACTION, MUTATION } from '@/reference/store';
+import { Qualtrics, SelectOption, Settings, State } from '@/types';
 
 interface Setting {
 	id: string;
@@ -103,7 +103,7 @@ const questions: Array<Setting> = [
 	{
 		id: 'rememberMe',
 		title: 'Remember me',
-		description: 'When this option is enabled, the application will remember your Qualtrics API token and data center so you don\'t have to sign-in manually. Conversely, stored API token and data center, if any, will be deleted',
+		description: 'When this option is enabled, the application will remember your Qualtrics API token so you don\'t have to sign-in manually. Conversely, stored API token will be deleted',
 		type: 'boolean'
 	},
 	{
@@ -139,6 +139,13 @@ export default defineComponent({
 		localSettings: {
 			handler(settings: Settings) {
 				this.$store.dispatch(ACTION.SAVE_SETTINGS, toRaw(settings));
+
+				const { apiToken } = this.$store.state.qualtrics;
+				// unset api token if remember-me option value is false
+				if (settings.rememberMe === false && apiToken !== undefined) {
+					this.$store.commit(MUTATION.SET.QUALTRICS, { apiToken: undefined } as Partial<Qualtrics>);
+					this.$store.dispatch(ACTION.SAVE_QUALTRICS);
+				}
 			},
 			deep: true
 		}

@@ -2,9 +2,11 @@ import { app, BrowserWindow, dialog, ipcMain, IpcMainEvent, IpcMainInvokeEvent, 
 import path from 'path';
 import fs from 'fs';
 import { WhoAmI } from '@/api/qualtrics';
-import { ApiAction, ApiAuthorization, ApiError, ApiEvent, Settings, SignedInParam, SignInFailedParam, User } from '@/types';
+import { ApiAction, ApiAuthorization, ApiError, ApiEvent, Qualtrics, QualtricsAuthorization, Settings, SignedInParam, SignInFailedParam, User } from '@/types';
+import { decrypt, encrypt } from './encryptor';
 
 const SETTINGS_FILE_PATH = path.join(app.getPath('userData'), 'settings.json');
+const QUALTRICS_FILE_PATH = path.join(app.getPath('userData'), 'qualtrics.json');
 const DEFAULT_EXPORT_DIRECTORY = path.resolve(app.getPath('downloads'));
 
 const signIn = async (auth: ApiAuthorization) => {
@@ -41,6 +43,32 @@ const saveSettings = (settings: Settings): Promise<void> => (
 			}
 			fs.writeFile(SETTINGS_FILE_PATH, JSON.stringify(settings), () => resolve());
 		});
+	})
+);
+
+export const loadQualtricsAuthorization = (): QualtricsAuthorization | undefined => {
+	if (!fs.existsSync(QUALTRICS_FILE_PATH)) {
+		return undefined;
+	}
+
+	const content: string = fs.readFileSync(QUALTRICS_FILE_PATH, 'utf-8');
+	const qualtrics: Qualtrics = JSON.parse(content) as Qualtrics;
+	const { dataCenter, apiToken } = qualtrics;
+
+	let decryptedApiToken: string | undefined;
+	if (apiToken) {
+		decryptedApiToken = decrypt(apiToken);
+	}
+	return { dataCenter, apiToken: decryptedApiToken };
+};
+
+const saveQualtricsAuthorization = (auth: QualtricsAuthorization): Promise<void> => (
+	new Promise<void>((resolve) => {
+		const encryptedAuth = { ...auth };
+		if (auth.apiToken) {
+			encryptedAuth.apiToken = encrypt(auth.apiToken);
+		}
+		fs.writeFile(QUALTRICS_FILE_PATH, JSON.stringify(encryptedAuth), () => resolve());
 	})
 );
 
@@ -87,6 +115,11 @@ export const registerEventListeners = (window: BrowserWindow): void => {
 	// save settings
 	ipcMain.on('saveSettings' as ApiAction, (event: IpcMainEvent, settings: Settings) => {
 		saveSettings(settings);
+	});
+
+	// save qualtrics authorization
+	ipcMain.on('saveQualtrics' as ApiAction, (event: IpcMainEvent, auth: QualtricsAuthorization) => {
+		saveQualtricsAuthorization(auth);
 	});
 
 	// select directory

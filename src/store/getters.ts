@@ -3,6 +3,7 @@ import { GETTER } from '@/reference/store';
 import { ExportProgress, NavigationMenuPosition, Settings, State, Survey } from '@/types';
 
 const {
+	IS_APP_READY,
 	IS_USER_AUTHORIZED,
 	NAVIGATION_MENU_POSITION,
 	SETTINGS,
@@ -16,6 +17,9 @@ const {
 
 /* eslint-disable arrow-body-style */
 const getters: GetterTree<State, State> = {
+	[IS_APP_READY]: (state: State): boolean => {
+		return state.current.appReady;
+	},
 	[IS_USER_AUTHORIZED]: (state: State): boolean => {
 		return state.qualtrics.apiToken !== undefined && state.user !== undefined && state.user.userId !== undefined;
 	},

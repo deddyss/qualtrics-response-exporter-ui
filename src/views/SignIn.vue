@@ -105,7 +105,7 @@ import Alert from '@/components/Alert.vue';
 
 import BACKGROUNDS from '@/reference/images';
 import { DATA_CENTERS } from '@/reference';
-import { ACTION, GETTER, MUTATION } from '@/reference/store';
+import { ACTION, GETTER } from '@/reference/store';
 import { Settings, SelectOption, State } from '@/types';
 import { ROUTE } from '@/reference/path';
 
@@ -177,11 +177,13 @@ export default defineComponent({
 		signIn(e: Event): void {
 			e.preventDefault();
 
+			const { rememberMe } = this;
+			const settings = { ...this.$store.state.settings, rememberMe } as Settings;
+			this.$store.dispatch(ACTION.SAVE_SETTINGS, settings);
+
 			const { apiToken, dataCenter } = this;
 			this.$store.dispatch(ACTION.SIGN_IN, { apiToken, dataCenter }).then(() => {
 				this.signingIn = true;
-				this.$store.commit(MUTATION.SET.SETTINGS, { rememberMe: this.rememberMe } as Settings);
-				// TODO: remember me = true -> store to file
 			});
 		},
 		focusToInput(): void {

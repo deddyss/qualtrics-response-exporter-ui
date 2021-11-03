@@ -2,7 +2,7 @@ import { ActionContext, ActionTree } from 'vuex';
 import { ApiAuthorization, Current, ExportProgress, Qualtrics, Settings, State, Survey } from '@/types';
 import { ACTION, MUTATION } from '@/reference/store';
 
-const { SAVE_SETTINGS, SIGN_IN, SIGN_OFF, START_EXPORT, START_OVER } = ACTION;
+const { SAVE_SETTINGS, SAVE_QUALTRICS, SIGN_IN, SIGN_OFF, START_EXPORT, START_OVER } = ACTION;
 const API_NOT_ACCESSIBLE_ERROR = new Error('API cannot be accessed');
 
 /* eslint-disable arrow-body-style */
@@ -12,6 +12,18 @@ const actions: ActionTree<State, State> = {
 			commit(MUTATION.SET.SETTINGS, settings);
 			if (window.api) {
 				window.api.saveSettings(settings);
+				resolve();
+			}
+			else {
+				reject(API_NOT_ACCESSIBLE_ERROR);
+			}
+		});
+	},
+	[SAVE_QUALTRICS]: ({ state }: ActionContext<State, State>) => {
+		return new Promise<void>((resolve, reject) => {
+			if (window.api) {
+				const { dataCenter, apiToken } = state.qualtrics;
+				window.api.saveQualtrics({ dataCenter, apiToken });
 				resolve();
 			}
 			else {
