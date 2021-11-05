@@ -1,19 +1,19 @@
+import { toRaw } from 'vue';
 import { ActionContext, ActionTree } from 'vuex';
 import { ApiAuthorization, Current, ExportProgress, Qualtrics, QualtricsAuthorization, Settings, State, Survey } from '@/types';
 import { ACTION, MUTATION } from '@/reference/store';
 // import surveys from './dummy/surveys';
 
-const { SAVE_SETTINGS, SAVE_QUALTRICS, SELECT_DIRECTORY, SIGN_IN, SIGN_OFF, RETRIEVE_SURVEYS, START_EXPORT, START_OVER } = ACTION;
+const { SAVE_SETTINGS, SAVE_QUALTRICS, SELECT_DIRECTORY, SIGN_IN, SIGN_OFF, RETRIEVE_SURVEYS, EXPORT_RESPONSES, START_OVER } = ACTION;
 const API_NOT_ACCESSIBLE_ERROR = new Error('API cannot be accessed');
 
 /* eslint-disable arrow-body-style */
 const actions: ActionTree<State, State> = {
 	[SAVE_SETTINGS]: ({ commit }: ActionContext<State, State>, settings: Settings) => {
 		return new Promise<void>((resolve, reject) => {
-			commit(MUTATION.SET.SETTINGS, settings);
-
 			if (window.api) {
-				window.api.saveSettings(settings);
+				commit(MUTATION.SET.SETTINGS, settings);
+				window.api.saveSettings({ settings: toRaw(settings) });
 				resolve();
 			}
 			else {
@@ -21,11 +21,10 @@ const actions: ActionTree<State, State> = {
 			}
 		});
 	},
-	[SAVE_QUALTRICS]: (context: ActionContext<State, State>, qualtrics: QualtricsAuthorization) => {
+	[SAVE_QUALTRICS]: (context: ActionContext<State, State>, auth: QualtricsAuthorization) => {
 		return new Promise<void>((resolve, reject) => {
 			if (window.api) {
-				const { dataCenter, apiToken } = qualtrics;
-				window.api.saveQualtrics({ dataCenter, apiToken });
+				window.api.saveQualtrics({ auth });
 				resolve();
 			}
 			else {
@@ -36,8 +35,8 @@ const actions: ActionTree<State, State> = {
 	[SELECT_DIRECTORY]: ({ state }: ActionContext<State, State>) => {
 		return new Promise<string>((resolve, reject) => {
 			if (window.api) {
-				const { exportDirectory } = state.settings;
-				window.api.selectDirectory(exportDirectory).then(resolve);
+				const { exportDirectory: path } = state.settings;
+				window.api.selectDirectory({ path }).then(resolve);
 			}
 			else {
 				reject(API_NOT_ACCESSIBLE_ERROR);
@@ -47,7 +46,7 @@ const actions: ActionTree<State, State> = {
 	[SIGN_IN]: (context: ActionContext<State, State>, auth: ApiAuthorization) => {
 		return new Promise<void>((resolve, reject) => {
 			if (window.api) {
-				window.api.signIn(auth);
+				window.api.signIn({ auth });
 				resolve();
 			}
 			else {
@@ -70,21 +69,22 @@ const actions: ActionTree<State, State> = {
 	},
 	[RETRIEVE_SURVEYS]: ({ commit, state }: ActionContext<State, State>) => {
 		return new Promise<void>((resolve, reject) => {
-			commit(MUTATION.SET.CURRENT, { isLoading: true } as Partial<Current>);
-
 			if (window.api) {
-				const { dataCenter } = state.qualtrics;
-				const apiToken = state.qualtrics.apiToken ?? '';
-				window.api.retrieveSurveys({ dataCenter, apiToken });
+				commit(MUTATION.SET.CURRENT, { isLoading: true } as Partial<Current>);
+
+				const { dataCenter, apiToken } = state.qualtrics;
+				const auth = { dataCenter, apiToken } as ApiAuthorization;
+				window.api.retrieveSurveys({ auth });
+				resolve();
 			}
 			else {
 				reject(API_NOT_ACCESSIBLE_ERROR);
 			}
 		});
 	},
-	[START_EXPORT]: ({ commit, state }: ActionContext<State, State>) => {
+	[EXPORT_RESPONSES]: ({ commit, state }: ActionContext<State, State>) => {
+		const { surveys, selectedIds, exportOptions, settings, qualtrics } = state;
 		const composeExportProgressState = (): ExportProgress => {
-			const { surveys, selectedIds } = state;
 			const getSurveyName = (id: string) => {
 				const survey: Survey | undefined = surveys.find((item) => item.id === id);
 				return survey?.name ?? '';
@@ -95,18 +95,31 @@ const actions: ActionTree<State, State> = {
 				const name = getSurveyName(id);
 				exportProgress[id] = { id, name };
 			});
-			console.log(exportProgress);
 			return exportProgress;
 		};
 
-		return new Promise<void>((resolve) => {
-			// eslint-disable-next-line
-			const exportProgress = composeExportProgressState();
-			// TODO: update export progress
-			// commit(MUTATION.SET.EXPORT_PROGRESS, exportProgress);
-			commit(MUTATION.SET.CURRENT, { isExporting: true } as Partial<Current>);
-			// TODO: call API
-			resolve();
+		return new Promise<void>((resolve, reject) => {
+			if (window.api) {
+				const { exportDirectory } = settings;
+				const { dataCenter, apiToken } = qualtrics;
+				const auth = { dataCenter, apiToken } as ApiAuthorization;
+				const exportProgress = composeExportProgressState();
+
+				commit(MUTATION.SET.EXPORT_PROGRESS, exportProgress);
+				commit(MUTATION.SET.CURRENT, { isExporting: true } as Partial<Current>);
+
+				window.api.exportResponses({
+					auth,
+					selectedIds: toRaw(selectedIds),
+					surveys: toRaw(surveys),
+					exportOptions: toRaw(exportOptions),
+					exportDirectory
+				});
+				resolve();
+			}
+			else {
+				reject(API_NOT_ACCESSIBLE_ERROR);
+			}
 		});
 	},
 	[START_OVER]: ({ commit }: ActionContext<State, State>) => {
@@ -114,8 +127,7 @@ const actions: ActionTree<State, State> = {
 			commit(MUTATION.RESET.CURRENT);
 			commit(MUTATION.RESET.SELECTED_IDS);
 			commit(MUTATION.RESET.EXPORT_OPTIONS);
-			// TODO: reset export progress
-			// commit(MUTATION.RESET.EXPORT_PROGRESS);
+			commit(MUTATION.RESET.EXPORT_PROGRESS);
 			// TODO: do we need to reset selected ID's and export options, or updated it with persisted configuration
 			resolve();
 		});

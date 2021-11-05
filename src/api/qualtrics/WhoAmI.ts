@@ -1,15 +1,10 @@
 import { AxiosResponse, AxiosError } from 'axios';
-import { ApiAuthorization, ApiErrorResponse, User, WhoAmIResponse } from '@/types';
+import { ApiErrorResponse, User, WhoAmIResponse } from '@/types';
 import Api from './Api';
 
 const URL = '/whoami';
 
 class WhoAmI extends Api {
-
-	constructor(config: ApiAuthorization) {
-		super(config);
-	}
-
 	public userInfo(): Promise<User> {
 		return new Promise<User>((resolve, reject) => {
 			this.sendHttpGetRequest<WhoAmIResponse>({ url: URL })
@@ -17,7 +12,7 @@ class WhoAmI extends Api {
 					resolve(response.data.result);
 				})
 				.catch((error: AxiosError<ApiErrorResponse>) => {
-					reject(this.parseError(error));
+					reject(Api.parseError(error));
 				});
 		});
 	}

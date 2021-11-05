@@ -67,7 +67,6 @@ export default defineComponent({
 		selectedIds: {
 			handler(values: string[]) {
 				this.$store.commit(MUTATION.SET.SELECTED_IDS, values);
-				// TODO: save to file if remember me checkbox is checked
 			},
 			deep: true
 		},
@@ -103,7 +102,6 @@ export default defineComponent({
 			this.$router.push(ROUTE.EXPORT_OPTIONS);
 		},
 		reload() {
-			// TODO:
 			this.selectedIds = [];
 			this.$store.dispatch(ACTION.RETRIEVE_SURVEYS);
 		}

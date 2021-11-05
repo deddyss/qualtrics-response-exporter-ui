@@ -6,7 +6,7 @@ class Api {
 	private baseUrl: string;
 	private apiToken: string;
 
-	constructor (auth: ApiAuthorization) {
+	constructor(auth: ApiAuthorization) {
 		this.baseUrl = `https://${auth.dataCenter}.qualtrics.com/API/v3`;
 		this.apiToken = auth.apiToken;
 	}
@@ -40,16 +40,16 @@ class Api {
 		return axios.request<T>({
 			...options,
 			...this.defaultAxiosRequestConfig(options),
-			...{ 
+			...{
 				method: 'post',
 				transformRequest: [
-					data => JSON.stringify(data)
+					(data) => JSON.stringify(data)
 				]
 			}
 		});
 	}
 
-	protected parseError(error: AxiosError<ApiErrorResponse>): ApiError {
+	protected static parseError(error: AxiosError<ApiErrorResponse>): ApiError {
 		const { response, request, message } = error;
 		if (response) {
 			const { status, statusText, data } = response;
@@ -59,12 +59,11 @@ class Api {
 			}
 			return apiError;
 		}
-		else if (request) {
+		if (request) {
 			return { status: -1, statusText: 'The request was made but no response was received' };
 		}
-		else {
-			return { status: -2, statusText: 'Something happened in setting up the request', message };
-		}
+
+		return { status: -2, statusText: 'Something happened in setting up the request', message };
 	}
 
 	private defaultAxiosRequestConfig(options: AxiosRequestConfig): AxiosRequestConfig {

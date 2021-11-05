@@ -42,9 +42,15 @@ npm install --save fuse.js
 // system information and cryptography library
 npm install --save systeminformation crypto-js
 npm install --save-dev @types/crypto-js
-
 // axios and rate limiter
 npm install --save axios limiter
+// queue, lock
+npm install --save denque async-lock
+npm install --save-dev @types/async-lock
+// to comply with eslint rules
+npm install --save-dev ts-jest@24.3.0
+
+
 // queue, thread, lock
 npm install --save denque threads async-lock
 // web server (http & websocket), available port

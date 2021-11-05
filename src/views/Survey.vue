@@ -119,19 +119,6 @@ export default defineComponent({
 				this.routePath = current;
 			}
 		};
-
-		// TODO: remove lines below
-		// this.$nextTick(() => {
-		// 	setTimeout(() => {
-		// 		this.$store.commit(MUTATION.SET.CURRENT, { errorMessage: 'The data is combined into a compressed ZIP file in order to reduce the overall file size.' } as Partial<Current>);
-		// 	}, 3_000);
-		// 	setTimeout(() => {
-		// 		this.$store.commit(MUTATION.SET.CURRENT, { errorMessage: 'Exporting without compression is only recommended for small exports. Large exports may encounter issues when downloading the large files' } as Partial<Current>);
-		// 	}, 6_000);
-		// 	setTimeout(() => {
-		// 		this.$store.commit(MUTATION.SET.CURRENT, { errorMessage: 'Continuation gives you the ability to export new responses since the last export (done with continuation).' } as Partial<Current>);
-		// 	}, 40_000);
-		// });
 	},
 	methods: {
 		menuClicked(menuItem: NavigationMenuItem): void {

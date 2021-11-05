@@ -1,58 +1,93 @@
 import { BrowserWindow, ipcMain, IpcMainEvent, IpcMainInvokeEvent, WebContents } from 'electron';
-import { ApiAction, ApiAuthorization, ApiError, ApiEvent, QualtricsAuthorization, RetrieveSurveysFailedParam, Settings, SignedInParam, SignInFailedParam, Survey, SurveysRetrievedParam, User } from '@/types';
-import { retrieveSurveys, signIn } from './qualtrics';
-import { saveQualtricsAuthorization, saveSettings, selectDirectory } from './internal';
+import { Surveys, WhoAmI } from '@/api/qualtrics';
+import { ApiAction, ApiAuthorization, ApiError, ExportResponsesActionParam, RetrieveSurveysActionParam, RetrieveSurveysFailedEventParam, SaveQualtricsActionParam, SaveSettingsActionParam, SelectDirectoryActionParam, SignedInEventParam, SignInActionParam, SignInFailedEventParam, Survey, SurveysRetrievedEventParam, User } from '@/types';
+import createServer from './export/server';
+import createWorker from './export/worker';
+import { saveQualtricsAuthorization } from './storage/qualtrics';
+import { saveSettings, selectDirectory } from './storage/settings';
+import { notify, range } from './util';
 
-export { loadQualtricsAuthorization, loadSettings } from './internal';
+export { loadQualtricsAuthorization } from './storage/qualtrics';
+export { loadSettings } from './storage/settings';
 
-/**
- * Wrapper of {@link WebContents.send}
- * @param webContents
- * @returns
- */
-export const notify = (webContents: WebContents) => {
-	const that = (apiEvent: ApiEvent, ...args: any[]) => {
-		webContents.send(apiEvent, ...args);
-	}
-	return { that };
-}
+const signIn = async (auth: ApiAuthorization) => {
+	const api = new WhoAmI(auth);
+	return new Promise<User>((resolve, reject) => {
+		api.userInfo()
+			.then((user: User) => resolve(user))
+			.catch((error: ApiError) => reject(error));
+	});
+};
+
+const retrieveSurveys = async (auth: ApiAuthorization) => {
+	const api = new Surveys(auth);
+	return new Promise<Array<Survey>>((resolve, reject) => {
+		api.listAllSurvey()
+			.then((surveys: Survey[]) => resolve(surveys))
+			.catch((error: ApiError) => reject(error));
+	});
+};
+
+const exportResponses = async (param: ExportResponsesActionParam, webContents: WebContents) => {
+	// TODO: change it to configurable value or use the number of CPUs
+	const count = 4;
+	const server = createServer({ ...param, webContents });
+	const runningWorkers: Array<Promise<void>> = [];
+	range(1, count).forEach((id) => {
+		const worker = createWorker({ id, server });
+		runningWorkers.push(worker.run());
+	});
+	Promise.all(runningWorkers).then(() => {
+		notify(webContents).that('responsesExported');
+	});
+};
 
 export const registerEventListeners = (window: BrowserWindow): void => {
 	// save settings
-	ipcMain.on('saveSettings' as ApiAction, (event: IpcMainEvent, settings: Settings) => {
+	ipcMain.on('saveSettings' as ApiAction, (event: IpcMainEvent, param: SaveSettingsActionParam) => {
+		const { settings } = param;
 		saveSettings(settings);
 	});
 
 	// save qualtrics authorization
-	ipcMain.on('saveQualtrics' as ApiAction, (event: IpcMainEvent, auth: QualtricsAuthorization) => {
+	ipcMain.on('saveQualtrics' as ApiAction, (event: IpcMainEvent, param: SaveQualtricsActionParam) => {
+		const { auth } = param;
 		saveQualtricsAuthorization(auth);
 	});
 
 	// select directory
-	ipcMain.handle('selectDirectory' as ApiAction, async (event: IpcMainInvokeEvent, path?: string) => {
+	ipcMain.handle('selectDirectory' as ApiAction, async (event: IpcMainInvokeEvent, param: SelectDirectoryActionParam) => {
+		const { path } = param;
 		const directory = await selectDirectory(window, path);
 		return directory;
 	});
 
 	// sign in
-	ipcMain.on('signIn' as ApiAction, (event: IpcMainEvent, auth: ApiAuthorization) => {
+	ipcMain.on('signIn' as ApiAction, (event: IpcMainEvent, param: SignInActionParam) => {
+		const { auth } = param;
 		signIn(auth)
-			.then((user: User) => notify(event.sender).that('signedIn', { user, auth } as SignedInParam))
-			.catch((error: ApiError) => notify(event.sender).that('signInFailed', { error, auth } as SignInFailedParam));
+			.then((user: User) => notify(event.sender).that('signedIn', { user, auth } as SignedInEventParam))
+			.catch((error: ApiError) => notify(event.sender).that('signInFailed', { error, auth } as SignInFailedEventParam));
 	});
 
 	// retrieve surveys
-	ipcMain.on('retrieveSurveys' as ApiAction, (event: IpcMainEvent, auth: ApiAuthorization) => {
+	ipcMain.on('retrieveSurveys' as ApiAction, (event: IpcMainEvent, param: RetrieveSurveysActionParam) => {
+		const { auth } = param;
 		retrieveSurveys(auth)
 			.then(
 				(surveys: Survey[]) => notify(event.sender).that(
-					'surveysRetrieved', { surveys } as SurveysRetrievedParam
+					'surveysRetrieved', { surveys } as SurveysRetrievedEventParam
 				)
 			)
 			.catch(
 				(error: ApiError) => notify(event.sender).that(
-					'retrieveSurveysFailed', { error } as RetrieveSurveysFailedParam
+					'retrieveSurveysFailed', { error } as RetrieveSurveysFailedEventParam
 				)
 			);
+	});
+
+	// export responses
+	ipcMain.on('exportResponses' as ApiAction, (event: IpcMainEvent, param: ExportResponsesActionParam) => {
+		exportResponses(param, event.sender);
 	});
 };

@@ -18,10 +18,10 @@ describe('Qualtrics API: Who Am I', () => {
 
 		expect.assertions(1);
 
-		const api = new WhoAmI({dataCenter: 'syd1', apiToken: ''});
-		await expect(api.userInfo()).rejects.toMatchObject<ApiError>({ 
+		const api = new WhoAmI({ dataCenter: 'syd1', apiToken: '' });
+		await expect(api.userInfo()).rejects.toMatchObject<ApiError>({
 			status: 400,
-			statusText: 'Bad Request' 
+			statusText: 'Bad Request'
 		});
 	});
 
@@ -31,10 +31,10 @@ describe('Qualtrics API: Who Am I', () => {
 
 		expect.assertions(1);
 
-		const api = new WhoAmI({dataCenter: 'syd1', apiToken: 'INVALID-API-TOKEN'});
-		await expect(api.userInfo()).rejects.toMatchObject<ApiError>({ 
+		const api = new WhoAmI({ dataCenter: 'syd1', apiToken: 'INVALID-API-TOKEN' });
+		await expect(api.userInfo()).rejects.toMatchObject<ApiError>({
 			status: 401,
-			statusText: 'Unauthorized' 
+			statusText: 'Unauthorized'
 		});
 	});
 
@@ -44,11 +44,10 @@ describe('Qualtrics API: Who Am I', () => {
 
 		expect.assertions(2);
 
-		const api = new WhoAmI({dataCenter: 'syd1', apiToken: 'VALID-API-TOKEN'});
+		const api = new WhoAmI({ dataCenter: 'syd1', apiToken: 'VALID-API-TOKEN' });
 		const user = await (api.userInfo());
 
 		expect(mockedAxios.request).toBeCalledTimes(1);
 		expect(user.firstName).toBe('John');
 	});
-
 });

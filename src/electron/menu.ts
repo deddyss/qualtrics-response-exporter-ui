@@ -1,13 +1,13 @@
-import { Menu, MenuItemConstructorOptions } from "electron";
-import { notify } from './api';
+import { Menu, MenuItemConstructorOptions } from 'electron';
+import { notify } from '@/electron/api/util';
 
 const template: MenuItemConstructorOptions[] = [
 	{
-		label: "App",
+		label: 'App',
 		submenu: [
 			{
-				label: "Settings",
-				accelerator: "CmdOrCtrl+,",
+				label: 'Settings',
+				accelerator: 'CmdOrCtrl+,',
 				click: (item, focusedWindow) => {
 					if (focusedWindow) {
 						notify(focusedWindow.webContents).that('settingsMenuClicked');
@@ -15,59 +15,59 @@ const template: MenuItemConstructorOptions[] = [
 				}
 			},
 			{
-				type: "separator"
+				type: 'separator'
 			},
 			{
-				label: "Exit",
-				accelerator: "CmdOrCtrl+Q",
-				role: "quit"
+				label: 'Exit',
+				accelerator: 'CmdOrCtrl+Q',
+				role: 'quit'
 			}
 		]
 	},
 	{
-		label: "Edit",
+		label: 'Edit',
 		submenu: [
 			{
-				label: "Undo",
-				accelerator: "CmdOrCtrl+Z",
-				role: "undo"
+				label: 'Undo',
+				accelerator: 'CmdOrCtrl+Z',
+				role: 'undo'
 			},
 			{
-				label: "Redo",
-				accelerator: "Shift+CmdOrCtrl+Z",
-				role: "redo"
+				label: 'Redo',
+				accelerator: 'Shift+CmdOrCtrl+Z',
+				role: 'redo'
 			},
 			{
-				type: "separator"
+				type: 'separator'
 			},
 			{
-				label: "Cut",
-				accelerator: "CmdOrCtrl+X",
-				role: "cut"
+				label: 'Cut',
+				accelerator: 'CmdOrCtrl+X',
+				role: 'cut'
 			},
 			{
-				label: "Copy",
-				accelerator: "CmdOrCtrl+C",
-				role: "copy"
+				label: 'Copy',
+				accelerator: 'CmdOrCtrl+C',
+				role: 'copy'
 			},
 			{
-				label: "Paste",
-				accelerator: "CmdOrCtrl+V",
-				role: "paste"
+				label: 'Paste',
+				accelerator: 'CmdOrCtrl+V',
+				role: 'paste'
 			},
 			{
-				label: "Select All",
-				accelerator: "CmdOrCtrl+A",
-				role: "selectAll"
+				label: 'Select All',
+				accelerator: 'CmdOrCtrl+A',
+				role: 'selectAll'
 			}
 		]
 	},
 	{
-		label: "View",
+		label: 'View',
 		submenu: [
 			{
-				label: "Reload",
-				accelerator: "CmdOrCtrl+R",
+				label: 'Reload',
+				accelerator: 'CmdOrCtrl+R',
 				click: (item, focusedWindow) => {
 					if (focusedWindow) {
 						focusedWindow.reload();
@@ -75,12 +75,12 @@ const template: MenuItemConstructorOptions[] = [
 				}
 			},
 			{
-				label: "Toggle Full Screen",
+				label: 'Toggle Full Screen',
 				accelerator: (() => {
-					if (process.platform === "darwin") {
-						return "Ctrl+Command+F";
+					if (process.platform === 'darwin') {
+						return 'Ctrl+Command+F';
 					}
-					return "F11";
+					return 'F11';
 				})(),
 				click: (item, focusedWindow) => {
 					if (focusedWindow) {
@@ -89,13 +89,13 @@ const template: MenuItemConstructorOptions[] = [
 				}
 			},
 			{
-				label: "Toggle Developer Tools",
+				label: 'Toggle Developer Tools',
 				accelerator: (() => {
-					if (process.platform === "darwin") {
-						return "Alt+Command+I";
+					if (process.platform === 'darwin') {
+						return 'Alt+Command+I';
 					}
 
-					return "Ctrl+Shift+I";
+					return 'Ctrl+Shift+I';
 				})(),
 				click: (item, focusedWindow) => {
 					if (focusedWindow) {
@@ -106,18 +106,18 @@ const template: MenuItemConstructorOptions[] = [
 		]
 	},
 	{
-		label: "Window",
-		role: "window",
+		label: 'Window',
+		role: 'window',
 		submenu: [
 			{
-				label: "Minimize",
-				accelerator: "CmdOrCtrl+M",
-				role: "minimize"
+				label: 'Minimize',
+				accelerator: 'CmdOrCtrl+M',
+				role: 'minimize'
 			},
 			{
-				label: "Close",
-				accelerator: "CmdOrCtrl+W",
-				role: "close"
+				label: 'Close',
+				accelerator: 'CmdOrCtrl+W',
+				role: 'close'
 			}
 		]
 	}

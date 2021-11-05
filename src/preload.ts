@@ -1,5 +1,5 @@
 import { contextBridge, ipcRenderer } from 'electron';
-import { ApiAction, ApiAuthorization, FunctionLike, QualtricsAuthorization, Settings } from '@/types';
+import { ApiAction, ExportResponsesActionParam, FunctionLike, RetrieveSurveysActionParam, SaveQualtricsActionParam, SaveSettingsActionParam, SelectDirectoryActionParam, SignInActionParam } from '@/types';
 
 /**
  * Wrapper of {@link IpcRenderer.send}
@@ -15,9 +15,7 @@ const send = (action: ApiAction, ...args: any[]) => {
  * @param action
  * @param args
  */
- const invoke = (action: ApiAction, ...args: any[]) => {
-	return ipcRenderer.invoke(action, ...args);
-}
+const invoke = (action: ApiAction, ...args: any[]) => ipcRenderer.invoke(action, ...args);
 
 contextBridge.exposeInMainWorld(
 	'api', {
@@ -27,20 +25,21 @@ contextBridge.exposeInMainWorld(
 		// saveConfiguration: (configuration: Configuration) => {
 		// 	ipcRenderer.send(COMMAND.CONFIGURATION.SAVE, { configuration });
 		// },
-		saveSettings: (settings: Settings) => {
-			send('saveSettings', settings);
+		saveSettings: (param: SaveSettingsActionParam) => {
+			send('saveSettings', param);
 		},
-		saveQualtrics: (auth: QualtricsAuthorization) => {
-			send('saveQualtrics', auth);
+		saveQualtrics: (param: SaveQualtricsActionParam) => {
+			send('saveQualtrics', param);
 		},
-		selectDirectory: (path?: string) => {
-			return invoke('selectDirectory', path);
+		selectDirectory: (param: SelectDirectoryActionParam) => invoke('selectDirectory', param),
+		signIn: (param: SignInActionParam) => {
+			send('signIn', param);
 		},
-		signIn: (auth: ApiAuthorization) => {
-			send('signIn', auth);
+		retrieveSurveys: (param: RetrieveSurveysActionParam) => {
+			send('retrieveSurveys', param);
 		},
-		retrieveSurveys: (auth: ApiAuthorization) => {
-			send('retrieveSurveys', auth);
+		exportResponses: (param: ExportResponsesActionParam) => {
+			send('exportResponses', param);
 		},
 		on: (name: string, func: FunctionLike) => {
 			// remove all listeners first

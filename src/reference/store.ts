@@ -31,7 +31,7 @@ export const ACTION = {
 	SIGN_IN: 'signIn' as ApiAction,
 	SIGN_OFF: 'signOff',
 	RETRIEVE_SURVEYS: 'retrieveSurveys' as ApiAction,
-	START_EXPORT: 'startExport',
+	EXPORT_RESPONSES: 'exportResponses' as ApiAction,
 	START_OVER: 'startOver'
 };
 

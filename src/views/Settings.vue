@@ -83,7 +83,7 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, ref, toRaw } from 'vue';
+import { defineComponent, ref } from 'vue';
 import { useStore } from 'vuex';
 import { Switch } from '@headlessui/vue';
 import { ArrowSmLeftIcon } from '@heroicons/vue/outline';
@@ -138,7 +138,7 @@ export default defineComponent({
 	watch: {
 		localSettings: {
 			handler(settings: Settings) {
-				this.$store.dispatch(ACTION.SAVE_SETTINGS, toRaw(settings));
+				this.$store.dispatch(ACTION.SAVE_SETTINGS, settings);
 
 				const { dataCenter } = this.$store.state.qualtrics;
 				// unset api token if remember-me option value is false

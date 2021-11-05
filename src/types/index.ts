@@ -1,3 +1,5 @@
+import { WebContents } from 'electron';
+
 // --------------------------------- Base --------------------------------------
 export interface Map<T> {
 	[key: string]: T;
@@ -21,7 +23,7 @@ export type SortOrder = 'ascending' | 'descending';
 
 export interface SortCriteria {
 	by: SortBy;
-	order: SortOrder; 
+	order: SortOrder;
 }
 
 export interface Header {
@@ -62,14 +64,15 @@ export interface Current {
 	errorMessage?: string;
 }
 
-export interface Qualtrics {
-	accessible: boolean;
-	dataCenter: string;
+export interface QualtricsAuthorization {
 	apiToken?: string;
-	errorMessage?: string;
+	dataCenter: string;
 }
 
-export type QualtricsAuthorization = Pick<Qualtrics, 'dataCenter' | 'apiToken'>;
+export interface Qualtrics extends QualtricsAuthorization {
+	accessible: boolean;
+	errorMessage?: string;
+}
 
 export interface User {
 	brandId?: string;
@@ -113,7 +116,7 @@ export interface ExportProgressDetail {
 	downloadedTime?: number;
 }
 
-export interface ExportProgress extends Map<ExportProgressDetail> {}
+export type ExportProgress = Map<ExportProgressDetail>
 
 export interface State {
 	settings: Settings;
@@ -151,16 +154,14 @@ export interface ListSurveysResult {
 	nextPage: string | null;
 }
 
-export type ResponseExportStatus = "complete" | "failed" | "inProgress" | undefined;
+export type ResponseExportStatus = 'complete' | 'failed' | 'inProgress' | undefined;
 export interface ResponseExportProgress {
 	percentComplete: number;
 	status: ResponseExportStatus;
 	continuationToken?: string;
 }
-export interface StartExportRequestData {
+export interface StartExportRequestData extends Partial<ExportOptions> {
 	format: string;
-	compress: boolean;
-	allowContinuation?: boolean;
 	continuationToken?: string;
 }
 export interface StartExportResult extends ResponseExportProgress {
@@ -169,6 +170,7 @@ export interface StartExportResult extends ResponseExportProgress {
 export interface ExportProgressResult extends ResponseExportProgress {
 	fileId?: string;
 }
+export type ExportFileProgressCallback = (receivedBytes: number, totalBytes: number) => void;
 
 export interface ApiResponse {
 	meta: Meta;
@@ -197,29 +199,56 @@ export interface ApiError {
 
 // ---------------------------- Application API --------------------------------
 
-export interface ReadyParam { settings: Settings, qualtrics?: QualtricsAuthorization }
-export interface SignedInParam { user: User, auth: ApiAuthorization }
-export interface SignInFailedParam { error: ApiError, auth: ApiAuthorization }
-export interface SurveysRetrievedParam { surveys: Array<Survey> }
-export interface RetrieveSurveysFailedParam { error: ApiError }
+export type ApiAction = 'saveSettings' | 'saveQualtrics' | 'selectDirectory' | 'signIn' | 'retrieveSurveys' | 'exportResponses';
+export interface SaveSettingsActionParam { settings: Settings }
+export interface SaveQualtricsActionParam { auth: QualtricsAuthorization }
+export interface SelectDirectoryActionParam { path?: string }
+export interface SignInActionParam { auth: ApiAuthorization }
+export interface RetrieveSurveysActionParam { auth: ApiAuthorization }
+export interface ExportResponsesActionParam { auth: ApiAuthorization, selectedIds: string[], surveys: Survey[], exportOptions: ExportOptions, exportDirectory?: string }
+
+export type ApiEvent = 'ready' | 'settingsMenuClicked' | 'signedIn' | 'signInFailed' | 'surveysRetrieved' | 'retrieveSurveysFailed' | 'exportProgress' | 'exportFileProgress' | 'exportSuccess' | 'exportFailed' | 'responsesExported';
+export interface ReadyEventParam { settings: Settings, qualtrics?: QualtricsAuthorization }
+export interface SignedInEventParam { user: User, auth: ApiAuthorization }
+export interface SignInFailedEventParam { error: ApiError, auth: ApiAuthorization }
+export interface SurveysRetrievedEventParam { surveys: Array<Survey> }
+export interface RetrieveSurveysFailedEventParam { error: ApiError }
+export interface ExportProgressEventParam { surveyId: string, status: ResponseExportStatus, percentComplete: number }
+export interface ExportFileProgressEventParam { surveyId: string, percentComplete: number }
+export interface ExportSuccessEventParam { surveyId: string }
+export interface ExportFailedEventParam { surveyId: string, errorMessage: string }
 
 // eslint-disable-next-line
 type EventListener = (...args: any[]) => void;
 export type FunctionLike = EventListener;
 
-export type ApiAction = 'signIn' | 'saveSettings' | 'saveQualtrics' | 'selectDirectory' | 'retrieveSurveys';
-export type ApiEvent = 'ready' | 'settingsMenuClicked' | 'signedIn' | 'signInFailed' | 'surveysRetrieved' | 'retrieveSurveysFailed';
+export interface ServerParam extends ExportResponsesActionParam { webContents: WebContents }
+export interface Server {
+	auth: ApiAuthorization;
+	exportOptions: ExportOptions;
+	outputDirectory: string;
+	getSurveyName: (surveyId: string) => string;
+	getNextSurveyId: () => Promise<string | null>;
+	notifyExportProgress: (surveyId: string, status: ResponseExportStatus, percentComplete: number) => Promise<void>;
+	notifyExportFileProgress: (surveyId: string, percentComplete: number) => Promise<void>;
+	notifyExportSuccess: (surveyId: string) => Promise<void>;
+	notifyExportFailed: (surveyId: string, errorMessage: string) => Promise<void>;
+}
+
+export interface WorkerParam { id: number, server: Server }
+export interface Worker {
+	run: () => Promise<void>;
+}
 
 declare global {
 	interface Window {
 		api: {
-			// loadConfiguration: () => void;
-			// saveConfiguration: (configuration: Configuration) => void;
-			saveSettings: (settings: Settings) => void;
-			saveQualtrics: (auth: QualtricsAuthorization) => void;
-			selectDirectory: (path?: string) => Promise<string>;
-			signIn: (auth: ApiAuthorization) => void;
-			retrieveSurveys: (auth: ApiAuthorization) => void;
+			saveSettings: (param: SaveSettingsActionParam) => void;
+			saveQualtrics: (param: SaveQualtricsActionParam) => void;
+			selectDirectory: (param: SelectDirectoryActionParam) => Promise<string>;
+			signIn: (param: SignInActionParam) => void;
+			retrieveSurveys: (param: RetrieveSurveysActionParam) => void;
+			exportResponses: (param: ExportResponsesActionParam) => void;
 			on: (event: ApiEvent, listener: EventListener) => void;
 		}
 	}
@@ -241,10 +270,6 @@ export interface RunnableOptions extends PoolOptions{
 }
 export type Runnable = (options: RunnableOptions) => Promise<void>;
 
-interface ExportFailedRequestBody {
-	surveyId: string;
-	errorMessage: string;
-}
 export interface ExportFailedSurvey {
 	id: string;
 	name: string;

@@ -18,10 +18,10 @@ describe('Qualtrics API: Surveys', () => {
 
 		expect.assertions(1);
 
-		const api = new Surveys({dataCenter: 'syd1', apiToken: ''});
-		await expect(api.listAllSurvey()).rejects.toMatchObject<ApiError>({ 
+		const api = new Surveys({ dataCenter: 'syd1', apiToken: '' });
+		await expect(api.listAllSurvey()).rejects.toMatchObject<ApiError>({
 			status: 400,
-			statusText: 'Bad Request' 
+			statusText: 'Bad Request'
 		});
 	});
 
@@ -31,10 +31,10 @@ describe('Qualtrics API: Surveys', () => {
 
 		expect.assertions(1);
 
-		const api = new Surveys({dataCenter: 'syd1', apiToken: 'INVALID-API-TOKEN'});
-		await expect(api.listAllSurvey()).rejects.toMatchObject<ApiError>({ 
+		const api = new Surveys({ dataCenter: 'syd1', apiToken: 'INVALID-API-TOKEN' });
+		await expect(api.listAllSurvey()).rejects.toMatchObject<ApiError>({
 			status: 401,
-			statusText: 'Unauthorized' 
+			statusText: 'Unauthorized'
 		});
 	});
 
@@ -44,7 +44,7 @@ describe('Qualtrics API: Surveys', () => {
 
 		expect.assertions(2);
 
-		const api = new Surveys({dataCenter: 'syd1', apiToken: 'VALID-API-TOKEN'});
+		const api = new Surveys({ dataCenter: 'syd1', apiToken: 'VALID-API-TOKEN' });
 		const surveys = await (api.listAllSurvey());
 
 		expect(mockedAxios.request).toBeCalledTimes(1);
@@ -57,7 +57,7 @@ describe('Qualtrics API: Surveys', () => {
 
 		expect.assertions(2);
 
-		const api = new Surveys({dataCenter: 'syd1', apiToken: 'VALID-API-TOKEN'});
+		const api = new Surveys({ dataCenter: 'syd1', apiToken: 'VALID-API-TOKEN' });
 		const surveys = await (api.listActiveSurvey());
 
 		expect(mockedAxios.request).toBeCalledTimes(1);
@@ -74,7 +74,7 @@ describe('Qualtrics API: Surveys', () => {
 
 		expect.assertions(2);
 
-		const api = new Surveys({dataCenter: 'syd1', apiToken: 'VALID-API-TOKEN'});
+		const api = new Surveys({ dataCenter: 'syd1', apiToken: 'VALID-API-TOKEN' });
 		const surveys = await (api.listAllSurvey());
 
 		expect(mockedAxios.request).toBeCalledTimes(3);
@@ -91,7 +91,7 @@ describe('Qualtrics API: Surveys', () => {
 
 		expect.assertions(2);
 
-		const api = new Surveys({dataCenter: 'syd1', apiToken: 'VALID-API-TOKEN'});
+		const api = new Surveys({ dataCenter: 'syd1', apiToken: 'VALID-API-TOKEN' });
 		const surveys = await (api.listAllSurvey());
 
 		expect(mockedAxios.request).toBeCalledTimes(3);
@@ -108,7 +108,7 @@ describe('Qualtrics API: Surveys', () => {
 
 		expect.assertions(2);
 
-		const api = new Surveys({dataCenter: 'syd1', apiToken: 'VALID-API-TOKEN'});
+		const api = new Surveys({ dataCenter: 'syd1', apiToken: 'VALID-API-TOKEN' });
 		const surveys = await (api.listActiveSurvey());
 
 		expect(mockedAxios.request).toBeCalledTimes(3);

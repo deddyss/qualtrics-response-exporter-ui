@@ -21,9 +21,9 @@ describe('Qualtrics API: Response Export', () => {
 
 		expect.assertions(1);
 
-		const api = new ResponseExport({dataCenter: 'syd1', apiToken: ''});
+		const api = new ResponseExport({ dataCenter: 'syd1', apiToken: '' });
 		await expect(api.startExport('SURVEY-ID', { format: 'csv', compress: true }))
-			.rejects.toMatchObject({ 
+			.rejects.toMatchObject({
 				message: 'An apiToken must be provided.'
 			});
 	});
@@ -34,12 +34,12 @@ describe('Qualtrics API: Response Export', () => {
 
 		expect.assertions(1);
 
-		const api = new ResponseExport({dataCenter: 'syd1', apiToken: 'INVALID-API-TOKEN'});
+		const api = new ResponseExport({ dataCenter: 'syd1', apiToken: 'INVALID-API-TOKEN' });
 		await expect(api.startExport('SURVEY-ID', { format: 'csv', compress: true }))
-			.rejects.toMatchObject({ 
+			.rejects.toMatchObject({
 				message: 'Unrecognized X-API-TOKEN.'
 			});
-});
+	});
 
 	test('When response export is started, expect progress ID and status', async () => {
 		const mockedResponse = TestUtil.loadAndParseJson<StartExportResponse>('./json/startexport.json');
@@ -47,7 +47,7 @@ describe('Qualtrics API: Response Export', () => {
 
 		expect.assertions(4);
 
-		const api = new ResponseExport({dataCenter: 'syd1', apiToken: 'VALID-API-TOKEN'});
+		const api = new ResponseExport({ dataCenter: 'syd1', apiToken: 'VALID-API-TOKEN' });
 		const result = await api.startExport('SURVEY-ID', { format: 'csv', compress: true });
 
 		expect(mockedAxios.request).toBeCalledTimes(1);
@@ -62,7 +62,7 @@ describe('Qualtrics API: Response Export', () => {
 
 		expect.assertions(2);
 
-		const api = new ResponseExport({dataCenter: 'syd1', apiToken: 'VALID-API-TOKEN'});
+		const api = new ResponseExport({ dataCenter: 'syd1', apiToken: 'VALID-API-TOKEN' });
 		const result = await api.getExportProgress('SURVEY-ID', 'PROGRESS-ID');
 
 		expect(mockedAxios.request).toBeCalledTimes(1);
@@ -75,7 +75,7 @@ describe('Qualtrics API: Response Export', () => {
 
 		expect.assertions(2);
 
-		const api = new ResponseExport({dataCenter: 'syd1', apiToken: 'VALID-API-TOKEN'});
+		const api = new ResponseExport({ dataCenter: 'syd1', apiToken: 'VALID-API-TOKEN' });
 		const result = await api.getExportProgress('SURVEY-ID', 'PROGRESS-ID');
 
 		expect(mockedAxios.request).toBeCalledTimes(1);
@@ -88,7 +88,7 @@ describe('Qualtrics API: Response Export', () => {
 
 		expect.assertions(3);
 
-		const api = new ResponseExport({dataCenter: 'syd1', apiToken: 'VALID-API-TOKEN'});
+		const api = new ResponseExport({ dataCenter: 'syd1', apiToken: 'VALID-API-TOKEN' });
 		const result = await api.getExportProgress('SURVEY-ID', 'PROGRESS-ID');
 
 		expect(mockedAxios.request).toBeCalledTimes(1);
@@ -107,7 +107,7 @@ describe('Qualtrics API: Response Export', () => {
 
 		expect.assertions(2);
 
-		const api = new ResponseExport({dataCenter: 'syd1', apiToken: 'VALID-API-TOKEN'});
+		const api = new ResponseExport({ dataCenter: 'syd1', apiToken: 'VALID-API-TOKEN' });
 		await api.getExportFile('SURVEY-ID', 'FILE_ID', filePath);
 
 		expect(mockedAxios.request).toBeCalledTimes(1);

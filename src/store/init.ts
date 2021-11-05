@@ -1,6 +1,4 @@
 import { State } from '@/types';
-// TODO: remove dummy export progress once UI development dong
-import exportProgress from './dummy/exportProgress';
 
 const initialState = Object.freeze({
 	settings: {
@@ -37,7 +35,7 @@ const initialState = Object.freeze({
 		useLabels: false,
 		timeZone: ''
 	},
-	exportProgress
+	exportProgress: {}
 } as State);
 
 export default initialState;

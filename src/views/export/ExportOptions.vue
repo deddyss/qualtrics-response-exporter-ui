@@ -102,7 +102,7 @@ export default defineComponent({
 			this.$store.commit(MUTATION.SET.CURRENT, { showAdvancedOptions } as Partial<Current>);
 		},
 		startExport() {
-			this.$store.dispatch(ACTION.START_EXPORT).then(() => {
+			this.$store.dispatch(ACTION.EXPORT_RESPONSES).then(() => {
 				this.$router.push(ROUTE.EXPORT_PROGRESS);
 			});
 		}

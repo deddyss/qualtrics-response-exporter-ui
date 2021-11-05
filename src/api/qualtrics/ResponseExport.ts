@@ -2,10 +2,7 @@ import { RateLimiter } from 'limiter';
 import { AxiosError, AxiosResponse } from 'axios';
 import { createWriteStream, WriteStream } from 'fs';
 import { Stream } from 'stream';
-import { 
-	ApiAuthorization, ApiError, ApiErrorResponse, ExportProgressResponse, ExportProgressResult,
-	StartExportRequestData, StartExportResponse, StartExportResult
-} from '@/types';
+import { ApiError, ApiErrorResponse, ExportFileProgressCallback, ExportProgressResponse, ExportProgressResult, StartExportRequestData, StartExportResponse, StartExportResult } from '@/types';
 import Api from './Api';
 
 const startExportUrl = (surveyId: string) => `/surveys/${surveyId}/export-responses`;
@@ -17,26 +14,24 @@ const exportProgressLimiter = new RateLimiter({ tokensPerInterval: 1000, interva
 const exportFileLimiter = new RateLimiter({ tokensPerInterval: 100, interval: 'minute' });
 
 class ResponseExport extends Api {
-	constructor (config: ApiAuthorization) {
-		super(config);
-	}
-
 	public async startExport(surveyId: string, data: StartExportRequestData)
 		: Promise<StartExportResult> {
 		await startExportLimiter.removeTokens(1);
 
 		return new Promise<StartExportResult>((resolve, reject) => {
-			this.sendHttpPostRequest<StartExportResponse>({ 
+			// TODO:
+			console.log('startExport.data: %O', data);
+			this.sendHttpPostRequest<StartExportResponse>({
 				url: startExportUrl(surveyId),
 				data,
 				headers: {
 					'Content-Type': 'application/json'
 				}
 			}).then((response: AxiosResponse<StartExportResponse>) => {
-					resolve(response.data.result);
-				})
+				resolve(response.data.result);
+			})
 				.catch((error: AxiosError<ApiErrorResponse>) => {
-					const apiError: ApiError = this.parseError(error);
+					const apiError: ApiError = Api.parseError(error);
 					reject(new Error(apiError.message ? apiError.message : apiError.statusText));
 				});
 		});
@@ -57,15 +52,33 @@ class ResponseExport extends Api {
 		});
 	}
 
-	public async getExportFile(surveyId: string, fileId: string, filePath: string): Promise<void> {
+	public async getExportFile(
+		surveyId: string,
+		fileId: string,
+		filePath: string,
+		progressCallback?: ExportFileProgressCallback
+	): Promise<void> {
 		await exportFileLimiter.removeTokens(1);
 
 		return new Promise<void>((resolve, reject) => {
 			const stream: WriteStream = createWriteStream(filePath);
 			this.sendHttpGetFileStreamRequest({ url: exportFileUrl(surveyId, fileId) })
 				.then((response: AxiosResponse<Stream>) => {
-					response.data.pipe(stream);
 					let writeStreamError: Error | undefined;
+					const totalBytes = parseInt(response.headers['content-length'] ?? '0', 10);
+					// TODO:
+					console.log('response.headers: %O', response.headers);
+					console.log('totalBytes: %s', totalBytes);
+					let receivedBytes = 0;
+
+					stream.on('pipe', (chunk) => {
+						receivedBytes += chunk.readableLength;
+						// TODO:
+						console.log('receivedBytes: %s', receivedBytes);
+						if (progressCallback) {
+							progressCallback(receivedBytes, totalBytes);
+						}
+					});
 					stream.on('error', (error: Error) => {
 						writeStreamError = error;
 						stream.close();
@@ -79,7 +92,8 @@ class ResponseExport extends Api {
 							reject(writeStreamError);
 						}
 					});
-				})
+					response.data.pipe(stream);
+				});
 		});
 	}
 }

@@ -1,22 +1,21 @@
-'use strict'
-
 import { app, protocol, BrowserWindow, shell, Menu } from 'electron';
 import { createProtocol } from 'vue-cli-plugin-electron-builder/lib';
 import installExtension, { VUEJS3_DEVTOOLS } from 'electron-devtools-installer';
 import { FastifyInstance } from 'fastify';
-import path from "path";
+import path from 'path';
 import { createWebServer, getAvailablePort } from '@/api/server';
-import { loadQualtricsAuthorization, loadSettings, notify, registerEventListeners } from '@/electron/api'
-import { initKey } from "@/electron/encryptor";
-import menu from "@/electron/menu";
-import { QualtricsAuthorization, ReadyParam, Settings } from './types';
+import { loadQualtricsAuthorization, loadSettings, registerEventListeners } from '@/electron/api';
+import { notify } from '@/electron/api/util';
+import { initKey } from '@/electron/encryptor';
+import menu from '@/electron/menu';
+import { ReadyEventParam } from '@/types';
 
 const isDevelopment = process.env.NODE_ENV !== 'production';
 
 // scheme must be registered before the app is ready
 protocol.registerSchemesAsPrivileged([
 	{ scheme: 'app', privileges: { secure: true, standard: true } }
-])
+]);
 
 const startInternalWebServer = async (): Promise<FastifyInstance> => {
 	const port = await getAvailablePort();
@@ -40,7 +39,7 @@ const createWindow = async () => {
 			// use pluginOptions.nodeIntegration, leave this alone
 			// see nklayman.github.io/vue-cli-plugin-electron-builder/guide/security.html#node-integration for more info
 			nodeIntegration: (process.env
-					.ELECTRON_NODE_INTEGRATION as unknown) as boolean,
+				.ELECTRON_NODE_INTEGRATION as unknown) as boolean,
 			contextIsolation: !process.env.ELECTRON_NODE_INTEGRATION
 		}
 	});
@@ -49,13 +48,13 @@ const createWindow = async () => {
 
 	if (process.env.WEBPACK_DEV_SERVER_URL) {
 		// load the url of the dev server if in development mode
-		await window.loadURL(process.env.WEBPACK_DEV_SERVER_URL as string)
+		await window.loadURL(process.env.WEBPACK_DEV_SERVER_URL as string);
 		window.webContents.openDevTools();
 	}
 	else {
-		createProtocol('app')
+		createProtocol('app');
 		// load the index.html when not in development
-		window.loadURL('app://./index.html')
+		window.loadURL('app://./index.html');
 	}
 	// open
 	window.webContents.setWindowOpenHandler(({ url }) => {
@@ -75,7 +74,7 @@ const createWindow = async () => {
 	// load qualtrics authorization (if any)
 	const qualtrics = loadQualtricsAuthorization();
 	// notify that application is ready now
-	notify(window.webContents).that('ready', { settings, qualtrics } as ReadyParam);
+	notify(window.webContents).that('ready', { settings, qualtrics } as ReadyEventParam);
 };
 
 const runMiscellaneousScript = () => {
@@ -124,7 +123,6 @@ const background = async () => {
 			// Install Vue Devtools
 			try {
 				await installExtension(VUEJS3_DEVTOOLS);
-
 			}
 			catch (e) {
 				console.error('Vue Devtools failed to install: ', e);

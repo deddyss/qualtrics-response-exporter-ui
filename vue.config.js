@@ -12,8 +12,8 @@ module.exports = {
 			.rule('mjs$')
 			.test(/\.mjs$/)
 			.include
-					.add(/node_modules/)
-					.end()
+			.add(/node_modules/)
+			.end()
 			.type('javascript/auto');
 	},
 	configureWebpack: {

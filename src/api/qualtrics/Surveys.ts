@@ -1,15 +1,10 @@
 import { AxiosError, AxiosResponse } from 'axios';
-import { ApiAuthorization, ApiError, ApiErrorResponse, ListSurveysResponse, Survey } from '@/types';
+import { ApiError, ApiErrorResponse, ListSurveysResponse, Survey } from '@/types';
 import Api from './Api';
 
 const URL = '/surveys';
 
 class Surveys extends Api {
-
-	constructor(config: ApiAuthorization) {
-		super(config);
-	}
-
 	public listActiveSurvey(): Promise<Array<Survey>> {
 		return this.listSurvey(true);
 	}
@@ -21,10 +16,10 @@ class Surveys extends Api {
 	protected listSurvey(activeOnly: boolean): Promise<Array<Survey>> {
 		return new Promise<Array<Survey>>((resolve, reject) => {
 			this.getSurveys(URL)
-				.then(surveys => {
+				.then((surveys) => {
 					resolve(
-						activeOnly === true ?
-							surveys.filter((survey: Survey) => survey.isActive === true) : surveys
+						activeOnly === true
+							? surveys.filter((survey: Survey) => survey.isActive === true) : surveys
 					);
 				})
 				.catch((error: ApiError) => {
@@ -38,14 +33,15 @@ class Surveys extends Api {
 			this.sendHttpGetRequest<ListSurveysResponse>({ url })
 				.then((response: AxiosResponse<ListSurveysResponse>) => {
 					const surveys: Array<Survey> = response.data.result.elements;
-					const nextPage: string | null = response.data.result.nextPage;
+					const { nextPage } = response.data.result;
 					if (nextPage) {
 						this.getSurveys(nextPage)
-							.then(nextSurveys => {
+							.then((nextSurveys) => {
 								resolve([...surveys, ...nextSurveys]);
 							})
-							.catch((error: AxiosError<ApiErrorResponse>) => {
-								const apiError = this.parseError(error);
+							.catch(() => {
+								// .catch((error: AxiosError<ApiErrorResponse>) => {
+								// const apiError = Api.parseError(error);
 								// // log
 								// this.logger.warn(
 								// 	'Cannot retrieve next surveys from URL %s due to error: %o', nextPage, apiError
@@ -59,9 +55,9 @@ class Surveys extends Api {
 					}
 				})
 				.catch((error: AxiosError<ApiErrorResponse>) => {
-					reject(this.parseError(error));
+					reject(Api.parseError(error));
 				});
-		})
+		});
 	}
 }
 
