@@ -1,9 +1,7 @@
 import { app, protocol, BrowserWindow, shell, Menu } from 'electron';
 import { createProtocol } from 'vue-cli-plugin-electron-builder/lib';
 import installExtension, { VUEJS3_DEVTOOLS } from 'electron-devtools-installer';
-import { FastifyInstance } from 'fastify';
 import path from 'path';
-import { createWebServer, getAvailablePort } from '@/api/server';
 import { loadQualtricsAuthorization, loadSettings, registerEventListeners } from '@/electron/api';
 import { notify } from '@/electron/api/util';
 import { initKey } from '@/electron/encryptor';
@@ -16,16 +14,6 @@ const isDevelopment = process.env.NODE_ENV !== 'production';
 protocol.registerSchemesAsPrivileged([
 	{ scheme: 'app', privileges: { secure: true, standard: true } }
 ]);
-
-const startInternalWebServer = async (): Promise<FastifyInstance> => {
-	const port = await getAvailablePort();
-	console.log('Port %d', port);
-	const server = createWebServer();
-	await server.listen(port);
-	console.log('Listening on port %d', port);
-
-	return server;
-};
 
 const createWindow = async () => {
 	const window = new BrowserWindow({
@@ -113,8 +101,6 @@ const runMiscellaneousScript = () => {
 };
 
 const background = async () => {
-	startInternalWebServer();
-
 	// this method will be called when Electron has finished
 	// initialization and is ready to create browser windows.
 	// some APIs can only be used after this event occurs.

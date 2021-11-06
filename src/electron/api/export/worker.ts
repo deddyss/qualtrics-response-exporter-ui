@@ -1,6 +1,6 @@
 import path from 'path';
 import { ResponseExport } from '@/api/qualtrics';
-import { random, sanitizeFilename, sleep } from '@/electron/api/util';
+import { initFile, random, sanitizeFilename, sleep } from '@/electron/api/util';
 import { getContinuationToken, putContinuationToken } from '@/electron/api/storage/continuation';
 import { ExportProgressResult, StartExportRequestData, Worker, WorkerParam } from '@/types';
 
@@ -20,12 +20,25 @@ const startQualtricsResponseExport = async (surveyId: string, props: WorkerPrope
 		}
 	});
 	if (exportRequestData.allowContinuation && continuationToken) {
+		delete exportRequestData.allowContinuation;
 		exportRequestData.continuationToken = continuationToken;
 	}
 	else {
 		exportRequestData.allowContinuation = true;
 	}
-
+	// we need to set it false to disable compressing exported file
+	if (exportRequestData.compress === undefined) {
+		exportRequestData.compress = false;
+	}
+	// recode seen but unanswered questions as -99
+	if (exportRequestData.seenUnansweredRecode) {
+		exportRequestData.seenUnansweredRecode = -99;
+	}
+	// recode seen but unanswered multi-value fields as 0
+	if (exportRequestData.multiselectSeenUnansweredRecode) {
+		exportRequestData.multiselectSeenUnansweredRecode = 0;
+	}
+	
 	const exportProgress = await api.startExport(surveyId, exportRequestData);
 	// notify
 	const { status, percentComplete } = exportProgress;
@@ -44,8 +57,10 @@ const getQualtricsResponseExportFile = async (surveyId: string, fileId: string, 
 	const { api, server } = props;
 	const { exportOptions: options, outputDirectory } = server;
 	const surveyName = server.getSurveyName(surveyId);
-	const fileName = `${sanitizeFilename(surveyName)}.${options.format}${options.compress ? '.zip' : ''}`;
+	const fileName = `${sanitizeFilename(surveyName)} (${surveyId}).${options.format}${options.compress ? '.zip' : ''}`;
 	const filePath = path.join(outputDirectory, fileName);
+
+	initFile(filePath);
 
 	await api.getExportFile(
 		surveyId,

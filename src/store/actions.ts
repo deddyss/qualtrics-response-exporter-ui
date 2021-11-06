@@ -4,7 +4,7 @@ import { ApiAuthorization, Current, ExportProgress, Qualtrics, QualtricsAuthoriz
 import { ACTION, MUTATION } from '@/reference/store';
 // import surveys from './dummy/surveys';
 
-const { SAVE_SETTINGS, SAVE_QUALTRICS, SELECT_DIRECTORY, SIGN_IN, SIGN_OFF, RETRIEVE_SURVEYS, EXPORT_RESPONSES, START_OVER } = ACTION;
+const { SAVE_SETTINGS, SAVE_QUALTRICS, SELECT_DIRECTORY, OPEN_DIRECTORY, SIGN_IN, SIGN_OFF, RETRIEVE_SURVEYS, EXPORT_RESPONSES, START_OVER } = ACTION;
 const API_NOT_ACCESSIBLE_ERROR = new Error('API cannot be accessed');
 
 /* eslint-disable arrow-body-style */
@@ -37,6 +37,18 @@ const actions: ActionTree<State, State> = {
 			if (window.api) {
 				const { exportDirectory: path } = state.settings;
 				window.api.selectDirectory({ path }).then(resolve);
+			}
+			else {
+				reject(API_NOT_ACCESSIBLE_ERROR);
+			}
+		});
+	},
+	[OPEN_DIRECTORY]: ({ state }: ActionContext<State, State>) => {
+		return new Promise<void>((resolve, reject) => {
+			if (window.api) {
+				const { exportDirectory: path } = state.current;
+				window.api.openDirectory({ path });
+				resolve();
 			}
 			else {
 				reject(API_NOT_ACCESSIBLE_ERROR);
@@ -105,6 +117,7 @@ const actions: ActionTree<State, State> = {
 				const auth = { dataCenter, apiToken } as ApiAuthorization;
 				const exportProgress = composeExportProgressState();
 
+				commit(MUTATION.RESET.EXPORT_PROGRESS);
 				commit(MUTATION.SET.EXPORT_PROGRESS, exportProgress);
 				commit(MUTATION.SET.CURRENT, { isExporting: true } as Partial<Current>);
 
@@ -128,7 +141,6 @@ const actions: ActionTree<State, State> = {
 			commit(MUTATION.RESET.SELECTED_IDS);
 			commit(MUTATION.RESET.EXPORT_OPTIONS);
 			commit(MUTATION.RESET.EXPORT_PROGRESS);
-			// TODO: do we need to reset selected ID's and export options, or updated it with persisted configuration
 			resolve();
 		});
 	}

@@ -1,4 +1,4 @@
-import { app, BrowserWindow, dialog, OpenDialogOptions, OpenDialogReturnValue } from 'electron';
+import { app, BrowserWindow, dialog, OpenDialogOptions, OpenDialogReturnValue, shell } from 'electron';
 import path from 'path';
 import fs from 'fs';
 import { Settings } from '@/types';
@@ -54,3 +54,11 @@ export const selectDirectory = (window: BrowserWindow, currentPath?: string): Pr
 		});
 	})
 );
+
+export const openDirectory = (exportDirectory?: string): void => {
+	const directoryPath = exportDirectory ?? DEFAULT_EXPORT_DIRECTORY;
+	const files = fs.readdirSync(directoryPath).sort();
+	shell.showItemInFolder(
+		files.length > 0 ? path.join(directoryPath, files[0]) : directoryPath
+	);
+};

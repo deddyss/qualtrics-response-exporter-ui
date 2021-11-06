@@ -61,6 +61,7 @@ export interface Current {
 	isLoading: boolean;
 	showAdvancedOptions: boolean;
 	isExporting: boolean;
+	exportDirectory?: string;
 	errorMessage?: string;
 }
 
@@ -94,14 +95,14 @@ export interface Survey {
 	isActive: boolean;
 }
 
-export interface ExportOptions extends Map<string | boolean | undefined> {
+export interface ExportOptions extends Map<string | boolean | number | undefined> {
 	format: string;
 	compress: boolean;
 	allowContinuation: boolean;
 	formatDecimalAsComma: boolean;
 	breakoutSets: boolean;
-	seenUnansweredRecode: boolean;
-	multiselectSeenUnansweredRecode: boolean;
+	seenUnansweredRecode: boolean | number;
+	multiselectSeenUnansweredRecode: boolean | number;
 	includeDisplayOrder: boolean;
 	useLabels: boolean;
 	timeZone: string;
@@ -199,10 +200,11 @@ export interface ApiError {
 
 // ---------------------------- Application API --------------------------------
 
-export type ApiAction = 'saveSettings' | 'saveQualtrics' | 'selectDirectory' | 'signIn' | 'retrieveSurveys' | 'exportResponses';
+export type ApiAction = 'saveSettings' | 'saveQualtrics' | 'selectDirectory' | 'openDirectory' | 'signIn' | 'retrieveSurveys' | 'exportResponses';
 export interface SaveSettingsActionParam { settings: Settings }
 export interface SaveQualtricsActionParam { auth: QualtricsAuthorization }
 export interface SelectDirectoryActionParam { path?: string }
+export interface OpenDirectoryActionParam { path?: string }
 export interface SignInActionParam { auth: ApiAuthorization }
 export interface RetrieveSurveysActionParam { auth: ApiAuthorization }
 export interface ExportResponsesActionParam { auth: ApiAuthorization, selectedIds: string[], surveys: Survey[], exportOptions: ExportOptions, exportDirectory?: string }
@@ -217,6 +219,7 @@ export interface ExportProgressEventParam { surveyId: string, status: ResponseEx
 export interface ExportFileProgressEventParam { surveyId: string, percentComplete: number }
 export interface ExportSuccessEventParam { surveyId: string }
 export interface ExportFailedEventParam { surveyId: string, errorMessage: string }
+export interface ResponseExportedEventParam { exportDirectory: string }
 
 // eslint-disable-next-line
 type EventListener = (...args: any[]) => void;
@@ -246,6 +249,7 @@ declare global {
 			saveSettings: (param: SaveSettingsActionParam) => void;
 			saveQualtrics: (param: SaveQualtricsActionParam) => void;
 			selectDirectory: (param: SelectDirectoryActionParam) => Promise<string>;
+			openDirectory: (param: OpenDirectoryActionParam) => void;
 			signIn: (param: SignInActionParam) => void;
 			retrieveSurveys: (param: RetrieveSurveysActionParam) => void;
 			exportResponses: (param: ExportResponsesActionParam) => void;

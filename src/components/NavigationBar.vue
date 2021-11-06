@@ -272,7 +272,6 @@ export default defineComponent({
 		'signout'
 	],
 	setup(props) {
-		// const step = ref<number>(props.menuItems.length > 0 ? 0 : -1);
 		const step = computed<number>(() => {
 			if (props.currentPath) {
 				return props.menuItems.findIndex((item) => item.path === props.currentPath);

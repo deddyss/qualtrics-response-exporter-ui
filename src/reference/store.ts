@@ -28,6 +28,7 @@ export const ACTION = {
 	SAVE_SETTINGS: 'saveSettings' as ApiAction,
 	SAVE_QUALTRICS: 'saveQualtrics' as ApiAction,
 	SELECT_DIRECTORY: 'selectDirectory' as ApiAction,
+	OPEN_DIRECTORY: 'openDirectory' as ApiAction,
 	SIGN_IN: 'signIn' as ApiAction,
 	SIGN_OFF: 'signOff',
 	RETRIEVE_SURVEYS: 'retrieveSurveys' as ApiAction,

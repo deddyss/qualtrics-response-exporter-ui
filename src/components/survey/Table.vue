@@ -33,6 +33,7 @@
 							<tr
 								v-for="(survey, idx) in filteredSurveys"
 								:key="survey.id"
+								:id="survey.id"
 								class="cursor-pointer hover:bg-blue-50"
 								:class="idx % 2 === 0 ? 'bg-white' : 'bg-gray-50'"
 								@click="select(survey)"
@@ -159,6 +160,7 @@ export default defineComponent({
 		sortCriteria: {
 			handler() {
 				this.sortSurveys();
+				this.sortSelectedIds();
 			},
 			deep: true
 		},
@@ -192,6 +194,11 @@ export default defineComponent({
 				return this.sortCriteria.order === 'descending' ? Number(firstValue) - Number(secondValue) : Number(secondValue) - Number(firstValue);
 			});
 		},
+		sortSelectedIds() {
+			const filteredSurveyIds: string[] = this.filteredSurveys.map((survey) => survey.id);
+			this.localSelectedIds = filteredSurveyIds.filter((id: string) => this.localSelectedIds.includes(id));
+			this.$emit('update:selectedIds', this.localSelectedIds);
+		},
 		applyFilter() {
 			if (this.keyword && this.keyword.trim().length >= 2) {
 				this.filteredSurveys = this.search(this.keyword);
@@ -208,19 +215,13 @@ export default defineComponent({
 
 			// filter selected ids
 			if (this.localSelectedIds.length > 0) {
-				const filteredSurveyIds: string[] = this.filteredSurveys.map((survey) => survey.id);
-				this.localSelectedIds = this.localSelectedIds.filter((id) => filteredSurveyIds.includes(id));
-				this.$emit('update:selectedIds', this.localSelectedIds);
+				this.sortSelectedIds();
 				this.evaluateSelectAllCheckbox();
 			}
 		},
 		selectAll() {
 			if (this.selectAllCheckbox.checked) {
-				this.filteredSurveys.forEach((survey: Survey) => {
-					if (!this.localSelectedIds.includes(survey.id)) {
-						this.localSelectedIds.push(survey.id);
-					}
-				});
+				this.localSelectedIds = this.filteredSurveys.map((survey: Survey) => survey.id);
 			}
 			else {
 				this.localSelectedIds = [];
@@ -232,11 +233,12 @@ export default defineComponent({
 			// survey already checked
 			if (index >= 0) {
 				this.localSelectedIds.splice(index, 1);
+				this.$emit('update:selectedIds', this.localSelectedIds);
 			}
 			else {
 				this.localSelectedIds.push(survey.id);
+				this.sortSelectedIds();
 			}
-			this.$emit('update:selectedIds', this.localSelectedIds);
 			this.evaluateSelectAllCheckbox();
 		},
 		evaluateSelectAllCheckbox() {

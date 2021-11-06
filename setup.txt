@@ -43,18 +43,15 @@ npm install --save fuse.js
 npm install --save systeminformation crypto-js
 npm install --save-dev @types/crypto-js
 // axios and rate limiter
-npm install --save axios limiter
+npm install --save axios limiter 
 // queue, lock
 npm install --save denque async-lock
 npm install --save-dev @types/async-lock
 // to comply with eslint rules
 npm install --save-dev ts-jest@24.3.0
 
+npm install --save progress-stream
+npm install --save-dev @types/progress-stream
 
-// queue, thread, lock
-npm install --save denque threads async-lock
-// web server (http & websocket), available port
-npm install --save fastify fastify-websocket get-port@5.1.1
-npm install --save-dev @types/ws
-
-
+// npm uninstall --save through2
+// npm uninstall --save-dev @types/through2

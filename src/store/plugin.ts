@@ -1,5 +1,5 @@
 import { Plugin, Store } from 'vuex';
-import { Current, ExportFailedEventParam, ExportFileProgressEventParam, ExportProgressEventParam, ExportSuccessEventParam, Qualtrics, QualtricsAuthorization, ReadyEventParam, RetrieveSurveysFailedEventParam, SignedInEventParam, SignInFailedEventParam, State, SurveysRetrievedEventParam } from '@/types';
+import { Current, ExportFailedEventParam, ExportFileProgressEventParam, ExportProgressEventParam, ExportSuccessEventParam, Qualtrics, QualtricsAuthorization, ReadyEventParam, ResponseExportedEventParam, RetrieveSurveysFailedEventParam, SignedInEventParam, SignInFailedEventParam, State, SurveysRetrievedEventParam } from '@/types';
 import { ACTION, MUTATION } from '@/reference/store';
 
 const ERROR_MESSAGE_TIMEOUT = 2500;
@@ -82,6 +82,12 @@ const createElectronApiPlugin = (): Plugin<State> => {
 					detail.exportProgress = 100;
 				}
 				detail.downloadProgress = percentComplete;
+				if (percentComplete === 0) {
+					detail.downloadProgress = 50;
+				}
+				if (detail.downloadProgress === 100) {
+					detail.downloadedTime = Date.now();
+				}
 				store.commit(MUTATION.SET.EXPORT_PROGRESS, exportProgress);
 			}
 		});
@@ -111,8 +117,9 @@ const createElectronApiPlugin = (): Plugin<State> => {
 				store.commit(MUTATION.SET.CURRENT, { errorMessage } as Partial<Current>);
 			}
 		});
-		window.api.on('responsesExported', () => {
-			store.commit(MUTATION.SET.CURRENT, { isExporting: false } as Partial<Current>);
+		window.api.on('responsesExported', (param: ResponseExportedEventParam) => {
+			const { exportDirectory } = param;
+			store.commit(MUTATION.SET.CURRENT, { isExporting: false, exportDirectory } as Partial<Current>);
 		});
 	};
 };

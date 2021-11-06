@@ -96,6 +96,7 @@ router.beforeEach((to, from, next) => {
 		next(ROUTE.SURVEY_LIST);
 		return;
 	}
+
 	next();
 });
 

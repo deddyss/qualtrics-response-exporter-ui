@@ -16,7 +16,7 @@
 			<CompletedList :exportProgress="exportProgress" ref="completed" />
 		</main>
 
-		<Footer :shown="footerShown" @startOver="startOver" />
+		<Footer :shown="footerShown" @openExportDirectory="openExportDirectory" @startOver="startOver" />
 		<BackToTop :class="footerShown ? 'bottom-40 md:bottom-24' :  ''"/>
 	</div>
 </template>
@@ -66,7 +66,6 @@ export default defineComponent({
 			);
 			const result: boolean = values.length > 0 && values.length === (completed.length + failed.length);
 			return result;
-			// return true;
 		}
 	},
 	methods: {
@@ -78,25 +77,14 @@ export default defineComponent({
 			const completed: HTMLElement = this.completed.$el;
 			window.scrollTo({ top: completed.offsetTop - NAVIGATION_BAR_HEIGHT_PLUS_MARGIN });
 		},
+		openExportDirectory() {
+			this.$store.dispatch(ACTION.OPEN_DIRECTORY);
+		},
 		startOver() {
 			this.$store.dispatch(ACTION.START_OVER).then(() => {
 				this.$router.push(ROUTE.SURVEY_LIST);
 			});
 		}
-	},
-	mounted() {
-		// this.$nextTick(() => {
-		// 	setTimeout(() => {
-		// 		const completed: HTMLElement = this.completed.$el;
-		// 		console.log('completed.offsetTop', completed.offsetTop);
-		// 		window.scrollTo({ top: completed.offsetTop });
-		// 	}, 5_000);
-		// 	setTimeout(() => {
-		// 		const ongoing: HTMLElement = this.ongoing.$el;
-		// 		console.log('ongoing.clientTop', ongoing.clientTop);
-		// 		window.scrollTo({ top: ongoing.clientTop });
-		// 	}, 10_000);
-		// });
 	}
 });
 </script>

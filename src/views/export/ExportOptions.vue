@@ -29,7 +29,7 @@
 			</transition>
 		</div>
 
-		<div class="px-4 py-4">
+		<div class="px-4 py-4 mb-2 text-left lg:text-right">
 			<a href="javascript:;"
 				class="text-center font-medium text-blue-600 hover:text-blue-500"
 				@click="toggleAdvancedQuestion"

@@ -49,14 +49,6 @@ const mutations: MutationTree<State> = {
 		state.exportOptions = { ...initialState.exportOptions };
 	},
 	[SET.EXPORT_PROGRESS]: (state: State, exportProgress: ExportProgress): void => {
-		// const clonedExportProgress = { ...exportProgress };
-		// Object.keys(clonedExportProgress).forEach((key) => {
-		// 	const currentDetail = state.exportProgress[key];
-		// 	if (currentDetail) {
-		// 		const newDetail = clonedExportProgress[key];
-		// 		clonedExportProgress[key] = { ...currentDetail, ...newDetail };
-		// 	}
-		// });
 		state.exportProgress = { ...state.exportProgress, ...exportProgress };
 	},
 	[RESET.EXPORT_PROGRESS]: (state: State): void => {

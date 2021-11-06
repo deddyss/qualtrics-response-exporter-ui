@@ -14,7 +14,7 @@
 				]"
 			>
 				<div class="flex-1 font-medium text-gray-900">{{ item.name }}</div>
-				<div class="relative flex-shrink-0 text-green-700 text-left lg:text-right w-full lg:w-72 -mt-4 lg:mt-0">
+				<div class="relative flex-shrink-0 text-green-700 text-left lg:text-right w-full lg:w-auto -mt-3 sm:-mt-5 lg:mt-0">
 					<UseTimeAgo v-slot="{ timeAgo }" :time="new Date(item.downloadedTime)">
 						{{ timeAgo }}
 					</UseTimeAgo>

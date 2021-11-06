@@ -1,5 +1,5 @@
 import { contextBridge, ipcRenderer } from 'electron';
-import { ApiAction, ExportResponsesActionParam, FunctionLike, RetrieveSurveysActionParam, SaveQualtricsActionParam, SaveSettingsActionParam, SelectDirectoryActionParam, SignInActionParam } from '@/types';
+import { ApiAction, ExportResponsesActionParam, FunctionLike, OpenDirectoryActionParam, RetrieveSurveysActionParam, SaveQualtricsActionParam, SaveSettingsActionParam, SelectDirectoryActionParam, SignInActionParam } from '@/types';
 
 /**
  * Wrapper of {@link IpcRenderer.send}
@@ -19,28 +19,13 @@ const invoke = (action: ApiAction, ...args: any[]) => ipcRenderer.invoke(action,
 
 contextBridge.exposeInMainWorld(
 	'api', {
-		// loadConfiguration: () => {
-		// 	ipcRenderer.send(COMMAND.CONFIGURATION.LOAD);
-		// },
-		// saveConfiguration: (configuration: Configuration) => {
-		// 	ipcRenderer.send(COMMAND.CONFIGURATION.SAVE, { configuration });
-		// },
-		saveSettings: (param: SaveSettingsActionParam) => {
-			send('saveSettings', param);
-		},
-		saveQualtrics: (param: SaveQualtricsActionParam) => {
-			send('saveQualtrics', param);
-		},
+		saveSettings: (param: SaveSettingsActionParam) => send('saveSettings', param),
+		saveQualtrics: (param: SaveQualtricsActionParam) => send('saveQualtrics', param),
 		selectDirectory: (param: SelectDirectoryActionParam) => invoke('selectDirectory', param),
-		signIn: (param: SignInActionParam) => {
-			send('signIn', param);
-		},
-		retrieveSurveys: (param: RetrieveSurveysActionParam) => {
-			send('retrieveSurveys', param);
-		},
-		exportResponses: (param: ExportResponsesActionParam) => {
-			send('exportResponses', param);
-		},
+		openDirectory: (param: OpenDirectoryActionParam) => send('openDirectory', param),
+		signIn: (param: SignInActionParam) => send('signIn', param),
+		retrieveSurveys: (param: RetrieveSurveysActionParam) => send('retrieveSurveys', param),
+		exportResponses: (param: ExportResponsesActionParam) => send('exportResponses', param),
 		on: (name: string, func: FunctionLike) => {
 			// remove all listeners first
 			ipcRenderer.removeAllListeners(name);

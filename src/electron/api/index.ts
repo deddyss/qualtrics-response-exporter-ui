@@ -1,10 +1,11 @@
 import { BrowserWindow, ipcMain, IpcMainEvent, IpcMainInvokeEvent, WebContents } from 'electron';
+import os from 'os';
 import { Surveys, WhoAmI } from '@/api/qualtrics';
-import { ApiAction, ApiAuthorization, ApiError, ExportResponsesActionParam, RetrieveSurveysActionParam, RetrieveSurveysFailedEventParam, SaveQualtricsActionParam, SaveSettingsActionParam, SelectDirectoryActionParam, SignedInEventParam, SignInActionParam, SignInFailedEventParam, Survey, SurveysRetrievedEventParam, User } from '@/types';
+import { ApiAction, ApiAuthorization, ApiError, ExportResponsesActionParam, OpenDirectoryActionParam, ResponseExportedEventParam, RetrieveSurveysActionParam, RetrieveSurveysFailedEventParam, SaveQualtricsActionParam, SaveSettingsActionParam, SelectDirectoryActionParam, SignedInEventParam, SignInActionParam, SignInFailedEventParam, Survey, SurveysRetrievedEventParam, User } from '@/types';
 import createServer from './export/server';
 import createWorker from './export/worker';
 import { saveQualtricsAuthorization } from './storage/qualtrics';
-import { saveSettings, selectDirectory } from './storage/settings';
+import { openDirectory, saveSettings, selectDirectory } from './storage/settings';
 import { notify, range } from './util';
 
 export { loadQualtricsAuthorization } from './storage/qualtrics';
@@ -29,8 +30,7 @@ const retrieveSurveys = async (auth: ApiAuthorization) => {
 };
 
 const exportResponses = async (param: ExportResponsesActionParam, webContents: WebContents) => {
-	// TODO: change it to configurable value or use the number of CPUs
-	const count = 4;
+	const count = os.cpus().length;
 	const server = createServer({ ...param, webContents });
 	const runningWorkers: Array<Promise<void>> = [];
 	range(1, count).forEach((id) => {
@@ -38,7 +38,10 @@ const exportResponses = async (param: ExportResponsesActionParam, webContents: W
 		runningWorkers.push(worker.run());
 	});
 	Promise.all(runningWorkers).then(() => {
-		notify(webContents).that('responsesExported');
+		notify(webContents).that(
+			'responsesExported',
+			{ exportDirectory: server.outputDirectory } as ResponseExportedEventParam
+		);
 	});
 };
 
@@ -60,6 +63,12 @@ export const registerEventListeners = (window: BrowserWindow): void => {
 		const { path } = param;
 		const directory = await selectDirectory(window, path);
 		return directory;
+	});
+
+	// open directory
+	ipcMain.on('openDirectory' as ApiAction, async (event: IpcMainInvokeEvent, param: OpenDirectoryActionParam) => {
+		const { path } = param;
+		openDirectory(path);
 	});
 
 	// sign in

@@ -58,7 +58,7 @@ export default defineComponent({
 			).length
 		);
 		const progress = computed<number>(
-			() => Math.round((completed.value / total.value) * 100)
+			() => (total.value > 0 ? Math.round((completed.value / total.value) * 100) : 0)
 		);
 		const remaining = computed<number>(() => total.value - completed.value);
 		return {

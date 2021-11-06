@@ -51,6 +51,12 @@ export const createOutputDirectory = (exportDirectory: string): string => {
 	return directoryPath;
 };
 
+export const initFile = (filePath: string): void => {
+	if (!fs.existsSync(filePath)) {
+		fs.closeSync(fs.openSync(filePath, "w"));
+	}
+};
+
 interface NotifyReturn {
 	that: (apiEvent: ApiEvent, ...args: any[]) => void;
 }
@@ -62,8 +68,6 @@ interface NotifyReturn {
  */
 export const notify = (webContents: WebContents): NotifyReturn => {
 	const that = (apiEvent: ApiEvent, ...args: any[]) => {
-		// TODO:
-		console.log('notify.that', apiEvent, ...args);
 		webContents.send(apiEvent, ...args);
 	};
 	return { that };

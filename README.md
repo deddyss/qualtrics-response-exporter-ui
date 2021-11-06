@@ -10,7 +10,6 @@ If you have so many [Qualtrics](https://www.qualtrics.com) surveys and want to e
 * [Tailwind	CSS](https://tailwindcss.com/)
 * [Electron.js](https://www.electronjs.org/)
 * [Axios HTTP Client](https://axios-http.com/)
-* [Thread.js](https://threads.js.org/)
 * [Limiter](https://github.com/jhurliman/node-rate-limiter)
 
 ## Getting Started
@@ -48,12 +47,4 @@ Distributed under the MIT License. See `LICENSE` for more information.
 * [Jest](https://jestjs.io/)
 * [Denque](https://github.com/invertase/denque)
 * [Async-lock](https://github.com/rogierschouten/async-lock)
-* [Fastify](https://www.fastify.io/)
-* [Get-port](https://github.com/sindresorhus/get-port)
-* [App-root-path](https://github.com/inxilpro/node-app-root-path)
-* [Pino](https://getpino.io/)
 * [Webpack](https://webpack.js.org/)
-* [Tsconfig-paths-webpack-plugin](https://github.com/dividab/tsconfig-paths-webpack-plugin)
-* [Terser-webpack-plugin](https://github.com/webpack-contrib/terser-webpack-plugin)
-* [Remove-files-webpack-plugin](https://github.com/Amaimersion/remove-files-webpack-plugin)
-* [Simple-progress-webpack-plugin](https://github.com/dominique-mueller/simple-progress-webpack-plugin)
