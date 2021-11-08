@@ -20,21 +20,20 @@ class ResponseExport extends Api {
 		await startExportLimiter.removeTokens(1);
 
 		return new Promise<StartExportResult>((resolve, reject) => {
-			// TODO:
-			console.log('startExport.data: %O', data);
 			this.sendHttpPostRequest<StartExportResponse>({
 				url: startExportUrl(surveyId),
 				data,
 				headers: {
 					'Content-Type': 'application/json'
 				}
-			}).then((response: AxiosResponse<StartExportResponse>) => {
+			})
+			.then((response: AxiosResponse<StartExportResponse>) => {
 				resolve(response.data.result);
 			})
-				.catch((error: AxiosError<ApiErrorResponse>) => {
-					const apiError: ApiError = Api.parseError(error);
-					reject(new Error(apiError.message ? apiError.message : apiError.statusText));
-				});
+			.catch((error: AxiosError<ApiErrorResponse>) => {
+				const apiError: ApiError = Api.parseError(error);
+				reject(new Error(apiError.message ? apiError.message : apiError.statusText));
+			});
 		});
 	}
 

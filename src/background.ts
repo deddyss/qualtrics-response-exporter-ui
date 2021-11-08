@@ -20,7 +20,7 @@ const createWindow = async () => {
 		width: 1366,
 		height: 768,
 		minWidth: 500,
-		minHeight: 768,
+		minHeight: 800,
 		show: false,
 		webPreferences: {
 			preload: path.join(__dirname, 'preload.js'),
@@ -56,13 +56,17 @@ const createWindow = async () => {
 	await initKey();
 	// register event listener
 	registerEventListeners(window);
-
-	// load settings
-	const settings = loadSettings();
-	// load qualtrics authorization (if any)
-	const qualtrics = loadQualtricsAuthorization();
-	// notify that application is ready now
-	notify(window.webContents).that('ready', { settings, qualtrics } as ReadyEventParam);
+	// wait until webContents is  fully loaded
+	window.webContents.once('did-finish-load', () => {
+		// load settings
+		const settings = loadSettings();
+		// load qualtrics authorization (if any)
+		const qualtrics = loadQualtricsAuthorization();
+		// notify that application is ready now
+		notify(window.webContents).that(
+			'ready', { settings, qualtrics } as ReadyEventParam
+		);
+	});
 };
 
 const runMiscellaneousScript = () => {

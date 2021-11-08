@@ -39,10 +39,12 @@ If you have so many [Qualtrics](https://www.qualtrics.com) surveys and want to e
 ## License
 Distributed under the MIT License. See `LICENSE` for more information.
 
+## Attributions
+* Application icon made by <a href="https://www.flaticon.com/authors/stockes-design" title="Stockes Design">Stockes Design</a> from <a href="https://www.flaticon.com/" title="Flaticon">www.flaticon.com</a>
+* Photos on sign-in page are retrieved from <a href="https://unsplash.com/">Unsplash</a>
+* I customized the background on settings page at [SVGBackgrounds.com](https://www.svgbackgrounds.com/)
 
 ## Acknowledgements
-* [Unsplash](https://unsplash.com/)
-* [SVGBackgrounds.com](https://www.svgbackgrounds.com/)
 * [Electron builder](https://www.electron.build/)
 * [Jest](https://jestjs.io/)
 * [Denque](https://github.com/invertase/denque)
