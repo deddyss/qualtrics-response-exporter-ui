@@ -28,10 +28,10 @@ If you have so many [Qualtrics](https://www.qualtrics.com) surveys and want to e
 ## Usage
 1. Download file Qualtrics-Response-Exporter.exe from [latest release](https://github.com/deddyss/qualtrics-response-exporter-ui/releases/latest)
 2. Since this is a portable application, you don't need to install it first. Just run file Qualtrics-Response-Exporter.exe
-
+3. If you want to develop, modify or build the application by yourself, please refer to [`DEVELOPMENT`](DEVELOPMENT.md)
 
 ## License
-Distributed under the MIT License. See `LICENSE` for more information.
+Distributed under the MIT License. See [`LICENSE`](LICENSE) for more information
 
 
 ## Attributions
