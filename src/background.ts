@@ -15,6 +15,16 @@ protocol.registerSchemesAsPrivileged([
 	{ scheme: 'app', privileges: { secure: true, standard: true } }
 ]);
 
+const notifyRenderer = (window: BrowserWindow): void => {
+	const settings = loadSettings();
+	// load qualtrics authorization (if any)
+	const qualtrics = loadQualtricsAuthorization();
+	// notify that application is ready now
+	notify(window.webContents).that(
+		'ready', { settings, qualtrics } as ReadyEventParam
+	);
+};
+
 const createWindow = async () => {
 	const window = new BrowserWindow({
 		width: 1366,
@@ -56,17 +66,16 @@ const createWindow = async () => {
 	await initKey();
 	// register event listener
 	registerEventListeners(window);
-	// wait until webContents is  fully loaded
-	window.webContents.once('did-finish-load', () => {
-		// load settings
-		const settings = loadSettings();
-		// load qualtrics authorization (if any)
-		const qualtrics = loadQualtricsAuthorization();
-		// notify that application is ready now
-		notify(window.webContents).that(
-			'ready', { settings, qualtrics } as ReadyEventParam
-		);
-	});
+
+	if (isDevelopment && !process.env.IS_TEST) {
+		notifyRenderer(window);
+	}
+	else {
+		// wait until webContents is  fully loaded
+		window.webContents.once('did-finish-load', () => {
+			notifyRenderer(window);
+		});
+	}
 };
 
 const runMiscellaneousScript = () => {
